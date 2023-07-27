@@ -27,11 +27,11 @@ module QIPU_Processor(
     
     wire [31:0] sum;
     
-    Adder adder (
+    Subtractor adder (
         .a_in (value_a),
         .b_in (value_b),
         .carry_out (),
-        .sum_out (sum)
+        .diff_out (sum)
     );
     
     assign slide_leds_out = dpad_btns_in[0] ? sum[31:16] : sum[15:0];
