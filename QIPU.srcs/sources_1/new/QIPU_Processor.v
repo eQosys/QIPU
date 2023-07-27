@@ -18,22 +18,34 @@ module QIPU_Processor(
     reg [31:0] value_b;
     always @ (posedge slow_clock) begin
         case (dpad_btns_in)
-            5'b00010: value_a[15:0] <= slide_switches_in;
-            5'b00100: value_b[15:0] <= slide_switches_in;
-            5'b01000: value_b[31:16] <= slide_switches_in;
-            5'b10000: value_a[31:16] <= slide_switches_in;
+            5'b10000: value_a[15:0] <= slide_switches_in;   // LEFT PRESSED
+            5'b10001: value_a[31:16] <= slide_switches_in;  // LEFT & MID PRESSED
+            5'b00100: value_b[15:0] <= slide_switches_in;   // RIGHT PRESSED
+            5'b00101: value_b[31:16] <= slide_switches_in;  // RIGHT & MID PRESSED
         endcase
     end
     
     wire [31:0] sum;
+    wire [31:0] diff;
     
-    Subtractor adder (
+    Adder adder (
         .a_in (value_a),
         .b_in (value_b),
         .carry_out (),
-        .diff_out (sum)
+        .sum_out (sum)
     );
     
-    assign slide_leds_out = dpad_btns_in[0] ? sum[31:16] : sum[15:0];
+    Subtractor subtractor (
+        .a_in (value_a),
+        .b_in (value_b),
+        .carry_out (),
+        .diff_out (diff)
+    );
+    
+    wire [31:0] result;
+    
+    assign result = dpad_btns_in[3] ? diff : sum;
+    
+    assign slide_leds_out = dpad_btns_in[0] ? result[31:16] : result[15:0];
     
 endmodule
