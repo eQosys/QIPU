@@ -40,9 +40,10 @@ module QIPU_Processor(
     
     always @ (*) begin
         case (dpad_btns_in)
-            5'b00000: slide_leds_out <= result[15:0];               // NOTHING PRESSED  -> VIEW LOWER HALF
-            5'b00001: slide_leds_out <= result[31:16];               // MIDDLE PRESSED  -> VIEW UPPER HALF
+            5'b00000: slide_leds_out <= result[15:0];               // NOTHING PRESSED  -> VIEW LOWER HALF of RESULT
+            5'b00001: slide_leds_out <= result[31:16];               // MIDDLE PRESSED  -> VIEW UPPER HALF of RESULT
             5'b00010: slide_leds_out <= {{14{1'b0}}, status_flags}; // TOP PRESSED      -> VIEW STATUS FLAGS
+            default:  slide_leds_out <= {32{slow_clock}};
         endcase
     end
 

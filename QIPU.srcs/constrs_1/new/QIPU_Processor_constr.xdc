@@ -1,3 +1,7 @@
+# CONFIG SETUP
+set_property CFGBVS VCCO [current_design]
+set_property CONFIG_VOLTAGE 3.3 [current_design]
+
 # 100MHz clock
 set_property -dict {PACKAGE_PIN W5 IOSTANDARD LVCMOS33} [get_ports ext_clock]
 create_clock -period 10.000 -name MAIN_CLOCK -waveform {0.000 5.000} [get_ports ext_clock]
