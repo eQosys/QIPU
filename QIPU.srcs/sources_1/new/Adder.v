@@ -181,20 +181,3 @@ module Thirtytwo_Bit_Adder(
     );
     
 endmodule
-
-module Adder(
-    input [31:0] a_in,
-    input [31:0] b_in,
-    output carry_out,
-    output [31:0] sum_out
-    );
-    
-    Thirtytwo_Bit_Adder adder(
-        .a_in (a_in),
-        .b_in (b_in),
-        .carry_in (1'b0),
-        .carry_out (carry_out),
-        .sum_out (sum_out)
-    );
-    
-endmodule
