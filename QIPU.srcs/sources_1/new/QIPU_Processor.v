@@ -4,47 +4,176 @@ module QIPU_Processor(
         input ext_clock,
         input [4:0] dpad_btns_in,
         input [15:0] slide_switches_in,
-        output reg [15:0] slide_leds_out
+        output [15:0] slide_leds_out,
+        output [3:0] seven_seg_anodes_out,
+        output [7:0] seven_seg_cathodes_out
     );
     
-    wire slow_clock;
-    reg [22:0] slow_clock_counter;
-    assign slow_clock = slow_clock_counter[22];
+    wire [31:0] programCounter_wire;
+    wire doJump_wire;
+    wire isShortOffset_wire;
+    wire [31:0] instruction_wire;
+    wire [31:0] immediate_wire;
+    wire [2:0] aluControl_wire;
+    wire aluIsZero_wire;
+    wire aluIsNeg_wire;
+    wire regWriteEnable_wire;
+    wire memWriteEnable_wire;
+    wire [31:0] offset_wire;
+    wire [31:0] regA_wire;
+    wire [31:0] regB_wire;
+    wire [31:0] regWriteData_wire;
+    wire [31:0] memReadData_wire;
+    wire [31:0] dataA_wire;
+    wire [31:0] dataB_wire;
+    wire [31:0] aluResult_wire;
+    wire offsetEnableA_wire;
+    wire offsetEnableB_wire;
+    wire [1:0] resultSelect_wire;
+    wire [1:0] immExtendMode_wire;
+    
+    
+    
+    
+    reg [20:0] clock_counter;
+    
     always @ (posedge ext_clock) begin
-        slow_clock_counter <= slow_clock_counter + 1;
+        clock_counter <= clock_counter + 1;
     end
     
-    reg [31:0] value_a;
-    reg [31:0] value_b;
-    reg [2:0] alu_control;
-    always @ (posedge slow_clock) begin
-        case (dpad_btns_in)
-            5'b10000: value_a[15:0] <= slide_switches_in;   // LEFT PRESSED         -> SET LOWER HALF OF A
-            5'b10001: value_a[31:16] <= slide_switches_in;  // LEFT & MID PRESSED   -> SET UPPER HALF OF A
-            5'b00100: value_b[15:0] <= slide_switches_in;   // RIGHT PRESSED        -> SET LOWER HALF OF B
-            5'b00101: value_b[31:16] <= slide_switches_in;  // RIGHT & MID PRESSED  -> SET UPPER HALF OF B
-            5'b01000: alu_control <= slide_switches_in[2:0]; // BOTTOM PRESSED      -> SET ALU CONTROL
-        endcase
+    reg [31:0] debouncer;
+    always @ (posedge clock_counter[20]) begin
+        debouncer <= (debouncer << 1) | {31'b0, dpad_btns_in[3]};
     end
     
-    wire [31:0] result;
-    wire [1:0] status_flags;
-    ALU alu(
-        .a_in (value_a),
-        .b_in (value_b),
-        .alu_control_in (alu_control),
-        .res_out (result),
-        .is_zero_out (status_flags[0]),
-        .is_neg_out (status_flags[1])
+    wire manual_clock;
+    assign manual_clock = debouncer == {32{1'b1}};
+    
+    reg [31:0] slide_instruction;
+    always @ (posedge dpad_btns_in[2]) begin
+        slide_instruction[15:0] <= slide_switches_in;
+    end
+    always @ (posedge dpad_btns_in[4]) begin
+        slide_instruction[31:16] <= slide_switches_in;
+    end
+    
+    Seven_Segment_Display ssd (
+        .clk_in (ext_clock),
+        .value_in (programCounter_wire / 4),
+        .anode_out (seven_seg_anodes_out),
+        .cathode_out (seven_seg_cathodes_out)
     );
     
-    always @ (*) begin
-        case (dpad_btns_in)
-            5'b00000: slide_leds_out <= result[15:0];               // NOTHING PRESSED  -> VIEW LOWER HALF of RESULT
-            5'b00001: slide_leds_out <= result[31:16];               // MIDDLE PRESSED  -> VIEW UPPER HALF of RESULT
-            5'b00010: slide_leds_out <= {{14{1'b0}}, status_flags}; // TOP PRESSED      -> VIEW STATUS FLAGS
-            default:  slide_leds_out <= {32{slow_clock}};
-        endcase
-    end
+    // LEFT   -> SET HIGH BITS OF INSTRUCTION
+    // RIGHT  -> SET LOW BITS OF INSTRUCTION
+    // MID    -> WRITE INSTRUCTION
+    // TOP    -> SELECT DEBUG REGISTER
+    // BUTTOM -> CLOCK
+    
+    
+    
+    
+    Program_Counter programCounter (
+        .clk_in (manual_clock),
+        .jmpEnable_in (doJump_wire),
+        .relJmp_in (instruction_wire[31]),
+        .pc_jmp_in (dataA_wire),
+        .pc_out (programCounter_wire)
+    );
+    
+    Instruction_Memory instructionMemory (
+        .address_in (programCounter_wire),
+        .instruction_out (instruction_wire),
+        .writeEnable_in (dpad_btns_in[0]),
+        .addrToWrite_in (slide_switches_in[4:0]),
+        .instrToWrite_in (slide_instruction)
+    );
+    
+    Controller controller (
+        .opcode_in (instruction_wire[4:0]),
+        .jmpCond_in (instruction_wire[8:5]),
+        .offsetSelect_in (instruction_wire[17]),
+        .isZero_in (aluIsZero_wire),
+        .isNeg_in (aluIsNeg_wire),
+        .aluControl_out (aluControl_wire),
+        .doJump_out (doJump_wire),
+        .isShortOffset_out (isShortOffset_wire),
+        .regWriteEnable_out (regWriteEnable_wire),
+        .memWriteEnable_out (memWriteEnable_wire),
+        .offsetEnableA_out (offsetEnableA_wire),
+        .offsetEnableB_out (offsetEnableB_wire),
+        .resultSelect_out (resultSelect_wire),
+        .immExtendMode_out (immExtendMode_wire)
+    );
+    
+    Immediate_Extender immediateExtender (
+        .extendMode_in (immExtendMode_wire),
+        .imm_in (instruction_wire[31:9]),
+        .imm_out (immediate_wire)
+    );
+    
+    Offset_Extender offsetExtender (
+        .is_short_in (isShortOffset_wire),
+        .offset_in (instruction_wire[31:18]),
+        .offset_out (offset_wire)
+    );
+    
+    wire [31:0] debugData_wire;
+    
+    Register_Bank registerBank (
+        .clk_in (manual_clock),
+        .regA_in (instruction_wire[12:9]),
+        .regB_in (instruction_wire[16:13]),
+        .regW_in (instruction_wire[8:5]),
+        .writeData_in (regWriteData_wire),
+        .writeEnable_in (regWriteEnable_wire),
+        .dataA_out (regA_wire),
+        .dataB_out (regB_wire),
+        .debugRegSelect_in (dpad_btns_in[1]),
+        .debugReg_in (slide_switches_in[3:0]),
+        .debugData_out (debugData_wire)
+    );
+    
+    assign slide_leds_out = debugData_wire[15:0];
+    
+    Offset_Applicator offsetApplicatorA (
+        .offsetEnable_in (offsetEnableA_wire),
+        .data_in (regA_wire),
+        .offset_in (offset_wire),
+        .result_out (dataA_wire)
+    );
+    
+    Offset_Applicator offsetApplicatorB (
+        .offsetEnable_in (offsetEnableB_wire),
+        .data_in (regB_wire),
+        .offset_in (offset_wire),
+        .result_out (dataB_wire)
+    );
+    
+    ALU alu (
+        .a_in (dataA_wire),
+        .b_in (dataB_wire),
+        .alu_control_in (aluControl_wire),
+        .res_out (aluResult_wire),
+        .is_zero_out (aluIsZero_wire),
+        .is_neg_out (aluIsNeg_wire)
+    );
+    
+    Data_Memory dataMemory (
+        .clk_in (manual_clock),
+        .address_in (dataA_wire),
+        .writeEnable_in (memWriteEnable_wire),
+        .writeData_in (dataB_wire),
+        .data_out (memReadData_wire)
+    );
+    
+    Multiplexer resultMultiplexer (
+        .select_in (resultSelect_wire),
+        .a_in (aluResult_wire),
+        .b_in (memReadData_wire),
+        .c_in (immediate_wire),
+        .d_in (32'bz),
+        .res_out (regWriteData_wire)
+    );
 
 endmodule

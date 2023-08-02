@@ -18,35 +18,35 @@ module ALU(
             // ADDITION
             3'b000: begin
                 res_out <= res_adder;
-                is_sub <= 1'b0;
+                is_sub <= 0;
             end
             // SUBTRACTION
             3'b001: begin
                 res_out <= res_adder;
-                is_sub <= 1'b1;
+                is_sub <= 1;
             end
             // BITWISE AND
             3'b010: begin
                 res_out <= a_in & b_in;
-                is_sub <= 1'b0;
+                is_sub <= 0;
             end
             // BITWISE OR
             3'b011: begin
                 res_out <= a_in | b_in;
-                is_sub <= 1'b0;
+                is_sub <= 0;
             end
             // BITWISE XOR
             3'b100: begin
                 res_out <= a_in ^ b_in;
-                is_sub <= 1'b0;
+                is_sub <= 0;
             end
             // BITWISE NOT
             // LOGICAL AND
             // LOGICAL OR
             // LOGICAL NOT
             default: begin
-                res_out <= {32{1'b0}};
-                is_sub <= 1'b0;
+                res_out <= {32{1'bz}};
+                is_sub <= 0;
             end
         endcase
     end
@@ -59,7 +59,7 @@ module ALU(
         .sum_out (res_adder)
     );
     
-    assign is_zero_out = {32{1'b0}} == res_out;
+    assign is_zero_out = res_out == 0;
     assign is_neg_out = res_out[31];
     
 endmodule

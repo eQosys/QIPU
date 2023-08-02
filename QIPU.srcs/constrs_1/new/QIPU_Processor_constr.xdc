@@ -1,3 +1,9 @@
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[0]]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[1]]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[2]]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[4]]
+
+
 # CONFIG SETUP
 set_property CFGBVS VCCO [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]
@@ -64,3 +70,20 @@ set_property -dict {PACKAGE_PIN T18 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_i
 set_property -dict {PACKAGE_PIN T17 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[2]}]
 set_property -dict {PACKAGE_PIN U17 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[3]}]
 set_property -dict {PACKAGE_PIN W19 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[4]}]
+
+
+# 7-SEGMENT ANODES
+set_property -dict {PACKAGE_PIN W4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[3]}]
+set_property -dict {PACKAGE_PIN V4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[2]}]
+set_property -dict {PACKAGE_PIN U4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[1]}]
+set_property -dict {PACKAGE_PIN U2 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[0]}]
+
+# 7-SEGMENT CATHODES
+set_property -dict {PACKAGE_PIN V7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[7]}]
+set_property -dict {PACKAGE_PIN W7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[6]}]
+set_property -dict {PACKAGE_PIN W6 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[5]}]
+set_property -dict {PACKAGE_PIN U8 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[4]}]
+set_property -dict {PACKAGE_PIN V8 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[3]}]
+set_property -dict {PACKAGE_PIN U5 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[2]}]
+set_property -dict {PACKAGE_PIN V5 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[1]}]
+set_property -dict {PACKAGE_PIN U7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[0]}]

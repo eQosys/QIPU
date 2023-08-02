@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 
 module Half_Adder(
-    input a_in,
-    input b_in,
-    output high_out,
-    output low_out
+        input a_in,
+        input b_in,
+        output high_out,
+        output low_out
     );
     
     assign high_out = a_in & b_in;
@@ -13,11 +13,11 @@ module Half_Adder(
 endmodule
 
 module Full_Adder(
-    input a_in,
-    input b_in,
-    input carry_in,
-    output high_out,
-    output low_out
+        input a_in,
+        input b_in,
+        input carry_in,
+        output high_out,
+        output low_out
     );
     
     wire low_to_or;
@@ -43,11 +43,11 @@ module Full_Adder(
 endmodule
 
 module Two_Bit_Adder(
-    input [1:0] a_in,
-    input [1:0] b_in,
-    input carry_in,
-    output carry_out,
-    output [1:0] sum_out
+        input [1:0] a_in,
+        input [1:0] b_in,
+        input carry_in,
+        output carry_out,
+        output [1:0] sum_out
     );
     
     wire high_to_carry;
@@ -71,11 +71,11 @@ module Two_Bit_Adder(
 endmodule
 
 module Four_Bit_Adder(
-    input [3:0] a_in,
-    input [3:0] b_in,
-    input carry_in,
-    output carry_out,
-    output [3:0] sum_out
+        input [3:0] a_in,
+        input [3:0] b_in,
+        input carry_in,
+        output carry_out,
+        output [3:0] sum_out
     );
     
     wire carry_to_carry;
@@ -99,11 +99,11 @@ module Four_Bit_Adder(
 endmodule
 
 module Eight_Bit_Adder(
-    input [7:0] a_in,
-    input [7:0] b_in,
-    input carry_in,
-    output carry_out,
-    output [7:0] sum_out
+        input [7:0] a_in,
+        input [7:0] b_in,
+        input carry_in,
+        output carry_out,
+        output [7:0] sum_out
     );
     
     wire carry_to_carry;
@@ -127,11 +127,11 @@ module Eight_Bit_Adder(
 endmodule
 
 module Sixteen_Bit_Adder(
-    input [15:0] a_in,
-    input [15:0] b_in,
-    input carry_in,
-    output carry_out,
-    output [15:0] sum_out
+        input [15:0] a_in,
+        input [15:0] b_in,
+        input carry_in,
+        output carry_out,
+        output [15:0] sum_out
     );
     
     wire carry_to_carry;
@@ -155,11 +155,11 @@ module Sixteen_Bit_Adder(
 endmodule
 
 module Thirtytwo_Bit_Adder(
-    input [31:0] a_in,
-    input [31:0] b_in,
-    input carry_in,
-    output carry_out,
-    output [31:0] sum_out
+        input [31:0] a_in,
+        input [31:0] b_in,
+        input carry_in,
+        output carry_out,
+        output [31:0] sum_out
     );
     
     wire carry_to_carry;

@@ -1,0 +1,43 @@
+add [dest] [src1] [src2]
+sub [dest] [src1] [src2]
+and [dest] [src1] [src2]
+or  [dest] [src1] [src2]
+xor [dest] [src1] [src2]
+
+jxx [addr] [src1] [src2]
+
+st  [addr] [src]
+ld  [addr] [dest]
+
+lui [dest] [imm]
+lli [dest] [imm]
+li  [dest] [imm]
+
+int [id]
+
+call [addr]
+ret
+
+-------------------------
+
+not [dest] [src]            == xor [dest] [src] zero(-1)
+neg [dest] [src]            == sub [dest] zero [src]
+inc [dest] [src]            == add [dest] [src] zero(1)
+dec [dest] [src]            == sub [dest] [src] zero(1)
+
+mov [dest] [src]            == add [dest] [src] 0
+
+jmp [addr]                  == jeq [addr] 0 0
+
+mul [dest] [src1] [src2]    == (software implementation)
+div [dest] [src1] [src2]    == (software implementation)
+mod [dest] [src1] [src2]    == (software implementation)
+
+-------------------------
+
+add r0 zero zero(5)
+add r1 zero zero(5)
+add r2 r0 r1
+
+li r0 5
+add r2 r0 zero(5)
