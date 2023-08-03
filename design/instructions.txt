@@ -4,7 +4,7 @@ and [dest] [src1] [src2]
 or  [dest] [src1] [src2]
 xor [dest] [src1] [src2]
 
-jxx [addr] [src1] [src2]
+jxx [addr] [src]
 
 st  [addr] [src]
 ld  [addr] [dest]
