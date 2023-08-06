@@ -7,13 +7,13 @@ xor [dest] [src1] [src2]
 jxx [addr] [src]
 
 st  [addr] [src]
-ld  [addr] [dest]
+ld  [dest] [addr]
 
 lui [dest] [imm]
 lli [dest] [imm]
 li  [dest] [imm]
 
-int [id]
+int [imm]
 
 call [addr]
 ret
