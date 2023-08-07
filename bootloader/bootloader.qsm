@@ -1,7 +1,22 @@
 .entry boot
 
 ::boot
-add r0 zero zero(3)
+add r0 zero zero
+
+add r1 zero zero(8191)
+add r1 r1 r1
+add r1 r1 r1
+add r1 r1 r1
+
 ::loop
+sub r1 r1 zero(1)
+jrnz zero(rel loop) r1
+
+add r1 zero zero(8191)
+add r1 r1 r1
+add r1 r1 r1
+add r1 r1 r1
+
 add r0 r0 zero(1)
+
 jrz zero(rel loop) zero

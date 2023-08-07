@@ -1,7 +1,7 @@
-set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[0]]
-set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[1]]
-set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[2]]
-set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[4]]
+#set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[0]]
+#set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[1]]
+#set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[2]]
+#set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets dpad_btns_in_IBUF[4]]
 
 
 # CONFIG SETUP
@@ -10,7 +10,7 @@ set_property CONFIG_VOLTAGE 3.3 [current_design]
 
 # 100MHz clock
 set_property -dict {PACKAGE_PIN W5 IOSTANDARD LVCMOS33} [get_ports ext_clock]
-create_clock -period 10.000 -name MAIN_CLOCK -waveform {0.000 5.000} [get_ports ext_clock]
+#create_clock -period 10.000 -name MAIN_CLOCK -waveform {0.000 5.000} [get_ports ext_clock]
 
 # 7-SEGMENT ANODES
 #set_property -dict {PACKAGE_PIN W4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anode_out[3]}]
@@ -65,11 +65,11 @@ set_property -dict {PACKAGE_PIN E19 IOSTANDARD LVCMOS33} [get_ports {slide_leds_
 set_property -dict {PACKAGE_PIN U16 IOSTANDARD LVCMOS33} [get_ports {slide_leds_out[0]}]
 
 # DPAD BUTTONS
-set_property -dict {PACKAGE_PIN U18 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[0]}]
-set_property -dict {PACKAGE_PIN T18 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[1]}]
-set_property -dict {PACKAGE_PIN T17 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[2]}]
-set_property -dict {PACKAGE_PIN U17 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[3]}]
-set_property -dict {PACKAGE_PIN W19 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[4]}]
+#set_property -dict {PACKAGE_PIN U18 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[0]}]
+#set_property -dict {PACKAGE_PIN T18 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[1]}]
+#set_property -dict {PACKAGE_PIN T17 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[2]}]
+#set_property -dict {PACKAGE_PIN U17 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[3]}]
+#set_property -dict {PACKAGE_PIN W19 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[4]}]
 
 
 # 7-SEGMENT ANODES

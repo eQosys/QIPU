@@ -9,7 +9,6 @@ module Register_Bank(
         input writeEnable_in,
         output [31:0] dataA_out,
         output [31:0] dataB_out,
-        input debugRegSelect_in,
         input [3:0] debugReg_in,
         output [31:0] debugData_out
     );
@@ -26,12 +25,6 @@ module Register_Bank(
             bank[regW_in] <= writeData_in;
     end
     
-    reg [3:0] selectedDebugReg;
-    
-    always @ (posedge debugRegSelect_in) begin
-        selectedDebugReg <= debugReg_in;
-    end
-    
-    assign debugData_out = bank[selectedDebugReg];
+    assign debugData_out = bank[debugReg_in];
     
 endmodule

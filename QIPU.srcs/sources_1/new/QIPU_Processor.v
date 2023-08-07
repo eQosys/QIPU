@@ -2,11 +2,20 @@
 
 module QIPU_Processor(
         input ext_clock,
-        input [4:0] dpad_btns_in,
+        //input [4:0] dpad_btns_in,
         input [15:0] slide_switches_in,
         output [15:0] slide_leds_out,
         output [3:0] seven_seg_anodes_out,
         output [7:0] seven_seg_cathodes_out
+    );
+    
+    wire main_clock;
+    
+    Primary_Clock primClock (
+        .clk_out (main_clock),
+        .reset (0),
+        .locked (),
+        .clk_in (ext_clock)
     );
     
     localparam opcode_offset = 0;
@@ -76,28 +85,6 @@ module QIPU_Processor(
     
     
     
-    reg [15:0] clock_counter;
-    
-    always @ (posedge ext_clock) begin
-        clock_counter <= clock_counter + 1;
-    end
-    
-    reg [31:0] debouncer;
-    always @ (posedge clock_counter[15]) begin
-        debouncer <= (debouncer << 1) | {31'b0, dpad_btns_in[3]};
-    end
-    
-    wire manual_clock;
-    assign manual_clock = debouncer == {32{1'b1}};
-    
-    reg [31:0] slide_instruction;
-    always @ (posedge dpad_btns_in[2]) begin
-        slide_instruction[15:0] <= slide_switches_in;
-    end
-    always @ (posedge dpad_btns_in[4]) begin
-        slide_instruction[31:16] <= slide_switches_in;
-    end
-    
     Seven_Segment_Display ssd (
         .clk_in (ext_clock),
         .value_in (programCounter_wire[15:0]),
@@ -115,7 +102,7 @@ module QIPU_Processor(
     
     
     Program_Counter programCounter (
-        .clk_in (manual_clock),
+        .clk_in (main_clock),
         .jmpEnable_in (doJump_wire),
         .relJmp_in (instruction_wire[relativeJump_offset + relativeJump_width - 1 : relativeJump_offset]),
         .pc_jmp_in (dataA_wire),
@@ -124,10 +111,7 @@ module QIPU_Processor(
     
     Instruction_Memory instructionMemory (
         .address_in (programCounter_wire),
-        .instruction_out (instruction_wire),
-        .writeEnable_in (dpad_btns_in[0]),
-        .addrToWrite_in (slide_switches_in[4:0]),
-        .instrToWrite_in (slide_instruction)
+        .instruction_out (instruction_wire)
     );
     
     Controller controller (
@@ -167,7 +151,7 @@ module QIPU_Processor(
     wire [31:0] debugData_wire;
     
     Register_Bank registerBank (
-        .clk_in (manual_clock),
+        .clk_in (main_clock),
         .regA_in (instruction_wire[regSrc1_offset + regSrc1_width - 1 : regSrc1_offset]),
         .regB_in (instruction_wire[regSrc2_offset + regSrc2_width - 1 : regSrc2_offset]),
         .regW_in (instruction_wire[regDest_offset + regDest_width - 1 : regDest_offset]),
@@ -175,7 +159,6 @@ module QIPU_Processor(
         .writeEnable_in (regWriteEnable_wire),
         .dataA_out (regA_wire),
         .dataB_out (regB_wire),
-        .debugRegSelect_in (dpad_btns_in[1]),
         .debugReg_in (slide_switches_in[3:0]),
         .debugData_out (debugData_wire)
     );
@@ -206,7 +189,7 @@ module QIPU_Processor(
     );
     
     Data_Memory dataMemory (
-        .clk_in (manual_clock),
+        .clk_in (main_clock),
         .address_in (dataA_wire),
         .writeEnable_in (memWriteEnable_wire),
         .writeData_in (dataB_wire),
