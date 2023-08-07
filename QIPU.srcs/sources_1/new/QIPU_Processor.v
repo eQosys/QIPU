@@ -9,9 +9,48 @@ module QIPU_Processor(
         output [7:0] seven_seg_cathodes_out
     );
     
+    localparam opcode_offset = 0;
+    localparam opcode_width = 5;
+    
+    localparam regDest_offset = 5;
+    localparam regDest_width = 4;
+    
+    localparam condition_offset = 5;
+    localparam condition_width = 4;
+    
+    localparam offsetSelect_offset = 9;
+    localparam offsetSelect_width = 1;
+    
+    localparam regSrc1_offset = 10;
+    localparam regSrc1_width = 4;
+    
+    localparam regSrc2_offset = 14;
+    localparam regSrc2_width = 4;
+    
+    localparam immediate_offset = 9;
+    localparam immediate_width = 23;
+    
+    localparam offsetNormal_offset = 18;
+    localparam offsetNormal_width = 14;
+    
+    localparam offsetShort_offset = 18;
+    localparam offsetShort_width = 13;
+    
+    localparam offsetLongContinuous_offset = 14;
+    localparam offsetLongContinuous_width = 18;
+    
+    localparam offsetLongSplitUpper_offset = 18;
+    localparam offsetLongSplitUpper_width = 14;
+    
+    localparam offsetLongSplitLower_offset = 5;
+    localparam offsetLongSplitLower_width = 4;
+    
+    localparam relativeJump_offset = 31;
+    localparam relativeJump_width = 1;
+    
+   
     wire [31:0] programCounter_wire;
     wire doJump_wire;
-    wire isShortOffset_wire;
     wire [31:0] instruction_wire;
     wire [31:0] immediate_wire;
     wire [2:0] aluControl_wire;
@@ -29,6 +68,8 @@ module QIPU_Processor(
     wire [31:0] aluResult_wire;
     wire offsetEnableA_wire;
     wire offsetEnableB_wire;
+    wire aluSrcASelect_wire;
+    wire [1:0] offsetLayout_wire;
     wire [1:0] resultSelect_wire;
     wire [1:0] immExtendMode_wire;
     
@@ -76,7 +117,7 @@ module QIPU_Processor(
     Program_Counter programCounter (
         .clk_in (manual_clock),
         .jmpEnable_in (doJump_wire),
-        .relJmp_in (instruction_wire[31]),
+        .relJmp_in (instruction_wire[relativeJump_offset + relativeJump_width - 1 : relativeJump_offset]),
         .pc_jmp_in (dataA_wire),
         .pc_out (programCounter_wire)
     );
@@ -90,31 +131,36 @@ module QIPU_Processor(
     );
     
     Controller controller (
-        .opcode_in (instruction_wire[4:0]),
-        .jmpCond_in (instruction_wire[8:5]),
-        .offsetSelect_in (instruction_wire[17]),
+        .opcode_in (instruction_wire[opcode_offset + opcode_width - 1 : opcode_offset]),
+        .jmpCond_in (instruction_wire[condition_offset + condition_width - 1 : condition_offset]),
+        .offsetSelect_in (instruction_wire[offsetSelect_offset + offsetSelect_width - 1 : offsetSelect_offset]),
         .isZero_in (aluIsZero_wire),
         .isNeg_in (aluIsNeg_wire),
         .aluControl_out (aluControl_wire),
         .doJump_out (doJump_wire),
-        .isShortOffset_out (isShortOffset_wire),
         .regWriteEnable_out (regWriteEnable_wire),
         .memWriteEnable_out (memWriteEnable_wire),
         .offsetEnableA_out (offsetEnableA_wire),
         .offsetEnableB_out (offsetEnableB_wire),
+        .aluSrcASelect_out (aluSrcASelect_wire),
+        .offsetLayout_out (offsetLayout_wire),
         .resultSelect_out (resultSelect_wire),
         .immExtendMode_out (immExtendMode_wire)
     );
     
     Immediate_Extender immediateExtender (
         .extendMode_in (immExtendMode_wire),
-        .imm_in (instruction_wire[31:9]),
+        .imm_in (instruction_wire[immediate_offset + immediate_width - 1 : immediate_offset]),
         .imm_out (immediate_wire)
     );
     
-    Offset_Extender offsetExtender (
-        .is_short_in (isShortOffset_wire),
-        .offset_in (instruction_wire[31:18]),
+    Offset_Layout_Selector (
+        .offsetLayout_in (offsetLayout_wire),
+        .offsetNormal_in (instruction_wire[offsetNormal_offset + offsetNormal_width - 1 : offsetNormal_offset]),
+        .offsetShort_in (instruction_wire[offsetShort_offset + offsetShort_width - 1 : offsetShort_offset]),
+        .offsetLongContinuous_in (instruction_wire[offsetLongContinuous_offset + offsetLongContinuous_width - 1 : offsetLongContinuous_offset]),
+        .offsetLongSplitUpper_in (instruction_wire[offsetLongSplitUpper_offset + offsetLongSplitUpper_width - 1 : offsetLongSplitUpper_offset]),
+        .offsetLongSplitLower_in (instruction_wire[offsetLongSplitLower_offset + offsetLongSplitLower_width - 1 : offsetLongSplitLower_offset]),
         .offset_out (offset_wire)
     );
     
@@ -122,9 +168,9 @@ module QIPU_Processor(
     
     Register_Bank registerBank (
         .clk_in (manual_clock),
-        .regA_in (instruction_wire[12:9]),
-        .regB_in (instruction_wire[16:13]),
-        .regW_in (instruction_wire[8:5]),
+        .regA_in (instruction_wire[regSrc1_offset + regSrc1_width - 1 : regSrc1_offset]),
+        .regB_in (instruction_wire[regSrc2_offset + regSrc2_width - 1 : regSrc2_offset]),
+        .regW_in (instruction_wire[regDest_offset + regDest_width - 1 : regDest_offset]),
         .writeData_in (regWriteData_wire),
         .writeEnable_in (regWriteEnable_wire),
         .dataA_out (regA_wire),
@@ -151,7 +197,7 @@ module QIPU_Processor(
     );
     
     ALU alu (
-        .a_in (dataA_wire),
+        .a_in (aluSrcASelect_wire ? 32'b0 : dataA_wire),
         .b_in (dataB_wire),
         .alu_control_in (aluControl_wire),
         .res_out (aluResult_wire),
