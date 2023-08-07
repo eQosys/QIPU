@@ -1,6 +1,7 @@
 .entry boot
 
 ::boot
-xor r0 r0 r0
+add r0 zero zero(3)
+::loop
 add r0 r0 zero(1)
-jrz zero(-4) zero
+jrz zero(rel loop) zero
