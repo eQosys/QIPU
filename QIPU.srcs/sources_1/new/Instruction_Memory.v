@@ -8,41 +8,9 @@ module Instruction_Memory(
         input [31:0] instrToWrite_in
     );
     
-    reg [31:0] memory[255:0];
+    reg [31:0] memory[0:255];
     initial begin
-        memory[0] = 32'b00000000_00000001_01010100_10100100;
-        memory[1] = 32'b00000000_00000100_00010110_10100000;
-        memory[2] = 32'b11111111_11110000_00000000_00000101;
-        memory[3] = 32'h0;
-        memory[4] = 32'h0;
-        memory[5] = 32'h0;
-        memory[6] = 32'h0;
-        memory[7] = 32'h0;
-        memory[8] = 32'h0;
-        memory[9] = 32'h0;
-        memory[10] = 32'h0;
-        memory[11] = 32'h0;
-        memory[12] = 32'h0;
-        memory[13] = 32'h0;
-        memory[14] = 32'h0;
-        memory[15] = 32'h0;
-        memory[16] = 32'h0;
-        memory[17] = 32'h0;
-        memory[18] = 32'h0;
-        memory[19] = 32'h0;
-        memory[20] = 32'h0;
-        memory[20] = 32'h0;
-        memory[21] = 32'h0;
-        memory[22] = 32'h0;
-        memory[23] = 32'h0;
-        memory[24] = 32'h0;
-        memory[25] = 32'h0;
-        memory[26] = 32'h0;
-        memory[27] = 32'h0;
-        memory[28] = 32'h0;
-        memory[29] = 32'h0;
-        memory[30] = 32'h0;
-        memory[31] = 32'h0;
+        $readmemb("./bootloader.qsm.bin", memory);
     end
     
     assign instruction_out = memory[address_in / 4];
