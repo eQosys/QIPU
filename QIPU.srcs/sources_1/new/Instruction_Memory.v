@@ -8,11 +8,11 @@ module Instruction_Memory(
         input [31:0] instrToWrite_in
     );
     
-    reg [31:0] memory[31:0];
+    reg [31:0] memory[255:0];
     initial begin
-        memory[0] = 32'h0;
-        memory[1] = 32'h0;
-        memory[2] = 32'h0;
+        memory[0] = 32'b00000000_00000001_01010100_10100100;
+        memory[1] = 32'b00000000_00000100_00010110_10100000;
+        memory[2] = 32'b11111111_11110000_00000000_00000101;
         memory[3] = 32'h0;
         memory[4] = 32'h0;
         memory[5] = 32'h0;

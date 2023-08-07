@@ -76,14 +76,14 @@ module QIPU_Processor(
     
     
     
-    reg [20:0] clock_counter;
+    reg [15:0] clock_counter;
     
     always @ (posedge ext_clock) begin
         clock_counter <= clock_counter + 1;
     end
     
     reg [31:0] debouncer;
-    always @ (posedge clock_counter[20]) begin
+    always @ (posedge clock_counter[15]) begin
         debouncer <= (debouncer << 1) | {31'b0, dpad_btns_in[3]};
     end
     
@@ -100,7 +100,7 @@ module QIPU_Processor(
     
     Seven_Segment_Display ssd (
         .clk_in (ext_clock),
-        .value_in (programCounter_wire / 4),
+        .value_in (programCounter_wire[15:0]),
         .anode_out (seven_seg_anodes_out),
         .cathode_out (seven_seg_cathodes_out)
     );

@@ -158,6 +158,7 @@ module Controller(
                 doJump_out <= 1'bz;
                 regWriteEnable_out <= 1'bz;
                 memWriteEnable_out <= 1'bz;
+                aluSrcASelect_out <= 1'bz;
                 offsetLayout_out <= 2'bzz;
                 resultSelect_out <= 1'bz;
                 immExtendMode_out <= 2'bzz;
