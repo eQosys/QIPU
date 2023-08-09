@@ -1,7 +1,21 @@
 .entry boot
 
 ::boot
+add gp zero zero(1)
+add sp zero zero(2)
+add bp zero zero(3)
+add ra zero zero(4)
 add r0 zero zero
+~~add r1 zero zero(6)
+add r2 zero zero(7)
+add r3 zero zero(8)
+add r4 zero zero(9)
+add r5 zero zero(10)
+add r6 zero zero(11)
+add r7 zero zero(12)
+add r8 zero zero(13)
+add r9 zero zero(14)
+add r10 zero zero(15)
 
 jrz zero(rel initSlowdown) zero
 
