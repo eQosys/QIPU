@@ -1,21 +1,8 @@
 .entry boot
 
 ::boot
-add gp zero zero(1)
-add sp zero zero(2)
-add bp zero zero(3)
-add ra zero zero(4)
-add r0 zero zero
-~~add r1 zero zero(6)
-add r2 zero zero(7)
-add r3 zero zero(8)
-add r4 zero zero(9)
-add r5 zero zero(10)
-add r6 zero zero(11)
-add r7 zero zero(12)
-add r8 zero zero(13)
-add r9 zero zero(14)
-add r10 zero zero(15)
+add r0 zero zero(1)
+add r2 zero zero
 
 jrz zero(rel initSlowdown) zero
 
@@ -23,10 +10,30 @@ jrz zero(rel initSlowdown) zero
 sub r1 r1 zero(1)
 jrnz zero(rel loop) r1
 
-add r0 r0 zero(1)
+jrz zero(rel scrollLeft) r2
+
+::scrollRight
+shr r0 r0 zero(1)
+shr r3 r0 zero(1)
+jrnz zero(rel initSlowdown) r3
+add r2 zero zero(0)
+jrz zero(rel initSlowdown) zero
+
+::scrollLeft
+shl r0 r0 zero(1)
+shr r3 r0 zero(15)
+jrz zero(rel initSlowdown) r3
+add r2 zero zero(1)
+jrz zero(rel initSlowdown) zero
 
 ::initSlowdown
 add r1 zero zero(8191)
+add r1 r1 r1
+add r1 r1 r1
+add r1 r1 r1
+add r1 r1 r1
+add r1 r1 r1
+add r1 r1 r1
 add r1 r1 r1
 add r1 r1 r1
 add r1 r1 r1

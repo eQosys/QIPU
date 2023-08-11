@@ -40,6 +40,15 @@ module ALU(
                 res_out <= a_in ^ b_in;
                 is_sub <= 0;
             end
+            // SHIFT LEFT
+            3'b101: begin
+                res_out <= a_in << b_in;
+                is_sub <= 0;
+            end
+            3'b110: begin
+                res_out <= a_in >> b_in;
+                is_sub <= 0;
+            end
             // BITWISE NOT
             // LOGICAL AND
             // LOGICAL OR

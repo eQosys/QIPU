@@ -23,13 +23,15 @@ module Controller(
     localparam opcode_and = 5'b00010;
     localparam opcode_or  = 5'b00011;
     localparam opcode_xor = 5'b00100;
-    localparam opcode_jxx = 5'b00101;
-    localparam opcode_st  = 5'b00110;
-    localparam opcode_ld  = 5'b00111;
-    localparam opcode_lui = 5'b01000;
-    localparam opcode_lli = 5'b01001;
-    localparam opcode_li  = 5'b01010;
-    localparam opcode_int = 5'b01011;
+    localparam opcode_shl = 5'b00101;
+    localparam opcode_shr = 5'b00110;
+    localparam opcode_jxx = 5'b00111;
+    localparam opcode_st  = 5'b01000;
+    localparam opcode_ld  = 5'b01001;
+    localparam opcode_lui = 5'b01010;
+    localparam opcode_lli = 5'b01011;
+    localparam opcode_li  = 5'b01100;
+    localparam opcode_int = 5'b01101;
     
     localparam aluControl_unused = 3'bzzz;
     localparam aluControl_add    = 3'b000;
@@ -37,6 +39,8 @@ module Controller(
     localparam aluControl_and    = 3'b010;
     localparam aluControl_or     = 3'b011;
     localparam aluControl_xor    = 3'b100;
+    localparam aluControl_shl    = 3'b101;
+    localparam aluControl_shr    = 3'b110;
     
     localparam offsetLayout_unused         = 2'bzz;
     localparam offsetLayout_normal         = 2'b00;
@@ -109,6 +113,26 @@ module Controller(
                 end
             opcode_xor: begin // xor
                 aluControl_out <= aluControl_xor;
+                doJump_out <= 0;
+                regWriteEnable_out <= 1;
+                memWriteEnable_out <= 0;
+                aluSrcASelect_out <= aluSrcASelect_reg;
+                offsetLayout_out <= offsetLayout_normal;
+                resultSelect_out <= resultSelect_alu;
+                immExtendMode_out <= immExtendMode_unused;
+                end
+            opcode_shl: begin // shl
+                aluControl_out <= aluControl_shl;
+                doJump_out <= 0;
+                regWriteEnable_out <= 1;
+                memWriteEnable_out <= 0;
+                aluSrcASelect_out <= aluSrcASelect_reg;
+                offsetLayout_out <= offsetLayout_normal;
+                resultSelect_out <= resultSelect_alu;
+                immExtendMode_out <= immExtendMode_unused;
+                end
+            opcode_shr: begin // shr
+                aluControl_out <= aluControl_shr;
                 doJump_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;

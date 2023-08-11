@@ -23,21 +23,23 @@ opcodes:
     and     00010 ->
     or      00011 ->
     xor     00100 ->
+    shl     00101 ->
+    shr     00110 ->
 
     // BRANCH INSTRUCTIONS
-    jxx     00101 ->
+    jxx     00111 ->
 
     // MEMORY INSTRUCTIONS
-    st      00110 ->
-    ld      00111 ->
+    st      01000 ->
+    ld      01001 ->
 
     // IMMEDIATE INSTRUCTIONS
-    lui     01000 ->
-    lli     01001 ->
-    li      01010 ->
+    lui     01010 ->
+    lli     01011 ->
+    li      01100 ->
 
     // ONE ARGUMENT INSTRUCTIONS
-    int     01011 ->
+    int     01101 ->
 
 jump conditions:
     z      0000 -> zero
