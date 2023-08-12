@@ -18,6 +18,19 @@ module Controller(
         output reg [1:0] immExtendMode_out
     );
     
+    initial begin
+        aluControl_out = 0;
+        doJump_out = 0;
+        regWriteEnable_out = 0;
+        memWriteEnable_out = 0;
+        offsetEnableA_out = 0;
+        offsetEnableB_out = 0;
+        aluSrcASelect_out = 0;
+        offsetLayout_out = 0;
+        resultSelect_out = 0;
+        immExtendMode_out = 0;
+    end
+    
     localparam opcode_add = 5'b00000;
     localparam opcode_sub = 5'b00001;
     localparam opcode_and = 5'b00010;
@@ -53,10 +66,11 @@ module Controller(
     localparam immExtendMode_lower  = 2'b10;
     localparam immExtendMode_full   = 2'b11;
     
-    localparam resultSelect_unused = 2'bzz;
-    localparam resultSelect_alu    = 2'b00;
-    localparam resultSelect_mem    = 2'b01;
-    localparam resultSelect_imm    = 2'b10;
+    localparam resultSelect_unused  = 2'bzz;
+    localparam resultSelect_alu     = 2'b00;
+    localparam resultSelect_mem     = 2'b01;
+    localparam resultSelect_imm     = 2'b10;
+    localparam resultSelect_jmpAddr = 2'b11;
     
     localparam aluSrcASelect_unused = 1'bz;
     localparam aluSrcASelect_reg    = 1'b0;
@@ -152,11 +166,11 @@ module Controller(
                     jmpCond_lessEqual:    doJump_out <= isNeg_in | isZero_in; // less than or equal to zero
                     default: doJump_out <= 0;
                 endcase
-                regWriteEnable_out <= 0;
+                regWriteEnable_out <= doJump_out;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_zero;
                 offsetLayout_out <= offsetLayout_short;
-                resultSelect_out <= resultSelect_alu;
+                resultSelect_out <= resultSelect_jmpAddr;
                 immExtendMode_out <= immExtendMode_unused;
                 end
             opcode_st: begin // st

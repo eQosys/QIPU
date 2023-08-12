@@ -9,10 +9,12 @@ module QIPU_Processor(
         output [7:0] seven_seg_cathodes_out
     );
     
-    wire main_clock;
+    wire clk50_wire;
+    wire clk100_wire;
     
     Primary_Clock primClock (
-        .clk_out (main_clock),
+        .clk50_out (clk50_wire),
+        .clk100_out (clk100_wire),
         .reset (0),
         .locked (),
         .clk_in (ext_clock)
@@ -59,6 +61,8 @@ module QIPU_Processor(
     
    
     wire [31:0] programCounter_wire;
+    wire [31:0] programCounterNext_wire;
+    wire [31:0] programCounterJump_wire;
     wire doJump_wire;
     wire [31:0] instruction_wire;
     wire [31:0] immediate_wire;
@@ -86,31 +90,42 @@ module QIPU_Processor(
     
     
     Seven_Segment_Display ssd (
-        .clk_in (ext_clock),
+        .clk_in (clk100_wire),
         .value_in (programCounter_wire[15:0]),
         .anode_out (seven_seg_anodes_out),
         .cathode_out (seven_seg_cathodes_out)
     );
     
-    // LEFT   -> SET HIGH BITS OF INSTRUCTION
-    // RIGHT  -> SET LOW BITS OF INSTRUCTION
-    // MID    -> WRITE INSTRUCTION
-    // TOP    -> SELECT DEBUG REGISTER
-    // BUTTOM -> CLOCK
     
     
     
+    Program_Incrementer programIncrementer (
+        .pc_in (programCounter_wire),
+        .pc_out (programCounterNext_wire)
+    );
+    
+    Program_Jump_Calculator programJumpCalculator (
+        .relJmp_in (instruction_wire[relativeJump_offset + relativeJump_width - 1 : relativeJump_offset]),
+        .pc_in (programCounter_wire),
+        .jmpAddress_in (dataA_wire),
+        .pc_out (programCounterJump_wire)
+    );
     
     Program_Counter programCounter (
-        .clk_in (main_clock),
+        .clk_in (clk50_wire),
         .jmpEnable_in (doJump_wire),
-        .relJmp_in (instruction_wire[relativeJump_offset + relativeJump_width - 1 : relativeJump_offset]),
-        .pc_jmp_in (dataA_wire),
+        .pc_next_in (programCounterNext_wire),
+        .pc_jmp_in (programCounterJump_wire),
         .pc_out (programCounter_wire)
     );
     
-    Instruction_Memory instructionMemory (
-        .address_in (programCounter_wire),
+    Random_Access_Memory ram (
+        .clk_in (clk50_wire),
+        .writeEnable_in (memWriteEnable_wire),
+        .dataAddress_in (dataA_wire),
+        .writeData_in (dataB_wire),
+        .instrAddress_in (programCounter_wire),
+        .data_out (memReadData_wire),
         .instruction_out (instruction_wire)
     );
     
@@ -151,10 +166,10 @@ module QIPU_Processor(
     wire [31:0] debugData_wire;
     
     Register_Bank registerBank (
-        .clk_in (main_clock),
+        .clk_in (clk50_wire),
         .regA_in (instruction_wire[regSrc1_offset + regSrc1_width - 1 : regSrc1_offset]),
         .regB_in (instruction_wire[regSrc2_offset + regSrc2_width - 1 : regSrc2_offset]),
-        .regW_in (instruction_wire[regDest_offset + regDest_width - 1 : regDest_offset]),
+        .regW_in (doJump_wire ? 4'b0100 : instruction_wire[regDest_offset + regDest_width - 1 : regDest_offset]),
         .writeData_in (regWriteData_wire),
         .writeEnable_in (regWriteEnable_wire),
         .dataA_out (regA_wire),
@@ -188,20 +203,12 @@ module QIPU_Processor(
         .is_neg_out (aluIsNeg_wire)
     );
     
-    Data_Memory dataMemory (
-        .clk_in (main_clock),
-        .address_in (dataA_wire),
-        .writeEnable_in (memWriteEnable_wire),
-        .writeData_in (dataB_wire),
-        .data_out (memReadData_wire)
-    );
-    
     Multiplexer resultMultiplexer (
         .select_in (resultSelect_wire),
         .a_in (aluResult_wire),
         .b_in (memReadData_wire),
         .c_in (immediate_wire),
-        .d_in (32'bz),
+        .d_in (programCounterJump_wire),
         .res_out (regWriteData_wire)
     );
 
