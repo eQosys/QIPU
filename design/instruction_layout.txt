@@ -12,9 +12,9 @@ registers:
     r5       1010 -> scratch register 6
     r6       1011 -> scratch register 7
     r7       1100 -> scratch register 8
-    r8       1101 -> scratch register 9
-    r9       1110 -> scratch register 10
-    r10      1111 -> scratch register 11
+    rinp     1101 -> scratch register 9
+    rssd     1110 -> scratch register 10
+    rled     1111 -> scratch register 11
 
 opcodes:
     // THREE ARGUMENT INSTRUCTIONS

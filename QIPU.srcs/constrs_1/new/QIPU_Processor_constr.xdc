@@ -13,20 +13,20 @@ set_property -dict {PACKAGE_PIN W5 IOSTANDARD LVCMOS33} [get_ports ext_clock]
 #create_clock -period 10.000 -name MAIN_CLOCK -waveform {0.000 5.000} [get_ports ext_clock]
 
 # 7-SEGMENT ANODES
-#set_property -dict {PACKAGE_PIN W4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anode_out[3]}]
-#set_property -dict {PACKAGE_PIN V4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anode_out[2]}]
-#set_property -dict {PACKAGE_PIN U4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anode_out[1]}]
-#set_property -dict {PACKAGE_PIN U2 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anode_out[0]}]
+set_property -dict {PACKAGE_PIN W4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[3]}]
+set_property -dict {PACKAGE_PIN V4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[2]}]
+set_property -dict {PACKAGE_PIN U4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[1]}]
+set_property -dict {PACKAGE_PIN U2 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[0]}]
 
 # 7-SEGMENT CATHODES
-#set_property -dict {PACKAGE_PIN V7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathode_out[7]}]
-#set_property -dict {PACKAGE_PIN W7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathode_out[6]}]
-#set_property -dict {PACKAGE_PIN W6 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathode_out[5]}]
-#set_property -dict {PACKAGE_PIN U8 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathode_out[4]}]
-#set_property -dict {PACKAGE_PIN V8 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathode_out[3]}]
-#set_property -dict {PACKAGE_PIN U5 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathode_out[2]}]
-#set_property -dict {PACKAGE_PIN V5 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathode_out[1]}]
-#set_property -dict {PACKAGE_PIN U7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathode_out[0]}]
+set_property -dict {PACKAGE_PIN V7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[7]}]
+set_property -dict {PACKAGE_PIN W7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[6]}]
+set_property -dict {PACKAGE_PIN W6 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[5]}]
+set_property -dict {PACKAGE_PIN U8 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[4]}]
+set_property -dict {PACKAGE_PIN V8 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[3]}]
+set_property -dict {PACKAGE_PIN U5 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[2]}]
+set_property -dict {PACKAGE_PIN V5 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[1]}]
+set_property -dict {PACKAGE_PIN U7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[0]}]
 
 # SLIDE SWITCHES
 set_property -dict {PACKAGE_PIN R2 IOSTANDARD LVCMOS33} [get_ports {slide_switches_in[15]}]
@@ -65,25 +65,8 @@ set_property -dict {PACKAGE_PIN E19 IOSTANDARD LVCMOS33} [get_ports {slide_leds_
 set_property -dict {PACKAGE_PIN U16 IOSTANDARD LVCMOS33} [get_ports {slide_leds_out[0]}]
 
 # DPAD BUTTONS
-#set_property -dict {PACKAGE_PIN U18 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[0]}]
-#set_property -dict {PACKAGE_PIN T18 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[1]}]
-#set_property -dict {PACKAGE_PIN T17 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[2]}]
-#set_property -dict {PACKAGE_PIN U17 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[3]}]
-#set_property -dict {PACKAGE_PIN W19 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[4]}]
-
-
-# 7-SEGMENT ANODES
-set_property -dict {PACKAGE_PIN W4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[3]}]
-set_property -dict {PACKAGE_PIN V4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[2]}]
-set_property -dict {PACKAGE_PIN U4 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[1]}]
-set_property -dict {PACKAGE_PIN U2 IOSTANDARD LVCMOS33} [get_ports {seven_seg_anodes_out[0]}]
-
-# 7-SEGMENT CATHODES
-set_property -dict {PACKAGE_PIN V7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[7]}]
-set_property -dict {PACKAGE_PIN W7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[6]}]
-set_property -dict {PACKAGE_PIN W6 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[5]}]
-set_property -dict {PACKAGE_PIN U8 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[4]}]
-set_property -dict {PACKAGE_PIN V8 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[3]}]
-set_property -dict {PACKAGE_PIN U5 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[2]}]
-set_property -dict {PACKAGE_PIN V5 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[1]}]
-set_property -dict {PACKAGE_PIN U7 IOSTANDARD LVCMOS33} [get_ports {seven_seg_cathodes_out[0]}]
+set_property -dict {PACKAGE_PIN U18 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[0]}]
+set_property -dict {PACKAGE_PIN T18 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[1]}]
+set_property -dict {PACKAGE_PIN T17 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[2]}]
+set_property -dict {PACKAGE_PIN U17 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[3]}]
+set_property -dict {PACKAGE_PIN W19 IOSTANDARD LVCMOS33} [get_ports {dpad_btns_in[4]}]

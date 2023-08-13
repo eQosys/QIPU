@@ -2,7 +2,7 @@
 
 module QIPU_Processor(
         input ext_clock,
-        //input [4:0] dpad_btns_in,
+        input [4:0] dpad_btns_in,
         input [15:0] slide_switches_in,
         output [15:0] slide_leds_out,
         output [3:0] seven_seg_anodes_out,
@@ -87,18 +87,6 @@ module QIPU_Processor(
     wire [1:0] immExtendMode_wire;
     
     
-    
-    
-    Seven_Segment_Display ssd (
-        .clk_in (clk100_wire),
-        .value_in (programCounter_wire[15:0]),
-        .anode_out (seven_seg_anodes_out),
-        .cathode_out (seven_seg_cathodes_out)
-    );
-    
-    
-    
-    
     Program_Incrementer programIncrementer (
         .pc_in (programCounter_wire),
         .pc_out (programCounterNext_wire)
@@ -163,8 +151,6 @@ module QIPU_Processor(
         .offset_out (offset_wire)
     );
     
-    wire [31:0] debugData_wire;
-    
     Register_Bank registerBank (
         .clk_in (clk50_wire),
         .regA_in (instruction_wire[regSrc1_offset + regSrc1_width - 1 : regSrc1_offset]),
@@ -172,13 +158,14 @@ module QIPU_Processor(
         .regW_in (doJump_wire ? 4'b0100 : instruction_wire[regDest_offset + regDest_width - 1 : regDest_offset]),
         .writeData_in (regWriteData_wire),
         .writeEnable_in (regWriteEnable_wire),
+        .dpadBtns_in (dpad_btns_in),
+        .slideSwitches_in (slide_switches_in),
         .dataA_out (regA_wire),
         .dataB_out (regB_wire),
-        .debugReg_in (slide_switches_in[3:0]),
-        .debugData_out (debugData_wire)
+        .slideLEDs_out (slide_leds_out),
+        .sevenSegAnodes_out (seven_seg_anodes_out),
+        .sevenSegCathodes_out (seven_seg_cathodes_out)
     );
-    
-    assign slide_leds_out = debugData_wire[15:0];
     
     Offset_Applicator offsetApplicatorA (
         .offsetEnable_in (offsetEnableA_wire),
