@@ -11,9 +11,6 @@ module Random_Access_Memory (
     );
     
     reg [31:0] memory[0:255];
-    initial begin
-        $readmemb("./bootloader.qsm.bin", memory);
-    end
     
     always @ (posedge clk_in) begin
         if (writeEnable_in) begin

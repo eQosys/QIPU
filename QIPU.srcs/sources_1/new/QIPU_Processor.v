@@ -16,7 +16,6 @@ module QIPU_Processor(
         .clk50_out (clk50_wire),
         .clk100_out (clk100_wire),
         .reset (0),
-        .locked (),
         .clk_in (ext_clock)
     );
     
@@ -64,6 +63,11 @@ module QIPU_Processor(
     wire [31:0] programCounterNext_wire;
     wire [31:0] programCounterJump_wire;
     wire doJump_wire;
+    wire switchToRAM_wire;
+    wire [31:0] instrBROM_wire;
+    wire [31:0] dataBROM_wire;
+    wire [31:0] instrRAM_wire;
+    wire [31:0] dataRAM_wire;
     wire [31:0] instruction_wire;
     wire [31:0] immediate_wire;
     wire [2:0] aluControl_wire;
@@ -85,6 +89,9 @@ module QIPU_Processor(
     wire [1:0] offsetLayout_wire;
     wire [1:0] resultSelect_wire;
     wire [1:0] immExtendMode_wire;
+    wire stall_wire;
+    
+    assign stall_wire = 0;
     
     
     Program_Incrementer programIncrementer (
@@ -101,10 +108,18 @@ module QIPU_Processor(
     
     Program_Counter programCounter (
         .clk_in (clk50_wire),
+        .stall_in (stall_wire),
         .jmpEnable_in (doJump_wire),
         .pc_next_in (programCounterNext_wire),
         .pc_jmp_in (programCounterJump_wire),
         .pc_out (programCounter_wire)
+    );
+    
+    Bootloader_ROM brom (
+        .dataAddress_in (dataA_wire),
+        .instrAddress_in (programCounter_wire),
+        .data_out (dataBROM_wire),
+        .instruction_out (instrBROM_wire)
     );
     
     Random_Access_Memory ram (
@@ -113,6 +128,17 @@ module QIPU_Processor(
         .dataAddress_in (dataA_wire),
         .writeData_in (dataB_wire),
         .instrAddress_in (programCounter_wire),
+        .data_out (dataRAM_wire),
+        .instruction_out (instrRAM_wire)
+    );
+    
+    Memory_Selector memSelect (
+        .clk_in (clk50_wire),
+        .switchToRAM_in (switchToRAM_wire),
+        .dataBROM_in (dataBROM_wire),
+        .instrBROM_in (instrBROM_wire),
+        .dataRAM_in (dataRAM_wire),
+        .instrRAM_in(instrRAM_wire),
         .data_out (memReadData_wire),
         .instruction_out (instruction_wire)
     );
@@ -132,7 +158,8 @@ module QIPU_Processor(
         .aluSrcASelect_out (aluSrcASelect_wire),
         .offsetLayout_out (offsetLayout_wire),
         .resultSelect_out (resultSelect_wire),
-        .immExtendMode_out (immExtendMode_wire)
+        .immExtendMode_out (immExtendMode_wire),
+        .switchToRAM_out (switchToRAM_wire)
     );
     
     Immediate_Extender immediateExtender (
@@ -153,6 +180,7 @@ module QIPU_Processor(
     
     Register_Bank registerBank (
         .clk_in (clk50_wire),
+        .stall_in (stall_wire),
         .regA_in (instruction_wire[regSrc1_offset + regSrc1_width - 1 : regSrc1_offset]),
         .regB_in (instruction_wire[regSrc2_offset + regSrc2_width - 1 : regSrc2_offset]),
         .regW_in (doJump_wire ? 4'b0100 : instruction_wire[regDest_offset + regDest_width - 1 : regDest_offset]),

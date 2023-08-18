@@ -2,6 +2,7 @@
 
 module Register_Bank(
         input clk_in,
+        input stall_in,
         input [3:0] regA_in,
         input [3:0] regB_in,
         input [3:0] regW_in,
@@ -42,18 +43,19 @@ module Register_Bank(
     assign dataB_out = bank[regB_in];
     
     always @ (posedge clk_in) begin
-        case (regW_in)
-            reg_rinp: begin
-                bank[reg_rinp] <= {11'b0, dpadBtns_in, slideSwitches_in};
-                end
-            reg_zero: begin
-                bank[reg_zero] <= 0;
-                end
-            default: begin
-                if (writeEnable_in == 1)
-                    bank[regW_in] <= writeData_in;
-                end
-        endcase
+        if (!stall_in)
+            case (regW_in)
+                reg_rinp: begin
+                    bank[reg_rinp] <= {11'b0, dpadBtns_in, slideSwitches_in};
+                    end
+                reg_zero: begin
+                    bank[reg_zero] <= 0;
+                    end
+                default: begin
+                    if (writeEnable_in == 1)
+                        bank[regW_in] <= writeData_in;
+                    end
+            endcase
     end
     
     // Output LEDs, register mapped
@@ -69,19 +71,19 @@ module Register_Bank(
         case (ssdRefreshCounter[1:0])
             2'b00: begin
                 sevenSegAnodes_out = 4'b0111;
-                sevenSegCathodes_out = bank[reg_rssd][7:0];
+                sevenSegCathodes_out = ~bank[reg_rssd][7:0];
                 end
             2'b01: begin
                 sevenSegAnodes_out = 4'b1011;
-                sevenSegCathodes_out = bank[reg_rssd][15:8];
+                sevenSegCathodes_out = ~bank[reg_rssd][15:8];
                 end
             2'b10: begin
                 sevenSegAnodes_out = 4'b1101;
-                sevenSegCathodes_out = bank[reg_rssd][23:16];
+                sevenSegCathodes_out = ~bank[reg_rssd][23:16];
                 end
             2'b11: begin
                 sevenSegAnodes_out = 4'b1110;
-                sevenSegCathodes_out = bank[reg_rssd][31:24];
+                sevenSegCathodes_out = ~bank[reg_rssd][31:24];
                 end
         endcase
     end

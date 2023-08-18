@@ -15,7 +15,8 @@ module Controller(
         output reg aluSrcASelect_out,
         output reg [1:0] offsetLayout_out,
         output reg [1:0] resultSelect_out,
-        output reg [1:0] immExtendMode_out
+        output reg [1:0] immExtendMode_out,
+        output reg switchToRAM_out
     );
     
     initial begin
@@ -29,6 +30,7 @@ module Controller(
         offsetLayout_out = 0;
         resultSelect_out = 0;
         immExtendMode_out = 0;
+        switchToRAM_out = 0;
     end
     
     localparam opcode_add = 5'b00000;
@@ -94,6 +96,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_normal;
                 resultSelect_out <= resultSelect_alu;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
             opcode_sub: begin // sub
                 aluControl_out <= aluControl_sub;
@@ -104,6 +107,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_normal;
                 resultSelect_out <= resultSelect_alu;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
             opcode_and: begin // and
                 aluControl_out <= aluControl_and;
@@ -114,6 +118,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_normal;
                 resultSelect_out <= resultSelect_alu;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
             opcode_or: begin // or
                 aluControl_out <= aluControl_or;
@@ -124,6 +129,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_normal;
                 resultSelect_out <= resultSelect_alu;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
             opcode_xor: begin // xor
                 aluControl_out <= aluControl_xor;
@@ -134,6 +140,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_normal;
                 resultSelect_out <= resultSelect_alu;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
             opcode_shl: begin // shl
                 aluControl_out <= aluControl_shl;
@@ -144,6 +151,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_normal;
                 resultSelect_out <= resultSelect_alu;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
             opcode_shr: begin // shr
                 aluControl_out <= aluControl_shr;
@@ -154,6 +162,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_normal;
                 resultSelect_out <= resultSelect_alu;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
             opcode_jxx: begin // jxx
                 aluControl_out <= aluControl_add;
@@ -172,6 +181,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_short;
                 resultSelect_out <= resultSelect_jmpAddr;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
             opcode_st: begin // st
                 aluControl_out <= aluControl_unused;
@@ -182,6 +192,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_longSplit;
                 resultSelect_out <= resultSelect_alu;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
             opcode_ld: begin // ld
                 aluControl_out <= aluControl_unused;
@@ -192,6 +203,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_longContinuous;
                 resultSelect_out <= resultSelect_mem;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
             opcode_lui: begin // lui
                 aluControl_out <= aluControl_unused;
@@ -202,6 +214,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_unused;
                 resultSelect_out <= resultSelect_imm;
                 immExtendMode_out <= immExtendMode_upper;
+                switchToRAM_out <= 0;
                 end
             opcode_lli: begin // lli
                 aluControl_out <= aluControl_unused;
@@ -212,6 +225,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_unused;
                 resultSelect_out <= resultSelect_imm;
                 immExtendMode_out <= immExtendMode_lower;
+                switchToRAM_out <= 0;
                 end
             opcode_li: begin // li
                 aluControl_out <= aluControl_unused;
@@ -222,16 +236,18 @@ module Controller(
                 offsetLayout_out <= offsetLayout_unused;
                 resultSelect_out <= resultSelect_imm;
                 immExtendMode_out <= immExtendMode_full;
+                switchToRAM_out <= 0;
                 end
             opcode_int: begin // int
                 aluControl_out <= aluControl_unused;
                 doJump_out <= 0;
-                regWriteEnable_out <= 1'bz;
-                memWriteEnable_out <= 1'bz;
+                regWriteEnable_out <= 0;
+                memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_unused;
                 offsetLayout_out <= offsetLayout_unused;
                 resultSelect_out <= resultSelect_unused;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 1;
                 end
             default: begin
                 aluControl_out <= aluControl_unused;
@@ -242,6 +258,7 @@ module Controller(
                 offsetLayout_out <= offsetLayout_unused;
                 resultSelect_out <= resultSelect_unused;
                 immExtendMode_out <= immExtendMode_unused;
+                switchToRAM_out <= 0;
                 end
         endcase
         
