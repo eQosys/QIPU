@@ -2,6 +2,7 @@
 
 module Controller(
         input [4:0] opcode_in,
+        input [22:0] intCode_in,
         input [3:0] jmpCond_in,
         input offsetSelect_in,
         input isZero_in,
@@ -84,6 +85,8 @@ module Controller(
     localparam jmpCond_lessZero     = 4'b0011;
     localparam jmpCond_greaterEqual = 4'b0100;
     localparam jmpCond_lessEqual    = 4'b0101;
+    
+    localparam intCode_exitBootloader = 4'b000000;
     
     always @ (*) begin
         case (opcode_in)
@@ -184,11 +187,11 @@ module Controller(
                 switchToRAM_out <= 0;
                 end
             opcode_st: begin // st
-                aluControl_out <= aluControl_unused;
+                aluControl_out <= aluControl_add;
                 doJump_out <= 0;
                 regWriteEnable_out <= 0;
                 memWriteEnable_out <= 1;
-                aluSrcASelect_out <= aluSrcASelect_unused;
+                aluSrcASelect_out <= aluSrcASelect_zero;
                 offsetLayout_out <= offsetLayout_longSplit;
                 resultSelect_out <= resultSelect_alu;
                 immExtendMode_out <= immExtendMode_unused;
@@ -248,6 +251,31 @@ module Controller(
                 resultSelect_out <= resultSelect_unused;
                 immExtendMode_out <= immExtendMode_unused;
                 switchToRAM_out <= 1;
+                
+                case (intCode_in)
+                    intCode_exitBootloader: begin // exit bootloader
+                        aluControl_out <= aluControl_and;
+                        doJump_out <= 1;
+                        regWriteEnable_out <= 0;
+                        memWriteEnable_out <= 0;
+                        aluSrcASelect_out <= aluSrcASelect_zero;
+                        offsetLayout_out <= offsetLayout_short;
+                        resultSelect_out <= resultSelect_jmpAddr;
+                        immExtendMode_out <= immExtendMode_unused;
+                        switchToRAM_out <= 1;
+                        end
+                    default: begin
+                        aluControl_out <= aluControl_unused;
+                        doJump_out <= 0;
+                        regWriteEnable_out <= 0;
+                        memWriteEnable_out <= 0;
+                        aluSrcASelect_out <= aluSrcASelect_unused;
+                        offsetLayout_out <= offsetLayout_unused;
+                        resultSelect_out <= resultSelect_unused;
+                        immExtendMode_out <= immExtendMode_unused;
+                        switchToRAM_out <= 0;
+                        end
+                endcase
                 end
             default: begin
                 aluControl_out <= aluControl_unused;

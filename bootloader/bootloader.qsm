@@ -1,39 +1,5 @@
 .entry boot
 
 ::boot
-add rled zero zero(1)
-add r2 zero zero
 
-jrz zero(rel initSlowdown) zero
-
-::loop
-sub r1 r1 zero(1)
-jrnz zero(rel loop) r1
-
-jrz zero(rel scrollLeft) r2
-
-::scrollRight
-shr rled rled zero(1)
-shr r3 rled zero(1)
-jrnz zero(rel initSlowdown) r3
-add r2 zero zero(0)
-jrz zero(rel initSlowdown) zero
-
-::scrollLeft
-shl rled rled zero(1)
-shr r3 rled zero(15)
-jrz zero(rel initSlowdown) r3
-add r2 zero zero(1)
-jrz zero(rel initSlowdown) zero
-
-::initSlowdown
-add r1 zero zero(8191)
-add r1 r1 r1
-add r1 r1 r1
-add r1 r1 r1
-add r1 r1 r1
-add r1 r1 r1
-add r1 r1 r1
-add r1 r1 r1
-add r1 r1 r1
-jrz zero(rel loop) zero
+int 0

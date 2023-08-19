@@ -126,7 +126,7 @@ module QIPU_Processor(
         .clk_in (clk50_wire),
         .writeEnable_in (memWriteEnable_wire),
         .dataAddress_in (dataA_wire),
-        .writeData_in (dataB_wire),
+        .writeData_in (regWriteData_wire),
         .instrAddress_in (programCounter_wire),
         .data_out (dataRAM_wire),
         .instruction_out (instrRAM_wire)
