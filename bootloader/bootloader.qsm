@@ -2,4 +2,28 @@
 
 ::boot
 
-int 0
+~~ Check if bootloader lives in RAM or BROM
+jrz zero(rel copyBootloaderToRam) rinp
+
+::mainProgram
+add rssd zero zero
+
+add rled zero rinp
+
+jrz zero(rel mainProgram) zero
+
+::copyBootloaderToRam
+add rssd zero zero(-1)
+add r0 zero zero
+::copyLoop
+ld r1 r0
+
+~~ Show current instruction
+add rled zero r1
+
+st r0 r1
+add r0 r0 zero(4)
+sub r2 r0 zero(1024)
+jrnz zero(rel copyLoop) r2
+
+int r0 0

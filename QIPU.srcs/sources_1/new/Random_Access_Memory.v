@@ -14,7 +14,7 @@ module Random_Access_Memory (
     
     always @ (posedge clk_in) begin
         if (writeEnable_in) begin
-            memory[dataAddress_in] <= writeData_in;
+            memory[dataAddress_in / 4] <= writeData_in;
         end
     end
     

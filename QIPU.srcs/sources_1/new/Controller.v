@@ -4,11 +4,13 @@ module Controller(
         input [4:0] opcode_in,
         input [22:0] intCode_in,
         input [3:0] jmpCond_in,
+        input isRelJmp_in,
         input offsetSelect_in,
         input isZero_in,
         input isNeg_in,
         output reg [2:0] aluControl_out,
         output reg doJump_out,
+        output reg isRelJmp_out,
         output reg regWriteEnable_out,
         output reg memWriteEnable_out,
         output reg offsetEnableA_out,
@@ -93,6 +95,7 @@ module Controller(
             opcode_add: begin // add
                 aluControl_out <= aluControl_add;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_reg;
@@ -104,6 +107,7 @@ module Controller(
             opcode_sub: begin // sub
                 aluControl_out <= aluControl_sub;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_reg;
@@ -115,6 +119,7 @@ module Controller(
             opcode_and: begin // and
                 aluControl_out <= aluControl_and;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_reg;
@@ -126,6 +131,7 @@ module Controller(
             opcode_or: begin // or
                 aluControl_out <= aluControl_or;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_reg;
@@ -137,6 +143,7 @@ module Controller(
             opcode_xor: begin // xor
                 aluControl_out <= aluControl_xor;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_reg;
@@ -148,6 +155,7 @@ module Controller(
             opcode_shl: begin // shl
                 aluControl_out <= aluControl_shl;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_reg;
@@ -159,6 +167,7 @@ module Controller(
             opcode_shr: begin // shr
                 aluControl_out <= aluControl_shr;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_reg;
@@ -178,6 +187,7 @@ module Controller(
                     jmpCond_lessEqual:    doJump_out <= isNeg_in | isZero_in; // less than or equal to zero
                     default: doJump_out <= 0;
                 endcase
+                isRelJmp_out <= isRelJmp_in;
                 regWriteEnable_out <= doJump_out;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_zero;
@@ -189,6 +199,7 @@ module Controller(
             opcode_st: begin // st
                 aluControl_out <= aluControl_add;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 0;
                 memWriteEnable_out <= 1;
                 aluSrcASelect_out <= aluSrcASelect_zero;
@@ -200,6 +211,7 @@ module Controller(
             opcode_ld: begin // ld
                 aluControl_out <= aluControl_unused;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_unused;
@@ -211,6 +223,7 @@ module Controller(
             opcode_lui: begin // lui
                 aluControl_out <= aluControl_unused;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_unused;
@@ -222,6 +235,7 @@ module Controller(
             opcode_lli: begin // lli
                 aluControl_out <= aluControl_unused;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_unused;
@@ -233,6 +247,7 @@ module Controller(
             opcode_li: begin // li
                 aluControl_out <= aluControl_unused;
                 doJump_out <= 0;
+                isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
                 aluSrcASelect_out <= aluSrcASelect_unused;
@@ -241,21 +256,12 @@ module Controller(
                 immExtendMode_out <= immExtendMode_full;
                 switchToRAM_out <= 0;
                 end
-            opcode_int: begin // int
-                aluControl_out <= aluControl_unused;
-                doJump_out <= 0;
-                regWriteEnable_out <= 0;
-                memWriteEnable_out <= 0;
-                aluSrcASelect_out <= aluSrcASelect_unused;
-                offsetLayout_out <= offsetLayout_unused;
-                resultSelect_out <= resultSelect_unused;
-                immExtendMode_out <= immExtendMode_unused;
-                switchToRAM_out <= 1;
-                
+            opcode_int: begin // int                
                 case (intCode_in)
                     intCode_exitBootloader: begin // exit bootloader
                         aluControl_out <= aluControl_and;
                         doJump_out <= 1;
+                        isRelJmp_out <= 0;
                         regWriteEnable_out <= 0;
                         memWriteEnable_out <= 0;
                         aluSrcASelect_out <= aluSrcASelect_zero;
@@ -267,6 +273,7 @@ module Controller(
                     default: begin
                         aluControl_out <= aluControl_unused;
                         doJump_out <= 0;
+                        isRelJmp_out <= 0;
                         regWriteEnable_out <= 0;
                         memWriteEnable_out <= 0;
                         aluSrcASelect_out <= aluSrcASelect_unused;
@@ -280,6 +287,7 @@ module Controller(
             default: begin
                 aluControl_out <= aluControl_unused;
                 doJump_out <= 1'bz;
+                isRelJmp_out <= 1'bz;
                 regWriteEnable_out <= 1'bz;
                 memWriteEnable_out <= 1'bz;
                 aluSrcASelect_out <= aluSrcASelect_unused;

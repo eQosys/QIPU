@@ -7,19 +7,19 @@ module Memory_Selector(
         input [31:0] instrBROM_in,
         input [31:0] dataRAM_in,
         input [31:0] instrRAM_in,
+        output reg isRAMSelected_out,
         output [31:0] data_out,
         output [31:0] instruction_out
     );
     
-    reg memSelect;
-    initial memSelect = 0;
+    initial isRAMSelected_out = 0;
     
     always @ (posedge clk_in) begin
         if (switchToRAM_in)
-            memSelect = 1;
+            isRAMSelected_out = 1;
     end
     
-    assign data_out = memSelect ? dataRAM_in : dataBROM_in;
-    assign instruction_out = memSelect ? instrRAM_in : instrBROM_in;
+    assign data_out = isRAMSelected_out ? dataRAM_in : dataBROM_in;
+    assign instruction_out = isRAMSelected_out ? instrRAM_in : instrBROM_in;
 
 endmodule

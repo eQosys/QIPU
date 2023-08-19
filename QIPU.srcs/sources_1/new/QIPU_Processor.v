@@ -63,7 +63,9 @@ module QIPU_Processor(
     wire [31:0] programCounterNext_wire;
     wire [31:0] programCounterJump_wire;
     wire doJump_wire;
+    wire isRelJmp_wire;
     wire switchToRAM_wire;
+    wire isRAMSelected_wire;
     wire [31:0] instrBROM_wire;
     wire [31:0] dataBROM_wire;
     wire [31:0] instrRAM_wire;
@@ -100,7 +102,7 @@ module QIPU_Processor(
     );
     
     Program_Jump_Calculator programJumpCalculator (
-        .relJmp_in (instruction_wire[relativeJump_offset + relativeJump_width - 1 : relativeJump_offset]),
+        .relJmp_in (isRelJmp_wire),
         .pc_in (programCounter_wire),
         .jmpAddress_in (dataA_wire),
         .pc_out (programCounterJump_wire)
@@ -138,19 +140,23 @@ module QIPU_Processor(
         .dataBROM_in (dataBROM_wire),
         .instrBROM_in (instrBROM_wire),
         .dataRAM_in (dataRAM_wire),
-        .instrRAM_in(instrRAM_wire),
+        .instrRAM_in (instrRAM_wire),
+        .isRAMSelected_out (isRAMSelected_wire),
         .data_out (memReadData_wire),
         .instruction_out (instruction_wire)
     );
     
     Controller controller (
         .opcode_in (instruction_wire[opcode_offset + opcode_width - 1 : opcode_offset]),
+        .intCode_in (instruction_wire[immediate_offset + immediate_width - 1 : immediate_offset]),
         .jmpCond_in (instruction_wire[condition_offset + condition_width - 1 : condition_offset]),
+        .isRelJmp_in (instruction_wire[relativeJump_offset + relativeJump_width - 1 : relativeJump_offset]),
         .offsetSelect_in (instruction_wire[offsetSelect_offset + offsetSelect_width - 1 : offsetSelect_offset]),
         .isZero_in (aluIsZero_wire),
         .isNeg_in (aluIsNeg_wire),
         .aluControl_out (aluControl_wire),
         .doJump_out (doJump_wire),
+        .isRelJmp_out (isRelJmp_wire),
         .regWriteEnable_out (regWriteEnable_wire),
         .memWriteEnable_out (memWriteEnable_wire),
         .offsetEnableA_out (offsetEnableA_wire),
@@ -186,6 +192,7 @@ module QIPU_Processor(
         .regW_in (doJump_wire ? 4'b0100 : instruction_wire[regDest_offset + regDest_width - 1 : regDest_offset]),
         .writeData_in (regWriteData_wire),
         .writeEnable_in (regWriteEnable_wire),
+        .isRAMSelected_in (isRAMSelected_wire),
         .dpadBtns_in (dpad_btns_in),
         .slideSwitches_in (slide_switches_in),
         .dataA_out (regA_wire),

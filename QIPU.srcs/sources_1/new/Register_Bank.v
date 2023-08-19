@@ -8,6 +8,7 @@ module Register_Bank(
         input [3:0] regW_in,
         input [31:0] writeData_in,
         input writeEnable_in,
+        input isRAMSelected_in,
         input [4:0] dpadBtns_in,
         input [15:0] slideSwitches_in,
         output [31:0] dataA_out,
@@ -44,9 +45,10 @@ module Register_Bank(
     
     always @ (posedge clk_in) begin
         if (!stall_in)
+            bank[reg_rinp] <= {10'b0, isRAMSelected_in, dpadBtns_in, slideSwitches_in};
+            
             case (regW_in)
                 reg_rinp: begin
-                    bank[reg_rinp] <= {11'b0, dpadBtns_in, slideSwitches_in};
                     end
                 reg_zero: begin
                     bank[reg_zero] <= 0;
