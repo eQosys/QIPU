@@ -6,20 +6,20 @@
 jrz zero(rel copyBootloaderToRam) rinp
 
 ::mainProgram
-add rssd zero zero
+mov rssd zero
 
-add rled zero rinp
+mov rled rinp
 
-jrz zero(rel mainProgram) zero
+jpr zero(rel mainProgram)
 
 ::copyBootloaderToRam
-add rssd zero zero(-1)
-add r0 zero zero
+mov rssd zero(-1)
+mov r0 zero
 ::copyLoop
 ld r1 r0
 
 ~~ Show current instruction
-add rled zero r1
+mov rled r1
 
 st r0 r1
 add r0 r0 zero(4)

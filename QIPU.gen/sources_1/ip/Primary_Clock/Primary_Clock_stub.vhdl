@@ -2,7 +2,7 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
--- Date        : Sat Aug 19 15:46:42 2023
+-- Date        : Sun Aug 20 00:32:19 2023
 -- Host        : TexPad running 64-bit Arch Linux
 -- Command     : write_vhdl -force -mode synth_stub
 --               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Primary_Clock/Primary_Clock_stub.vhdl
