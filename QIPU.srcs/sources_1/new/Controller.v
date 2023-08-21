@@ -226,7 +226,7 @@ module Controller(
                 isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
-                aluSrcASelect_out <= aluSrcASelect_unused;
+                aluSrcASelect_out <= aluSrcASelect_reg;
                 offsetLayout_out <= offsetLayout_unused;
                 resultSelect_out <= resultSelect_imm;
                 immExtendMode_out <= immExtendMode_upper;
@@ -238,7 +238,7 @@ module Controller(
                 isRelJmp_out <= 0;
                 regWriteEnable_out <= 1;
                 memWriteEnable_out <= 0;
-                aluSrcASelect_out <= aluSrcASelect_unused;
+                aluSrcASelect_out <= aluSrcASelect_reg;
                 offsetLayout_out <= offsetLayout_unused;
                 resultSelect_out <= resultSelect_imm;
                 immExtendMode_out <= immExtendMode_lower;

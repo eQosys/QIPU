@@ -3,7 +3,10 @@
 ::boot
 
 ~~ Check if bootloader lives in RAM or BROM
-jrz zero(rel copyBootloaderToRam) rinp
+mov r0 rinp
+shr r0 r0 zero(21)
+and r0 r0 zero(1)
+jrz zero(rel copyBootloaderToRam) r0
 
 ::mainProgram
 ~~ show 'ram' message on 7-segment display
@@ -40,9 +43,10 @@ ld r1 r0
 mov rled r1
 st r0 r1
 
-li r0 0b01111111111111111111111
-dec r0 r0
-jrnz zero(-4) r0
+lui r1 0b0000000000000001
+lli r1 0b11111111111111111111111111111111
+dec r1 r1
+jrnz zero(-4) r1
 
 add r0 r0 zero(4)
 sub r2 r0 zero(bootloaderSize)

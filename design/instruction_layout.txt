@@ -98,8 +98,8 @@ instruction layouts (32 bits):
 |rj|                offset                |    rs     |  rjaddr   |or|   cond    |    opcode    |   // CONDITIONAL BRANCH INSTRUCTION
 |                       offset                        |   raddr   |os|    rd     |    opcode    |   // MEMORY READ INSTRUCTION
 |                  offset                 |    rs     |   raddr   |os|  offset   |    opcode    |   // MEMORY WRITE INSTRUCTION
-|                                imm                                 |    rd     |    opcode    |   // IMMEDIATE INSTRUCTIONS
-
+|                                imm                                 |    rd     |    opcode    |   // FULL IMMEDIATE INSTRUCTION
+|                      imm                      |.....|    rs1    |..|    rd     |    opcode    |   // PARTIAL IMMEDIATE INSTRUCTION
 
 EXAMPLE PROGRAM:
 00000000 00000001 01010100 10100100    // SET THE COUNTER TO 0

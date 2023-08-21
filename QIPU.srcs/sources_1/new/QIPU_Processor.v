@@ -170,6 +170,7 @@ module QIPU_Processor(
     
     Immediate_Extender immediateExtender (
         .extendMode_in (immExtendMode_wire),
+        .regA_in (regA_wire),
         .imm_in (instruction_wire[immediate_offset + immediate_width - 1 : immediate_offset]),
         .imm_out (immediate_wire)
     );
