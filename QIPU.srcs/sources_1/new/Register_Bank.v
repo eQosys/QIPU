@@ -64,28 +64,28 @@ module Register_Bank(
     assign slideLEDs_out = bank[reg_rled][15:0];
     
     // Seven segment display, register mapped
-    reg [1:0] ssdRefreshCounter;
+    reg [17:0] ssdRefreshCounter;
     always @ (posedge clk_in) begin
         ssdRefreshCounter <= ssdRefreshCounter + 1;
     end
     
     always @ (*) begin
-        case (ssdRefreshCounter[1:0])
+        case (ssdRefreshCounter[17:16])
             2'b00: begin
                 sevenSegAnodes_out = 4'b0111;
-                sevenSegCathodes_out = ~bank[reg_rssd][7:0];
+                sevenSegCathodes_out = ~bank[reg_rssd][31:24];
                 end
             2'b01: begin
                 sevenSegAnodes_out = 4'b1011;
-                sevenSegCathodes_out = ~bank[reg_rssd][15:8];
+                sevenSegCathodes_out = ~bank[reg_rssd][23:16];
                 end
             2'b10: begin
                 sevenSegAnodes_out = 4'b1101;
-                sevenSegCathodes_out = ~bank[reg_rssd][23:16];
+                sevenSegCathodes_out = ~bank[reg_rssd][15:8];
                 end
             2'b11: begin
                 sevenSegAnodes_out = 4'b1110;
-                sevenSegCathodes_out = ~bank[reg_rssd][31:24];
+                sevenSegCathodes_out = ~bank[reg_rssd][7:0];
                 end
         endcase
     end

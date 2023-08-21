@@ -6,24 +6,49 @@
 jrz zero(rel copyBootloaderToRam) rinp
 
 ::mainProgram
-mov rssd zero
+~~ show 'ram' message on 7-segment display
+mov rssd zero(0b00000101)
+shl rssd rssd zero(8)
+add rssd rssd zero(0b01110111)
+shl rssd rssd zero(8)
+add rssd rssd zero(0b01010101)
+shl rssd rssd zero(8)
 
-mov rled rinp
+li r0 0b1111111111111111
 
-jpr zero(rel mainProgram)
+::mainLoop
+mov r1 rinp
+and r1 r1 r0
+mov rled r1
+
+jpr zero(rel mainLoop)
 
 ::copyBootloaderToRam
-mov rssd zero(-1)
+~~ show 'boot' message on 7-segment display
+mov rssd zero(0b00011111)
+shl rssd rssd zero(8)
+add rssd rssd zero(0b00011101)
+shl rssd rssd zero(8)
+add rssd rssd zero(0b00011101)
+shl rssd rssd zero(8)
+add rssd rssd zero(0b00001111)
+
 mov r0 zero
 ::copyLoop
 ld r1 r0
-
 ~~ Show current instruction
 mov rled r1
-
 st r0 r1
+
+li r0 0b01111111111111111111111
+dec r0 r0
+jrnz zero(-4) r0
+
 add r0 r0 zero(4)
-sub r2 r0 zero(1024)
+sub r2 r0 zero(bootloaderSize)
+
 jrnz zero(rel copyLoop) r2
 
 int r0 0
+
+::bootloaderSize
