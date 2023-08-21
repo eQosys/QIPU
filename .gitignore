@@ -1,3 +1,4 @@
 QIPU.cache/
 QIPU.runs/
 QIPU.sim/
+*.bin
