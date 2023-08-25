@@ -16,10 +16,9 @@ lli rssd 0b0101010100000000 ~~ sts "m "
 li r0 0b1111111111111111
 
 ::mainLoop
-mov r1 rinp
-and r1 r1 r0
-mov rled r1
-
+    mov r1 rinp
+    and r1 r1 r0
+    mov rled r1
 jpr zero(rel mainLoop)
 
 ::copyBootloaderToRam
@@ -29,19 +28,17 @@ lli rssd 0b0001110100001111 ~~ sts "ot"
 
 mov r0 zero
 ::copyLoop
-ld r1 r0
-~~ Show current instruction
-mov rled r1
-st r0 r1
+    ld rled r0
+    ~~ Show current instruction
+    st r0 rled
 
-lui r1 0b0000000000000001
-lli r1 0b11111111111111111111111111111111
-dec r1 r1
-jrnz zero(-4) r1
+    lui r1 0b0000000000000001
+    lli r1 0b11111111111111111111111111111111
+    dec r1 r1
+    jrnz zero(-4) r1
 
-add r0 r0 zero(4)
-sub r2 r0 zero(bootloaderSize)
-
+    add r0 r0 zero(4)
+    sub r2 r0 zero(bootloaderSize)
 jrnz zero(rel copyLoop) r2
 
 int r0 0
