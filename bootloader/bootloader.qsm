@@ -10,8 +10,8 @@ jrz zero(rel copyBootloaderToRam) r0
 
 ::mainProgram
 ~~ show 'ram' message on 7-segment display
-lui rssd 0b0000010101110111
-lli rssd 0b0101010100000000
+lui rssd 0b0000010101110111 ~~ sts "ra"
+lli rssd 0b0101010100000000 ~~ sts "m "
 
 li r0 0b1111111111111111
 
@@ -24,8 +24,8 @@ jpr zero(rel mainLoop)
 
 ::copyBootloaderToRam
 ~~ show 'boot' message on 7-segment display
-lui rssd 0b0001111100011101
-lli rssd 0b0001110100001111
+lui rssd 0b0001111100011101 ~~ sts "bo"
+lli rssd 0b0001110100001111 ~~ sts "ot"
 
 mov r0 zero
 ::copyLoop
