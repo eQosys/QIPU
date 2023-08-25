@@ -86,11 +86,20 @@ instruction layouts (32 bits):
     rs          4 bits
     offset     14 bits
 
-    // IMMEDIATE INSTRUCTIONS
+    // FULL IMMEDIATE INSTRUCTION
         // ONE DESTINATION, ONE IMMEDIATE
     opcode      5 bits
     rd          4 bits
     imm        23 bits
+
+    // PARTIAL IMMEDIATE INSTRUCTION
+        // ONE DESTINATION, ONE SOURCE, ONE IMMEDIATE
+    opcode      5 bits
+    rd          4 bits
+    unused.     1 bit
+    rs          4 bits
+    unused      2 bits
+    imm        16 bits
 
 |31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0|
 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -99,7 +108,7 @@ instruction layouts (32 bits):
 |                       offset                        |   raddr   |os|    rd     |    opcode    |   // MEMORY READ INSTRUCTION
 |                  offset                 |    rs     |   raddr   |os|  offset   |    opcode    |   // MEMORY WRITE INSTRUCTION
 |                                imm                                 |    rd     |    opcode    |   // FULL IMMEDIATE INSTRUCTION
-|                      imm                      |.....|    rs1    |..|    rd     |    opcode    |   // PARTIAL IMMEDIATE INSTRUCTION
+|                      imm                      |.....|    rs     |..|    rd     |    opcode    |   // PARTIAL IMMEDIATE INSTRUCTION
 
 EXAMPLE PROGRAM:
 00000000 00000001 01010100 10100100    // SET THE COUNTER TO 0
