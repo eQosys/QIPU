@@ -2,10 +2,10 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
--- Date        : Mon Aug 21 20:12:11 2023
--- Host        : TecArch running 64-bit Arch Linux
--- Command     : write_vhdl -force -mode funcsim
---               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Primary_Clock/Primary_Clock_sim_netlist.vhdl
+-- Date        : Sun Aug 20 00:32:18 2023
+-- Host        : TexPad running 64-bit Arch Linux
+-- Command     : write_vhdl -force -mode funcsim -rename_top Primary_Clock -prefix
+--               Primary_Clock_ Primary_Clock_sim_netlist.vhdl
 -- Design      : Primary_Clock
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -15,16 +15,16 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity Primary_Clock_clk_wiz is
+entity Primary_Clock_Primary_Clock_clk_wiz is
   port (
     clk50_out : out STD_LOGIC;
     clk100_out : out STD_LOGIC;
     reset : in STD_LOGIC;
     clk_in : in STD_LOGIC
   );
-end Primary_Clock_clk_wiz;
+end Primary_Clock_Primary_Clock_clk_wiz;
 
-architecture STRUCTURE of Primary_Clock_clk_wiz is
+architecture STRUCTURE of Primary_Clock_Primary_Clock_clk_wiz is
   signal clk100_out_Primary_Clock : STD_LOGIC;
   signal clk100_out_Primary_Clock_en_clk : STD_LOGIC;
   signal clk50_out_Primary_Clock : STD_LOGIC;
@@ -450,7 +450,7 @@ end Primary_Clock;
 
 architecture STRUCTURE of Primary_Clock is
 begin
-inst: entity work.Primary_Clock_clk_wiz
+inst: entity work.Primary_Clock_Primary_Clock_clk_wiz
      port map (
       clk100_out => clk100_out,
       clk50_out => clk50_out,

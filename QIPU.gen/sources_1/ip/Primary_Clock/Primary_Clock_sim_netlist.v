@@ -2,10 +2,10 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
-// Date        : Mon Aug 21 20:12:11 2023
-// Host        : TecArch running 64-bit Arch Linux
-// Command     : write_verilog -force -mode funcsim
-//               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Primary_Clock/Primary_Clock_sim_netlist.v
+// Date        : Sun Aug 20 00:32:18 2023
+// Host        : TexPad running 64-bit Arch Linux
+// Command     : write_verilog -force -mode funcsim -rename_top Primary_Clock -prefix
+//               Primary_Clock_ Primary_Clock_sim_netlist.v
 // Design      : Primary_Clock
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -29,14 +29,14 @@ module Primary_Clock
   (* IBUF_LOW_PWR *) wire clk_in;
   wire reset;
 
-  Primary_Clock_clk_wiz inst
+  Primary_Clock_Primary_Clock_clk_wiz inst
        (.clk100_out(clk100_out),
         .clk50_out(clk50_out),
         .clk_in(clk_in),
         .reset(reset));
 endmodule
 
-module Primary_Clock_clk_wiz
+module Primary_Clock_Primary_Clock_clk_wiz
    (clk50_out,
     clk100_out,
     reset,

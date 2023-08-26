@@ -2,10 +2,10 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
-// Date        : Mon Aug 21 20:12:11 2023
-// Host        : TecArch running 64-bit Arch Linux
-// Command     : write_verilog -force -mode synth_stub
-//               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Primary_Clock/Primary_Clock_stub.v
+// Date        : Sun Aug 20 00:32:18 2023
+// Host        : TexPad running 64-bit Arch Linux
+// Command     : write_verilog -force -mode synth_stub -rename_top Primary_Clock -prefix
+//               Primary_Clock_ Primary_Clock_stub.v
 // Design      : Primary_Clock
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7a35tcpg236-1
