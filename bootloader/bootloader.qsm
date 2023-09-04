@@ -5,8 +5,7 @@
 ~~ Check if bootloader lives in RAM or BROM
 mov r0 rinp
 shr r0 r0 zero(21)
-and r0 r0 zero(1)
-jrz zero(rel copyBootloaderToRam) r0
+jrz zero(rel copyBootloaderToRam) r0(-1)
 
 ::mainProgram
 ~~ show 'ram' message on 7-segment display
@@ -36,13 +35,7 @@ mov r0 zero
     ld rled r0
     st r0 rled
 
-    ~~ Wait 2 ** 18 cycles (to show lower 16 bits of copied instruction on the leds)
-    lui r1 0b0000000000000011
-    lli r1 0b1111111111111111
-    dec r1 r1
-    jrnz zero(-4) r1
-
-    ~~ Increment instruction pointer
+    ~~ Increment memory pointer
     add r0 r0 zero(4)
     sub r2 r0 zero(bootloaderSize)
 jrnz zero(rel copyLoop) r2
