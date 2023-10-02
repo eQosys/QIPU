@@ -18,10 +18,8 @@ li r0 0b1111111111111111
 ::mainLoop
     ~~ Read input
     mov r1 rinp
-    ~~ Mask input
-    and r1 r1 r0
-    ~~ Write input to leds
-    mov rled r1
+    ~~ Mask input and write result to leds
+    and rled r1 r0
 jpr zero(rel mainLoop)
 
 ::copyBootloaderToRam
