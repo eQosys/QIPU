@@ -4,13 +4,13 @@
 
 ~~ Check if bootloader lives in RAM or BROM
 mov r0 rinp
-shr r0 r0 zero(21)
-jrz zero(rel copyBootloaderToRam) r0(-1)
+shr r0 21
+jrz rel:copyBootloaderToRam r0(-1)
 
 ::mainProgram
 ~~ show 'ram' message on 7-segment display
-lui rssd sts "ra"
-lli rssd sts "m "
+lui rssd sts:"ra"
+lli rssd sts:"m "
 
 ~~ Load input mask into r0
 li r0 0b1111111111111111
@@ -20,23 +20,23 @@ li r0 0b1111111111111111
     mov r1 rinp
     ~~ Mask input and write result to leds
     and rled r1 r0
-jpr zero(rel mainLoop)
+jpr rel:mainLoop
 
 ::copyBootloaderToRam
 ~~ show 'boot' message on 7-segment display
-lui rssd sts "bo"
-lli rssd sts "ot"
+lui rssd sts:"bo"
+lli rssd sts:"ot"
 
-mov r0 zero
+mov r0 0
 ::copyLoop
     ~~ Copy instruction from BROM to RAM
     ld rled r0
     st r0 rled
 
     ~~ Increment memory pointer
-    add r0 r0 zero(4)
-    sub r2 r0 zero(bootloaderSize)
-jrnz zero(rel copyLoop) r2
+    add r0 4
+    sub r2 r0 bootloaderSize
+jrnz rel:copyLoop r2
 
 int 0
 
