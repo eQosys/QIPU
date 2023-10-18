@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module Memory_Selector(
+module RAM_Selector(
         input clk_in,
         input switchToRAM_in,
         input [31:0] dataBROM_in,

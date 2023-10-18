@@ -134,7 +134,7 @@ module QIPU_Processor(
         .instruction_out (instrRAM_wire)
     );
     
-    Memory_Selector memSelect (
+    RAM_Selector ramSelect (
         .clk_in (clk50_wire),
         .switchToRAM_in (switchToRAM_wire),
         .dataBROM_in (dataBROM_wire),
@@ -144,6 +144,14 @@ module QIPU_Processor(
         .isRAMSelected_out (isRAMSelected_wire),
         .data_out (memReadData_wire),
         .instruction_out (instruction_wire)
+    );
+    
+    Memory_Controller memControl (
+        .clk_in (clk50_wire),
+        .addr_in (),
+        .ramSelect_out (),
+        .sdSelect_out (),
+        .videoSelect_out ()
     );
     
     Controller controller (
