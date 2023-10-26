@@ -4,7 +4,6 @@
 module Control_Unit(
         input            clk_i,
         input            rst_i,
-        input            mem_read_valid_i,
         input            mem_busy_i,
         input      [4:0] opcode_i,
         
@@ -50,7 +49,7 @@ module Control_Unit(
                     mem_addr_sel_o     <= `MEM_ADDR_SEL_INSTR;
                     mem_read_enable_o  <= 1;
                     mem_write_enable_o <= 0;
-                    pc_enable_o        <= 1;
+                    pc_enable_o        <= 0;
                     state              <= `CU_STATE_EXECUTE;
                 end
                 `CU_STATE_EXECUTE: begin
@@ -77,7 +76,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             `OPCODE_SUB: begin
@@ -93,7 +92,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             `OPCODE_AND: begin
@@ -109,7 +108,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             `OPCODE_OR: begin
@@ -125,7 +124,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             `OPCODE_XOR: begin
@@ -141,7 +140,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             `OPCODE_SHL: begin
@@ -157,7 +156,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             `OPCODE_SHR: begin
@@ -173,7 +172,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             `OPCODE_JXX: begin
@@ -189,7 +188,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             `OPCODE_ST: begin
@@ -212,7 +211,7 @@ module Control_Unit(
                                 off_layout_o       <= `OFF_LAYOUT_LONG_CONT;
                                 alu_ctrl_o         <= `ALU_CTRL_UNUSED;
                                 alu_src1_sel_o     <= `ALU_SRC1_SEL_UNUSED;
-                                res_sel_o          <= `RES_SEL_MEM;
+                                res_sel_o          <= `RES_SEL_UNUSED;
                                 reg_write_enable_o <= 0;
                                 imm_ex_mode_o      <= `IMM_EX_MODE_UNUSED;
                                 jmp_enable_o       <= 0;
@@ -237,7 +236,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             `OPCODE_LLI: begin
@@ -253,7 +252,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             `OPCODE_LI: begin
@@ -269,7 +268,7 @@ module Control_Unit(
                                 mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                                 mem_read_enable_o  <= 0;
                                 mem_write_enable_o <= 0;
-                                pc_enable_o        <= 0;
+                                pc_enable_o        <= 1;
                                 state              <= `CU_STATE_FETCH;
                             end
                             default: begin
@@ -310,10 +309,10 @@ module Control_Unit(
                         jmp_enable_o       <= 0;
 
                         instr_dec_enable_o <= 0;
-                        mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
+                        mem_addr_sel_o     <= `MEM_ADDR_SEL_DATA;
                         mem_read_enable_o  <= 0;
                         mem_write_enable_o <= 0;
-                        pc_enable_o        <= 0;
+                        pc_enable_o        <= 1;
                         state              <= `CU_STATE_FETCH;
                     end
                 end
@@ -339,7 +338,7 @@ module Control_Unit(
                         mem_addr_sel_o     <= `MEM_ADDR_SEL_UNUSED;
                         mem_read_enable_o  <= 0;
                         mem_write_enable_o <= 0;
-                        pc_enable_o        <= 0;
+                        pc_enable_o        <= 1;
                         state              <= `CU_STATE_FETCH;
                     end
                 end

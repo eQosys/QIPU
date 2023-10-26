@@ -11,18 +11,18 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1,119.333 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,145.828 ns"></ZoomEndTime>
-      <Cursor1Time time="1,163.279 ns"></Cursor1Time>
+      <ZoomStartTime time="472.380 ns"></ZoomStartTime>
+      <ZoomEndTime time="598.405 ns"></ZoomEndTime>
+      <Cursor1Time time="568.995 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="157"></NameColumnWidth>
-      <ValueColumnWidth column_width="130"></ValueColumnWidth>
+      <NameColumnWidth column_width="189"></NameColumnWidth>
+      <ValueColumnWidth column_width="103"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="97" />
+   <WVObjectSize size="171" />
    <wave_markers>
-      <marker label="" time="1163279" />
-      <marker label="" time="1137745" />
+      <marker label="" time="615333" />
+      <marker label="" time="562000" />
    </wave_markers>
    <wvobject type="logic" fp_name="/testbench/qipu/program_counter/clk_i">
       <obj_property name="ElementShortName">clk_i</obj_property>
@@ -76,9 +76,61 @@
       <obj_property name="ElementShortName">instr_i[31:0]</obj_property>
       <obj_property name="ObjectShortName">instr_i[31:0]</obj_property>
    </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/opcode_o">
+      <obj_property name="ElementShortName">opcode_o[4:0]</obj_property>
+      <obj_property name="ObjectShortName">opcode_o[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/reg_dest_o">
+      <obj_property name="ElementShortName">reg_dest_o[3:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_dest_o[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/jmp_cond_o">
+      <obj_property name="ElementShortName">jmp_cond_o[3:0]</obj_property>
+      <obj_property name="ObjectShortName">jmp_cond_o[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/instruction_decoder/off_sel_o">
+      <obj_property name="ElementShortName">off_sel_o</obj_property>
+      <obj_property name="ObjectShortName">off_sel_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/reg_src1_o">
+      <obj_property name="ElementShortName">reg_src1_o[3:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_src1_o[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/reg_src2_o">
+      <obj_property name="ElementShortName">reg_src2_o[3:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_src2_o[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/imm_o">
+      <obj_property name="ElementShortName">imm_o[22:0]</obj_property>
+      <obj_property name="ObjectShortName">imm_o[22:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/off_normal_o">
+      <obj_property name="ElementShortName">off_normal_o[13:0]</obj_property>
+      <obj_property name="ObjectShortName">off_normal_o[13:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/off_short_o">
+      <obj_property name="ElementShortName">off_short_o[12:0]</obj_property>
+      <obj_property name="ObjectShortName">off_short_o[12:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/off_long_cont_o">
+      <obj_property name="ElementShortName">off_long_cont_o[17:0]</obj_property>
+      <obj_property name="ObjectShortName">off_long_cont_o[17:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/off_long_split_o">
+      <obj_property name="ElementShortName">off_long_split_o[17:0]</obj_property>
+      <obj_property name="ObjectShortName">off_long_split_o[17:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/instruction_decoder/rel_jmp_o">
+      <obj_property name="ElementShortName">rel_jmp_o</obj_property>
+      <obj_property name="ObjectShortName">rel_jmp_o</obj_property>
+   </wvobject>
    <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/instr">
       <obj_property name="ElementShortName">instr[31:0]</obj_property>
       <obj_property name="ObjectShortName">instr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/instruction_decoder/temp_instr">
+      <obj_property name="ElementShortName">temp_instr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">temp_instr[31:0]</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/testbench/qipu/control_unit/clk_i">
       <obj_property name="ElementShortName">clk_i</obj_property>
@@ -96,25 +148,9 @@
       <obj_property name="ElementShortName">opcode_i[4:0]</obj_property>
       <obj_property name="ObjectShortName">opcode_i[4:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/control_unit/instr_dec_enable_o">
-      <obj_property name="ElementShortName">instr_dec_enable_o</obj_property>
-      <obj_property name="ObjectShortName">instr_dec_enable_o</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/testbench/qipu/control_unit/off_layout_o">
       <obj_property name="ElementShortName">off_layout_o[1:0]</obj_property>
       <obj_property name="ObjectShortName">off_layout_o[1:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/control_unit/mem_addr_sel_o">
-      <obj_property name="ElementShortName">mem_addr_sel_o</obj_property>
-      <obj_property name="ObjectShortName">mem_addr_sel_o</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/control_unit/mem_read_enable_o">
-      <obj_property name="ElementShortName">mem_read_enable_o</obj_property>
-      <obj_property name="ObjectShortName">mem_read_enable_o</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/control_unit/mem_write_enable_o">
-      <obj_property name="ElementShortName">mem_write_enable_o</obj_property>
-      <obj_property name="ObjectShortName">mem_write_enable_o</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/testbench/qipu/control_unit/alu_ctrl_o">
       <obj_property name="ElementShortName">alu_ctrl_o[3:0]</obj_property>
@@ -136,13 +172,29 @@
       <obj_property name="ElementShortName">imm_ex_mode_o[1:0]</obj_property>
       <obj_property name="ObjectShortName">imm_ex_mode_o[1:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/control_unit/pc_enable_o">
-      <obj_property name="ElementShortName">pc_enable_o</obj_property>
-      <obj_property name="ObjectShortName">pc_enable_o</obj_property>
-   </wvobject>
    <wvobject type="logic" fp_name="/testbench/qipu/control_unit/jmp_enable_o">
       <obj_property name="ElementShortName">jmp_enable_o</obj_property>
       <obj_property name="ObjectShortName">jmp_enable_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/control_unit/instr_dec_enable_o">
+      <obj_property name="ElementShortName">instr_dec_enable_o</obj_property>
+      <obj_property name="ObjectShortName">instr_dec_enable_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/control_unit/mem_addr_sel_o">
+      <obj_property name="ElementShortName">mem_addr_sel_o</obj_property>
+      <obj_property name="ObjectShortName">mem_addr_sel_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/control_unit/mem_read_enable_o">
+      <obj_property name="ElementShortName">mem_read_enable_o</obj_property>
+      <obj_property name="ObjectShortName">mem_read_enable_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/control_unit/mem_write_enable_o">
+      <obj_property name="ElementShortName">mem_write_enable_o</obj_property>
+      <obj_property name="ObjectShortName">mem_write_enable_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/control_unit/pc_enable_o">
+      <obj_property name="ElementShortName">pc_enable_o</obj_property>
+      <obj_property name="ObjectShortName">pc_enable_o</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/testbench/qipu/control_unit/state">
       <obj_property name="ElementShortName">state[1:0]</obj_property>
@@ -191,7 +243,6 @@
    <wvobject type="array" fp_name="/testbench/qipu/register_bank/bank">
       <obj_property name="ElementShortName">bank[0:15][31:0]</obj_property>
       <obj_property name="ObjectShortName">bank[0:15][31:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/testbench/qipu/offset_applicator/layout_i">
       <obj_property name="ElementShortName">layout_i[1:0]</obj_property>
@@ -237,6 +288,22 @@
       <obj_property name="ElementShortName">offset[31:0]</obj_property>
       <obj_property name="ObjectShortName">offset[31:0]</obj_property>
    </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/offset_applicator/LAYOUT_NORMAL">
+      <obj_property name="ElementShortName">LAYOUT_NORMAL[1:0]</obj_property>
+      <obj_property name="ObjectShortName">LAYOUT_NORMAL[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/offset_applicator/LAYOUT_SHORT">
+      <obj_property name="ElementShortName">LAYOUT_SHORT[1:0]</obj_property>
+      <obj_property name="ObjectShortName">LAYOUT_SHORT[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/offset_applicator/LAYOUT_LONG_CONT">
+      <obj_property name="ElementShortName">LAYOUT_LONG_CONT[1:0]</obj_property>
+      <obj_property name="ObjectShortName">LAYOUT_LONG_CONT[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/offset_applicator/LAYOUT_LONG_SPLIT">
+      <obj_property name="ElementShortName">LAYOUT_LONG_SPLIT[1:0]</obj_property>
+      <obj_property name="ObjectShortName">LAYOUT_LONG_SPLIT[1:0]</obj_property>
+   </wvobject>
    <wvobject type="array" fp_name="/testbench/qipu/immediate_extender/ex_mode_i">
       <obj_property name="ElementShortName">ex_mode_i[1:0]</obj_property>
       <obj_property name="ObjectShortName">ex_mode_i[1:0]</obj_property>
@@ -252,6 +319,18 @@
    <wvobject type="array" fp_name="/testbench/qipu/immediate_extender/data_o">
       <obj_property name="ElementShortName">data_o[31:0]</obj_property>
       <obj_property name="ObjectShortName">data_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/immediate_extender/EX_MODE_UPPER">
+      <obj_property name="ElementShortName">EX_MODE_UPPER[1:0]</obj_property>
+      <obj_property name="ObjectShortName">EX_MODE_UPPER[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/immediate_extender/EX_MODE_LOWER">
+      <obj_property name="ElementShortName">EX_MODE_LOWER[1:0]</obj_property>
+      <obj_property name="ObjectShortName">EX_MODE_LOWER[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/immediate_extender/EX_MODE_FULL">
+      <obj_property name="ElementShortName">EX_MODE_FULL[1:0]</obj_property>
+      <obj_property name="ObjectShortName">EX_MODE_FULL[1:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/testbench/qipu/alu/alu_ctrl_i">
       <obj_property name="ElementShortName">alu_ctrl_i[3:0]</obj_property>
@@ -285,6 +364,34 @@
       <obj_property name="ElementShortName">src1[31:0]</obj_property>
       <obj_property name="ObjectShortName">src1[31:0]</obj_property>
    </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/alu/ALU_CTRL_ADD">
+      <obj_property name="ElementShortName">ALU_CTRL_ADD[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ALU_CTRL_ADD[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/alu/ALU_CTRL_SUB">
+      <obj_property name="ElementShortName">ALU_CTRL_SUB[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ALU_CTRL_SUB[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/alu/ALU_CTRL_AND">
+      <obj_property name="ElementShortName">ALU_CTRL_AND[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ALU_CTRL_AND[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/alu/ALU_CTRL_OR">
+      <obj_property name="ElementShortName">ALU_CTRL_OR[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ALU_CTRL_OR[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/alu/ALU_CTRL_XOR">
+      <obj_property name="ElementShortName">ALU_CTRL_XOR[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ALU_CTRL_XOR[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/alu/ALU_CTRL_SHL">
+      <obj_property name="ElementShortName">ALU_CTRL_SHL[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ALU_CTRL_SHL[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/alu/ALU_CTRL_SHR">
+      <obj_property name="ElementShortName">ALU_CTRL_SHR[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ALU_CTRL_SHR[3:0]</obj_property>
+   </wvobject>
    <wvobject type="logic" fp_name="/testbench/qipu/jump_decider/jmp_enable_i">
       <obj_property name="ElementShortName">jmp_enable_i</obj_property>
       <obj_property name="ObjectShortName">jmp_enable_i</obj_property>
@@ -309,45 +416,29 @@
       <obj_property name="ElementShortName">should_jmp</obj_property>
       <obj_property name="ObjectShortName">should_jmp</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/memory_address_selector/addr_sel_i">
-      <obj_property name="ElementShortName">addr_sel_i</obj_property>
-      <obj_property name="ObjectShortName">addr_sel_i</obj_property>
+   <wvobject type="array" fp_name="/testbench/qipu/jump_decider/JMP_COND_ZERO">
+      <obj_property name="ElementShortName">JMP_COND_ZERO[3:0]</obj_property>
+      <obj_property name="ObjectShortName">JMP_COND_ZERO[3:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/testbench/qipu/memory_address_selector/instr_addr_i">
-      <obj_property name="ElementShortName">instr_addr_i[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instr_addr_i[31:0]</obj_property>
+   <wvobject type="array" fp_name="/testbench/qipu/jump_decider/JMP_COND_NOT_ZERO">
+      <obj_property name="ElementShortName">JMP_COND_NOT_ZERO[3:0]</obj_property>
+      <obj_property name="ObjectShortName">JMP_COND_NOT_ZERO[3:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/testbench/qipu/memory_address_selector/data_addr_i">
-      <obj_property name="ElementShortName">data_addr_i[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_addr_i[31:0]</obj_property>
+   <wvobject type="array" fp_name="/testbench/qipu/jump_decider/JMP_COND_GREATER_ZERO">
+      <obj_property name="ElementShortName">JMP_COND_GREATER_ZERO[3:0]</obj_property>
+      <obj_property name="ObjectShortName">JMP_COND_GREATER_ZERO[3:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/testbench/qipu/memory_address_selector/addr_o">
-      <obj_property name="ElementShortName">addr_o[31:0]</obj_property>
-      <obj_property name="ObjectShortName">addr_o[31:0]</obj_property>
+   <wvobject type="array" fp_name="/testbench/qipu/jump_decider/JMP_COND_LESS_ZERO">
+      <obj_property name="ElementShortName">JMP_COND_LESS_ZERO[3:0]</obj_property>
+      <obj_property name="ObjectShortName">JMP_COND_LESS_ZERO[3:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/addr_i">
-      <obj_property name="ElementShortName">addr_i[31:0]</obj_property>
-      <obj_property name="ObjectShortName">addr_i[31:0]</obj_property>
+   <wvobject type="array" fp_name="/testbench/qipu/jump_decider/JMP_COND_GREATER_EQUAL_ZERO">
+      <obj_property name="ElementShortName">JMP_COND_GREATER_EQUAL_ZERO[3:0]</obj_property>
+      <obj_property name="ObjectShortName">JMP_COND_GREATER_EQUAL_ZERO[3:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/busy_o">
-      <obj_property name="ElementShortName">busy_o</obj_property>
-      <obj_property name="ObjectShortName">busy_o</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/ram_enable_o">
-      <obj_property name="ElementShortName">ram_enable_o</obj_property>
-      <obj_property name="ObjectShortName">ram_enable_o</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/ram_read_data_i">
-      <obj_property name="ElementShortName">ram_read_data_i[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ram_read_data_i[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/ram_busy_i">
-      <obj_property name="ElementShortName">ram_busy_i</obj_property>
-      <obj_property name="ObjectShortName">ram_busy_i</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/enable_id">
-      <obj_property name="ElementShortName">enable_id</obj_property>
-      <obj_property name="ObjectShortName">enable_id</obj_property>
+   <wvobject type="array" fp_name="/testbench/qipu/jump_decider/JMP_COND_LESS_EQUAL_ZERO">
+      <obj_property name="ElementShortName">JMP_COND_LESS_EQUAL_ZERO[3:0]</obj_property>
+      <obj_property name="ObjectShortName">JMP_COND_LESS_EQUAL_ZERO[3:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/testbench/qipu/result_selector/sel_i">
       <obj_property name="ElementShortName">sel_i[1:0]</obj_property>
@@ -373,13 +464,145 @@
       <obj_property name="ElementShortName">data_o[31:0]</obj_property>
       <obj_property name="ObjectShortName">data_o[31:0]</obj_property>
    </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_address_selector/addr_sel_i">
+      <obj_property name="ElementShortName">addr_sel_i</obj_property>
+      <obj_property name="ObjectShortName">addr_sel_i</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_address_selector/instr_addr_i">
+      <obj_property name="ElementShortName">instr_addr_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instr_addr_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_address_selector/data_addr_i">
+      <obj_property name="ElementShortName">data_addr_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_addr_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_address_selector/addr_o">
+      <obj_property name="ElementShortName">addr_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/read_enable_i">
+      <obj_property name="ElementShortName">read_enable_i</obj_property>
+      <obj_property name="ObjectShortName">read_enable_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/write_enable_i">
+      <obj_property name="ElementShortName">write_enable_i</obj_property>
+      <obj_property name="ObjectShortName">write_enable_i</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/addr_i">
+      <obj_property name="ElementShortName">addr_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/read_data_o">
+      <obj_property name="ElementShortName">read_data_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/busy_o">
+      <obj_property name="ElementShortName">busy_o</obj_property>
+      <obj_property name="ObjectShortName">busy_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/ram_read_enable_o">
+      <obj_property name="ElementShortName">ram_read_enable_o</obj_property>
+      <obj_property name="ObjectShortName">ram_read_enable_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/ram_write_enable_o">
+      <obj_property name="ElementShortName">ram_write_enable_o</obj_property>
+      <obj_property name="ObjectShortName">ram_write_enable_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/ram_read_data_i">
+      <obj_property name="ElementShortName">ram_read_data_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ram_read_data_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/ram_busy_i">
+      <obj_property name="ElementShortName">ram_busy_i</obj_property>
+      <obj_property name="ObjectShortName">ram_busy_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/ssd_read_enable_o">
+      <obj_property name="ElementShortName">ssd_read_enable_o</obj_property>
+      <obj_property name="ObjectShortName">ssd_read_enable_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/ssd_write_enable_o">
+      <obj_property name="ElementShortName">ssd_write_enable_o</obj_property>
+      <obj_property name="ObjectShortName">ssd_write_enable_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/ssd_read_data_i">
+      <obj_property name="ElementShortName">ssd_read_data_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ssd_read_data_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/ssd_busy_i">
+      <obj_property name="ElementShortName">ssd_busy_i</obj_property>
+      <obj_property name="ObjectShortName">ssd_busy_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/eio_read_enable_o">
+      <obj_property name="ElementShortName">eio_read_enable_o</obj_property>
+      <obj_property name="ObjectShortName">eio_read_enable_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/eio_write_enable_o">
+      <obj_property name="ElementShortName">eio_write_enable_o</obj_property>
+      <obj_property name="ObjectShortName">eio_write_enable_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/eio_read_data_i">
+      <obj_property name="ElementShortName">eio_read_data_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">eio_read_data_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/eio_busy_i">
+      <obj_property name="ElementShortName">eio_busy_i</obj_property>
+      <obj_property name="ObjectShortName">eio_busy_i</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/enable_id">
+      <obj_property name="ElementShortName">enable_id[3:0]</obj_property>
+      <obj_property name="ObjectShortName">enable_id[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/ram_select">
+      <obj_property name="ElementShortName">ram_select</obj_property>
+      <obj_property name="ObjectShortName">ram_select</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/ssd_select">
+      <obj_property name="ElementShortName">ssd_select</obj_property>
+      <obj_property name="ObjectShortName">ssd_select</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/memory_bus/eio_select">
+      <obj_property name="ElementShortName">eio_select</obj_property>
+      <obj_property name="ObjectShortName">eio_select</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/ENABLE_ID_UNUSED">
+      <obj_property name="ElementShortName">ENABLE_ID_UNUSED[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ENABLE_ID_UNUSED[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/ENABLE_ID_RAM">
+      <obj_property name="ElementShortName">ENABLE_ID_RAM[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ENABLE_ID_RAM[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/ENABLE_ID_SSD">
+      <obj_property name="ElementShortName">ENABLE_ID_SSD[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ENABLE_ID_SSD[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/ENABLE_ID_EIO">
+      <obj_property name="ElementShortName">ENABLE_ID_EIO[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ENABLE_ID_EIO[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/ADDR_MASK_RAM">
+      <obj_property name="ElementShortName">ADDR_MASK_RAM[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ADDR_MASK_RAM[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/ADDR_MASK_SSD">
+      <obj_property name="ElementShortName">ADDR_MASK_SSD[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ADDR_MASK_SSD[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/memory_bus/ADDR_MASK_EIO">
+      <obj_property name="ElementShortName">ADDR_MASK_EIO[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ADDR_MASK_EIO[31:0]</obj_property>
+   </wvobject>
    <wvobject type="logic" fp_name="/testbench/qipu/random_access_memory/clk_i">
       <obj_property name="ElementShortName">clk_i</obj_property>
       <obj_property name="ObjectShortName">clk_i</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/random_access_memory/enable_i">
-      <obj_property name="ElementShortName">enable_i</obj_property>
-      <obj_property name="ObjectShortName">enable_i</obj_property>
+   <wvobject type="array" fp_name="/testbench/qipu/random_access_memory/addr_i">
+      <obj_property name="ElementShortName">addr_i[23:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_i[23:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/random_access_memory/data_i">
+      <obj_property name="ElementShortName">data_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_i[31:0]</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/testbench/qipu/random_access_memory/read_enable_i">
       <obj_property name="ElementShortName">read_enable_i</obj_property>
@@ -389,21 +612,9 @@
       <obj_property name="ElementShortName">write_enable_i</obj_property>
       <obj_property name="ObjectShortName">write_enable_i</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/testbench/qipu/random_access_memory/addr_i">
-      <obj_property name="ElementShortName">addr_i[31:0]</obj_property>
-      <obj_property name="ObjectShortName">addr_i[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/testbench/qipu/random_access_memory/data_i">
-      <obj_property name="ElementShortName">data_i[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_i[31:0]</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/testbench/qipu/random_access_memory/read_data_o">
       <obj_property name="ElementShortName">read_data_o[31:0]</obj_property>
       <obj_property name="ObjectShortName">read_data_o[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/testbench/qipu/random_access_memory/read_valid_o">
-      <obj_property name="ElementShortName">read_valid_o</obj_property>
-      <obj_property name="ObjectShortName">read_valid_o</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/testbench/qipu/random_access_memory/busy_o">
       <obj_property name="ElementShortName">busy_o</obj_property>
@@ -412,5 +623,89 @@
    <wvobject type="array" fp_name="/testbench/qipu/random_access_memory/mem">
       <obj_property name="ElementShortName">mem[0:1024][31:0]</obj_property>
       <obj_property name="ObjectShortName">mem[0:1024][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/seven_segment_display/clk_i">
+      <obj_property name="ElementShortName">clk_i</obj_property>
+      <obj_property name="ObjectShortName">clk_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/seven_segment_display/rst_i">
+      <obj_property name="ElementShortName">rst_i</obj_property>
+      <obj_property name="ObjectShortName">rst_i</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/seven_segment_display/data_i">
+      <obj_property name="ElementShortName">data_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/seven_segment_display/read_enable_i">
+      <obj_property name="ElementShortName">read_enable_i</obj_property>
+      <obj_property name="ObjectShortName">read_enable_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/seven_segment_display/write_enable_i">
+      <obj_property name="ElementShortName">write_enable_i</obj_property>
+      <obj_property name="ObjectShortName">write_enable_i</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/seven_segment_display/read_data_o">
+      <obj_property name="ElementShortName">read_data_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/seven_segment_display/busy_o">
+      <obj_property name="ElementShortName">busy_o</obj_property>
+      <obj_property name="ObjectShortName">busy_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/seven_segment_display/hw_anodes_o">
+      <obj_property name="ElementShortName">hw_anodes_o[3:0]</obj_property>
+      <obj_property name="ObjectShortName">hw_anodes_o[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/seven_segment_display/hw_cathodes_o">
+      <obj_property name="ElementShortName">hw_cathodes_o[7:0]</obj_property>
+      <obj_property name="ObjectShortName">hw_cathodes_o[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/seven_segment_display/data">
+      <obj_property name="ElementShortName">data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/seven_segment_display/refresh_counter">
+      <obj_property name="ElementShortName">refresh_counter[17:0]</obj_property>
+      <obj_property name="ObjectShortName">refresh_counter[17:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/easy_io/clk_i">
+      <obj_property name="ElementShortName">clk_i</obj_property>
+      <obj_property name="ObjectShortName">clk_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/easy_io/rst_i">
+      <obj_property name="ElementShortName">rst_i</obj_property>
+      <obj_property name="ObjectShortName">rst_i</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/easy_io/data_i">
+      <obj_property name="ElementShortName">data_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/easy_io/read_enable_i">
+      <obj_property name="ElementShortName">read_enable_i</obj_property>
+      <obj_property name="ObjectShortName">read_enable_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/easy_io/write_enable_i">
+      <obj_property name="ElementShortName">write_enable_i</obj_property>
+      <obj_property name="ObjectShortName">write_enable_i</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/easy_io/read_data_o">
+      <obj_property name="ElementShortName">read_data_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/testbench/qipu/easy_io/busy_o">
+      <obj_property name="ElementShortName">busy_o</obj_property>
+      <obj_property name="ObjectShortName">busy_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/easy_io/hw_dpad_btns_i">
+      <obj_property name="ElementShortName">hw_dpad_btns_i[4:0]</obj_property>
+      <obj_property name="ObjectShortName">hw_dpad_btns_i[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/easy_io/hw_slide_switches_i">
+      <obj_property name="ElementShortName">hw_slide_switches_i[15:0]</obj_property>
+      <obj_property name="ObjectShortName">hw_slide_switches_i[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/testbench/qipu/easy_io/hw_slide_leds_o">
+      <obj_property name="ElementShortName">hw_slide_leds_o[15:0]</obj_property>
+      <obj_property name="ObjectShortName">hw_slide_leds_o[15:0]</obj_property>
    </wvobject>
 </wave_config>

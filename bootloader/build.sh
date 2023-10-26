@@ -1,3 +1,3 @@
 #!/bin/bash
 
-qism -v -a -f=bintxt ./bootloader.qsm
+qism -v -a -f=hextxt ./bootloader.qsm

@@ -34,7 +34,7 @@ module ALU(
         ALU_CTRL_XOR: res_o <= src1 ^  src2_i;
         ALU_CTRL_SHL: res_o <= src1 << src2_i;
         ALU_CTRL_SHR: res_o <= src1 >> src2_i;
-        default: res_o <= 'bz;
+        default:      res_o <= 'bz;
         endcase
     end
 

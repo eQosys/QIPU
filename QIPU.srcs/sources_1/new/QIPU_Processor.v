@@ -4,19 +4,17 @@ module QIPU_Processor(
         input         hw_clk_i,
         
         input  [ 4:0] hw_dpad_btns_i,
-        
         input  [15:0] hw_slide_switches_i,
-        
         output [15:0] hw_slide_leds_o,
         
         output [ 3:0] hw_svn_seg_anodes_o,
-        output [ 7:0] hw_svn_seg_cathodes_o,
+        output [ 7:0] hw_svn_seg_cathodes_o
         
-        output [ 3:0] hw_vga_red_o,
-        output [ 3:0] hw_vga_green_o,
-        output [ 3:0] hw_vga_blue_o,
-        output        hw_vga_hsync_o,
-        output        hw_vga_vsync_o
+        //output [ 3:0] hw_vga_red_o,
+        //output [ 3:0] hw_vga_green_o,
+        //output [ 3:0] hw_vga_blue_o,
+        //output        hw_vga_hsync_o,
+        //output        hw_vga_vsync_o
     );
     
     wire reset;
@@ -81,20 +79,29 @@ module QIPU_Processor(
     
     // memory_bus
     wire [31:0] mem_read_data;
-    wire        mem_read_valid;
     wire        mem_busy;
     //////////////////////////////////////
-    wire        mem_ram_enable;
+    wire        mem_ram_read_enable;
+    wire        mem_ram_write_enable;
+    wire        mem_ssd_read_enable;
+    wire        mem_ssd_write_enable;
+    wire        mem_eio_read_enable;
+    wire        mem_eio_write_enable;
     
     // result_selector
     wire [31:0] result;
     
     // random_access_memory
     wire [31:0] mem_ram_read_data;
-    wire        mem_ram_read_valid;
     wire        mem_ram_busy;
-    
-    assign hw_slide_leds_o = pc[15:0];
+
+    // seven_segment_display
+    wire [31:0] mem_ssd_read_data;
+    wire        mem_ssd_busy;
+
+    // easy_io
+    wire [31:0] mem_eio_read_data;
+    wire        mem_eio_busy;
     
     (* keep_hierarchy = "yes" *) Initial_Reset initial_reset (
         .clk_i (clk_cpu),
@@ -144,7 +151,6 @@ module QIPU_Processor(
     (* keep_hierarchy = "yes" *) Control_Unit control_unit (
         .clk_i              (clk_cpu),
         .rst_i              (reset),
-        .mem_read_valid_i   (mem_read_valid),
         .mem_busy_i         (mem_busy),
         .opcode_i           (instr_opcode),
         
@@ -235,29 +241,70 @@ module QIPU_Processor(
     );
     
     (* keep_hierarchy = "yes" *) Memory_Bus memory_bus (
+        .read_enable_i      (mem_read_enable),
+        .write_enable_i     (mem_write_enable),
         .addr_i             (mem_addr),
         
         .read_data_o        (mem_read_data),
-        .read_valid_o       (mem_read_valid),
         .busy_o             (mem_busy),
         
-        .ram_enable_o       (mem_ram_enable),
+        .ram_read_enable_o  (mem_ram_read_enable),
+        .ram_write_enable_o (mem_ram_write_enable),
         .ram_read_data_i    (mem_ram_read_data),
-        .ram_read_valid_i   (mem_ram_read_valid),
-        .ram_busy_i         (mem_ram_busy)
+        .ram_busy_i         (mem_ram_busy),
+
+        .ssd_read_enable_o  (mem_ssd_read_enable),
+        .ssd_write_enable_o (mem_ssd_write_enable),
+        .ssd_read_data_i    (mem_ssd_read_data),
+        .ssd_busy_i         (mem_ssd_busy),
+
+        .eio_read_enable_o  (mem_eio_read_enable),
+        .eio_write_enable_o (mem_eio_write_enable),
+        .eio_read_data_i    (mem_eio_read_data),
+        .eio_busy_i         (mem_eio_busy)
     );
     
     (* keep_hierarchy = "yes" *) Random_Access_Memory random_access_memory (
         .clk_i          (clk_cpu),
-        .enable_i       (mem_ram_enable),
-        .addr_i         (mem_addr),
+        //.rst_i          (reset),
+        .addr_i         (mem_addr[23:0]),
         .data_i         (result),
-        .read_enable_i  (mem_read_enable),
-        .write_enable_i (mem_write_enable),
+        .read_enable_i  (mem_ram_read_enable),
+        .write_enable_i (mem_ram_write_enable),
         
         .read_data_o    (mem_ram_read_data),
-        .read_valid_o   (mem_ram_read_valid),
         .busy_o         (mem_ram_busy)
+    );
+
+    (* keep_hierarchy = "yes" *) Seven_Segment_Display seven_segment_display (
+        .clk_i          (clk_cpu),
+        .rst_i          (reset),
+        //.addr_i         (mem_addr),
+        .data_i         (result),
+        .read_enable_i  (mem_ssd_read_enable),
+        .write_enable_i (mem_ssd_write_enable),
+
+        .read_data_o    (mem_ssd_read_data),
+        .busy_o         (mem_ssd_busy),
+
+        .hw_anodes_o    (hw_svn_seg_anodes_o),
+        .hw_cathodes_o  (hw_svn_seg_cathodes_o)
+    );
+
+    (* keep_hierarchy = "yes" *) Easy_IO easy_io (
+        .clk_i               (clk_cpu),
+        .rst_i               (reset),
+        //.addr_i              (mem_addr),
+        .data_i              (result),
+        .read_enable_i       (mem_eio_read_enable),
+        .write_enable_i      (mem_eio_write_enable),
+        
+        .read_data_o         (mem_eio_read_data),
+        .busy_o              (mem_eio_busy),
+        
+        .hw_dpad_btns_i      (hw_dpad_btns_i),
+        .hw_slide_switches_i (hw_slide_switches_i),
+        .hw_slide_leds_o     (hw_slide_leds_o)
     );
 
 endmodule

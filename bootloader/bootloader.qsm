@@ -2,14 +2,12 @@
 
 ::test
 
-add r0 zero zero(1)
-add r0 r0 zero(2)
-st zero(128) r0
-add r0 r0 r0
-sub r0 r0 zero(4)
-ld r1 zero(128)
-add r0 r0 r1
-add r0 zero zero
+lui r0 sts "ra"
+lli r0 sts "m "
+st zero(-1) r0
+ld r0 zero(-2)
+st zero(-2) r0
+jrz zero(-8) zero
 
 ~~ .entry boot
 

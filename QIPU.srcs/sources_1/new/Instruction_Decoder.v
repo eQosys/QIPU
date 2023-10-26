@@ -33,7 +33,7 @@ module Instruction_Decoder(
     assign off_normal_o     = temp_instr[31:18];
     assign off_short_o      = temp_instr[30:18];
     assign off_long_cont_o  = temp_instr[31:14];
-    assign off_long_split_o ={temp_instr[31:18], instr[8:5] };
+    assign off_long_split_o ={temp_instr[31:18], temp_instr[8:5] };
     assign rel_jmp_o        = temp_instr[   31];
     
     always @ (posedge clk_i) begin
