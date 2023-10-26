@@ -1,43 +1,56 @@
-.entry boot
+.entry test
 
-::boot
+::test
 
-~~ Check if bootloader lives in RAM or BROM
-mov r0 rinp
-shr r0 21
-jrz rel:copyBootloaderToRam r0(-1)
+add r0 zero zero(1)
+add r0 r0 zero(2)
+st zero(128) r0
+add r0 r0 r0
+sub r0 r0 zero(4)
+ld r1 zero(128)
+add r0 r0 r1
+add r0 zero zero
 
-::mainProgram
-~~ show 'ram' message on 7-segment display
-lui rssd sts:"ra"
-lli rssd sts:"m "
+~~ .entry boot
 
-~~ Load input mask into r0
-li r0 0b1111111111111111
+~~ ::boot
 
-::mainLoop
-    ~~ Read input
-    mov r1 rinp
-    ~~ Mask input and write result to leds
-    and rled r1 r0
-jpr rel:mainLoop
+~~ ~~ Check if bootloader lives in RAM or BROM
+~~ mov r0 rinp
+~~ shr r0 21
+~~ jrz rel:copyBootloaderToRam r0(-1)
 
-::copyBootloaderToRam
-~~ show 'boot' message on 7-segment display
-lui rssd sts:"bo"
-lli rssd sts:"ot"
+~~ ::mainProgram
+~~ ~~ show 'ram' message on 7-segment display
+~~ lui rssd sts:"ra"
+~~ lli rssd sts:"m "
 
-mov r0 0
-::copyLoop
-    ~~ Copy instruction from BROM to RAM
-    ld rled r0
-    st r0 rled
+~~ ~~ Load input mask into r0
+~~ li r0 0b1111111111111111
 
-    ~~ Increment memory pointer
-    add r0 4
-    sub r2 r0 bootloaderSize
-jrnz rel:copyLoop r2
+~~ ::mainLoop
+~~     ~~ Read input
+~~     mov r1 rinp
+~~     ~~ Mask input and write result to leds
+~~     and rled r1 r0
+~~ jpr rel:mainLoop
 
-int 0
+~~ ::copyBootloaderToRam
+~~ ~~ show 'boot' message on 7-segment display
+~~ lui rssd sts:"bo"
+~~ lli rssd sts:"ot"
 
-::bootloaderSize
+~~ mov r0 0
+~~ ::copyLoop
+~~     ~~ Copy instruction from BROM to RAM
+~~     ld rled r0
+~~     st r0 rled
+
+~~     ~~ Increment memory pointer
+~~     add r0 4
+~~     sub r2 r0 bootloaderSize
+~~ jrnz rel:copyLoop r2
+
+~~ int 0
+
+~~ ::bootloaderSize

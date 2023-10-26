@@ -1,246 +1,263 @@
 `timescale 1ns / 1ps
 
 module QIPU_Processor(
-        input ext_clock,
-        input [4:0] dpad_btns_in,
-        input [15:0] slide_switches_in,
-        output [15:0] slide_leds_out,
-        output [3:0] seven_seg_anodes_out,
-        output [7:0] seven_seg_cathodes_out
+        input         hw_clk_i,
+        
+        input  [ 4:0] hw_dpad_btns_i,
+        
+        input  [15:0] hw_slide_switches_i,
+        
+        output [15:0] hw_slide_leds_o,
+        
+        output [ 3:0] hw_svn_seg_anodes_o,
+        output [ 7:0] hw_svn_seg_cathodes_o,
+        
+        output [ 3:0] hw_vga_red_o,
+        output [ 3:0] hw_vga_green_o,
+        output [ 3:0] hw_vga_blue_o,
+        output        hw_vga_hsync_o,
+        output        hw_vga_vsync_o
     );
     
-    wire clk50_wire;
-    wire clk100_wire;
+    wire reset;
     
-    Primary_Clock primClock (
-        .clk50_out (clk50_wire),
-        .clk100_out (clk100_wire),
-        .reset (0),
-        .clk_in (ext_clock)
+    // clock_manager
+    wire clk_cpu;
+    wire clk_vga;
+    
+    // program_counter
+    wire [31:0] pc;
+    wire [31:0] pc_next;
+    
+    // instruction_decoder
+    wire [ 4:0] instr_opcode;
+    wire [ 3:0] instr_reg_dest;
+    wire [ 3:0] instr_jmp_cond;
+    wire        instr_off_sel;
+    wire [ 3:0] instr_reg_src1;
+    wire [ 3:0] instr_reg_src2;
+    wire [22:0] instr_imm;
+    wire [13:0] instr_off_normal;
+    wire [12:0] instr_off_short;
+    wire [17:0] instr_off_long_cont;
+    wire [17:0] instr_off_long_split;
+    wire        instr_rel_jmp;
+    
+    // control_unit
+    wire        instr_dec_enable;
+    wire [ 1:0] off_layout;
+    wire        mem_addr_sel;
+    wire        mem_read_enable;
+    wire        mem_write_enable;
+    wire [ 3:0] alu_ctrl;
+    wire        alu_src1_sel;
+    wire [ 1:0] res_sel;
+    wire        reg_write_enable;
+    wire [ 1:0] imm_ex_mode;
+    wire        pc_enable;
+    wire        jmp_enable;
+    
+    // register_bank
+    wire [31:0] raw_src1;
+    wire [31:0] raw_src2;
+    
+    // offset_applicator
+    wire [31:0] src1;
+    wire [31:0] src2;
+    
+    // immediate_extender
+    wire [31:0] imm;
+    
+    // alu
+    wire [31:0] alu_res;
+    wire        alu_is_zero;
+    wire        alu_is_neg;
+    
+    // jump_decider
+    wire        do_jmp;
+    
+    // memory_address_selector
+    wire [31:0] mem_addr;
+    
+    // memory_bus
+    wire [31:0] mem_read_data;
+    wire        mem_read_valid;
+    wire        mem_busy;
+    //////////////////////////////////////
+    wire        mem_ram_enable;
+    
+    // result_selector
+    wire [31:0] result;
+    
+    // random_access_memory
+    wire [31:0] mem_ram_read_data;
+    wire        mem_ram_read_valid;
+    wire        mem_ram_busy;
+    
+    assign hw_slide_leds_o = pc[15:0];
+    
+    (* keep_hierarchy = "yes" *) Initial_Reset initial_reset (
+        .clk_i (clk_cpu),
+        
+        .rst_o (reset)
     );
     
-    localparam opcode_offset = 0;
-    localparam opcode_width = 5;
-    
-    localparam regDest_offset = 5;
-    localparam regDest_width = 4;
-    
-    localparam condition_offset = 5;
-    localparam condition_width = 4;
-    
-    localparam offsetSelect_offset = 9;
-    localparam offsetSelect_width = 1;
-    
-    localparam regSrc1_offset = 10;
-    localparam regSrc1_width = 4;
-    
-    localparam regSrc2_offset = 14;
-    localparam regSrc2_width = 4;
-    
-    localparam immediate_offset = 9;
-    localparam immediate_width = 23;
-    
-    localparam offsetNormal_offset = 18;
-    localparam offsetNormal_width = 14;
-    
-    localparam offsetShort_offset = 18;
-    localparam offsetShort_width = 13;
-    
-    localparam offsetLongContinuous_offset = 14;
-    localparam offsetLongContinuous_width = 18;
-    
-    localparam offsetLongSplitUpper_offset = 18;
-    localparam offsetLongSplitUpper_width = 14;
-    
-    localparam offsetLongSplitLower_offset = 5;
-    localparam offsetLongSplitLower_width = 4;
-    
-    localparam relativeJump_offset = 31;
-    localparam relativeJump_width = 1;
-    
-   
-    wire [31:0] programCounter_wire;
-    wire [31:0] programCounterNext_wire;
-    wire [31:0] programCounterJump_wire;
-    wire doJump_wire;
-    wire isRelJmp_wire;
-    wire switchToRAM_wire;
-    wire isRAMSelected_wire;
-    wire [31:0] instrBROM_wire;
-    wire [31:0] dataBROM_wire;
-    wire [31:0] instrRAM_wire;
-    wire [31:0] dataRAM_wire;
-    wire [31:0] instruction_wire;
-    wire [31:0] immediate_wire;
-    wire [2:0] aluControl_wire;
-    wire aluIsZero_wire;
-    wire aluIsNeg_wire;
-    wire regWriteEnable_wire;
-    wire memWriteEnable_wire;
-    wire [31:0] offset_wire;
-    wire [31:0] regA_wire;
-    wire [31:0] regB_wire;
-    wire [31:0] regWriteData_wire;
-    wire [31:0] memReadData_wire;
-    wire [31:0] dataA_wire;
-    wire [31:0] dataB_wire;
-    wire [31:0] aluResult_wire;
-    wire offsetEnableA_wire;
-    wire offsetEnableB_wire;
-    wire aluSrcASelect_wire;
-    wire [1:0] offsetLayout_wire;
-    wire [1:0] resultSelect_wire;
-    wire [1:0] immExtendMode_wire;
-    wire stall_wire;
-    
-    assign stall_wire = 0;
-    
-    
-    Program_Incrementer programIncrementer (
-        .pc_in (programCounter_wire),
-        .pc_out (programCounterNext_wire)
+    Clock_Manager clock_manager (
+        .clk_i     (hw_clk_i),
+        
+        .clk_cpu_o (clk_cpu),
+        .clk_vga_o (clk_vga)
     );
     
-    Program_Jump_Calculator programJumpCalculator (
-        .relJmp_in (isRelJmp_wire),
-        .pc_in (programCounter_wire),
-        .jmpAddress_in (dataA_wire),
-        .pc_out (programCounterJump_wire)
+    (* keep_hierarchy = "yes" *) Program_Counter program_counter (
+        .clk_i        (clk_cpu),
+        .rst_i        (reset),
+        .enable_i     (pc_enable),
+        .do_jmp_i     (do_jmp),
+        .is_rel_jmp_i (instr_rel_jmp),
+        .jmp_addr_i   (src1),
+        
+        .pc_o         (pc),
+        .pc_next_o    (pc_next)
     );
     
-    Program_Counter programCounter (
-        .clk_in (clk50_wire),
-        .stall_in (stall_wire),
-        .jmpEnable_in (doJump_wire),
-        .pc_next_in (programCounterNext_wire),
-        .pc_jmp_in (programCounterJump_wire),
-        .pc_out (programCounter_wire)
+    (* keep_hierarchy = "yes" *) Instruction_Decoder instruction_decoder (
+        .clk_i            (clk_cpu),
+        .rst_i            (reset),
+        .enable_i         (instr_dec_enable),
+        .instr_i          (mem_read_data),
+        
+        .opcode_o         (instr_opcode),
+        .reg_dest_o       (instr_reg_dest),
+        .jmp_cond_o       (instr_jmp_cond),
+        .off_sel_o        (instr_off_sel),
+        .reg_src1_o       (instr_reg_src1),
+        .reg_src2_o       (instr_reg_src2),
+        .imm_o            (instr_imm),
+        .off_normal_o     (instr_off_normal),
+        .off_short_o      (instr_off_short),
+        .off_long_cont_o  (instr_off_long_cont),
+        .off_long_split_o (instr_off_long_split),
+        .rel_jmp_o        (instr_rel_jmp)
     );
     
-    Bootloader_ROM brom (
-        .dataAddress_in (dataA_wire),
-        .instrAddress_in (programCounter_wire),
-        .data_out (dataBROM_wire),
-        .instruction_out (instrBROM_wire)
+    (* keep_hierarchy = "yes" *) Control_Unit control_unit (
+        .clk_i              (clk_cpu),
+        .rst_i              (reset),
+        .mem_read_valid_i   (mem_read_valid),
+        .mem_busy_i         (mem_busy),
+        .opcode_i           (instr_opcode),
+        
+        .instr_dec_enable_o (instr_dec_enable),
+        .off_layout_o       (off_layout),
+        .mem_addr_sel_o     (mem_addr_sel),
+        .mem_read_enable_o  (mem_read_enable),
+        .mem_write_enable_o (mem_write_enable),
+        .alu_ctrl_o         (alu_ctrl),
+        .alu_src1_sel_o     (alu_src1_sel),
+        .res_sel_o          (res_sel),
+        .reg_write_enable_o (reg_write_enable),
+        .imm_ex_mode_o      (imm_ex_mode),
+        .pc_enable_o        (pc_enable),
+        .jmp_enable_o       (jmp_enable)
     );
     
-    Random_Access_Memory ram (
-        .clk_in (clk50_wire),
-        .writeEnable_in (memWriteEnable_wire),
-        .dataAddress_in (dataA_wire),
-        .writeData_in (regWriteData_wire),
-        .instrAddress_in (programCounter_wire),
-        .data_out (dataRAM_wire),
-        .instruction_out (instrRAM_wire)
+    (* keep_hierarchy = "yes" *) Register_Bank register_bank (
+        .clk_i          (clk_cpu),
+        .rst_i          (reset),
+        .reg_src1_i     (instr_reg_src1),
+        .reg_src2_i     (instr_reg_src2),
+        .reg_dest_i     (instr_reg_dest),
+        .write_data_i   (result),
+        .write_enable_i (reg_write_enable),
+        
+        .data_src1_o    (raw_src1),
+        .data_src2_o    (raw_src2)
     );
     
-    RAM_Selector ramSelect (
-        .clk_in (clk50_wire),
-        .switchToRAM_in (switchToRAM_wire),
-        .dataBROM_in (dataBROM_wire),
-        .instrBROM_in (instrBROM_wire),
-        .dataRAM_in (dataRAM_wire),
-        .instrRAM_in (instrRAM_wire),
-        .isRAMSelected_out (isRAMSelected_wire),
-        .data_out (memReadData_wire),
-        .instruction_out (instruction_wire)
+    (* keep_hierarchy = "yes" *) Offset_Applicator offset_applicator (
+        .layout_i         (off_layout),
+        .off_normal_i     (instr_off_normal),
+        .off_short_i      (instr_off_short),
+        .off_long_cont_i  (instr_off_long_cont),
+        .off_long_split_i (instr_off_long_split),
+        .off_sel_i        (instr_off_sel),
+        .src1_i           (raw_src1),
+        .src2_i           (raw_src2),
+        
+        .src1_o           (src1),
+        .src2_o           (src2)
     );
     
-    Memory_Controller memControl (
-        .clk_in (clk50_wire),
-        .addr_in (),
-        .ramSelect_out (),
-        .sdSelect_out (),
-        .videoSelect_out ()
+    (* keep_hierarchy = "yes" *) Immediate_Extender immediate_extender (
+        .ex_mode_i (imm_ex_mode),
+        .data_i    (raw_src1),
+        .imm_i     (instr_imm),
+        
+        .data_o    (imm)
     );
     
-    Controller controller (
-        .opcode_in (instruction_wire[opcode_offset + opcode_width - 1 : opcode_offset]),
-        .intCode_in (instruction_wire[immediate_offset + immediate_width - 1 : immediate_offset]),
-        .jmpCond_in (instruction_wire[condition_offset + condition_width - 1 : condition_offset]),
-        .isRelJmp_in (instruction_wire[relativeJump_offset + relativeJump_width - 1 : relativeJump_offset]),
-        .offsetSelect_in (instruction_wire[offsetSelect_offset + offsetSelect_width - 1 : offsetSelect_offset]),
-        .isZero_in (aluIsZero_wire),
-        .isNeg_in (aluIsNeg_wire),
-        .aluControl_out (aluControl_wire),
-        .doJump_out (doJump_wire),
-        .isRelJmp_out (isRelJmp_wire),
-        .regWriteEnable_out (regWriteEnable_wire),
-        .memWriteEnable_out (memWriteEnable_wire),
-        .offsetEnableA_out (offsetEnableA_wire),
-        .offsetEnableB_out (offsetEnableB_wire),
-        .aluSrcASelect_out (aluSrcASelect_wire),
-        .offsetLayout_out (offsetLayout_wire),
-        .resultSelect_out (resultSelect_wire),
-        .immExtendMode_out (immExtendMode_wire),
-        .switchToRAM_out (switchToRAM_wire)
+    (* keep_hierarchy = "yes" *) ALU alu (
+        .alu_ctrl_i (alu_ctrl),
+        .src1_sel_i (alu_src1_sel),
+        .src1_i     (src1),
+        .src2_i     (src2),
+        
+        .res_o      (alu_res),
+        .is_zero_o  (alu_is_zero),
+        .is_neg_o   (alu_is_neg)
     );
     
-    Immediate_Extender immediateExtender (
-        .extendMode_in (immExtendMode_wire),
-        .regA_in (regA_wire),
-        .imm_in (instruction_wire[immediate_offset + immediate_width - 1 : immediate_offset]),
-        .imm_out (immediate_wire)
+    (* keep_hierarchy = "yes" *) Jump_Decider jump_decider (
+        .jmp_enable_i (jmp_enable),
+        .jmp_cond_i   (instr_jmp_cond),
+        .is_zero_i    (alu_is_zero),
+        .is_neg_i     (alu_is_neg),
+        
+        .do_jmp_o     (do_jmp)
+    );
+
+    (* keep_hierarchy = "yes" *) Multiplexer_x4 result_selector (
+        .sel_i     (res_sel),
+        .data_00_i (alu_res),
+        .data_01_i (mem_read_data),
+        .data_10_i (imm),
+        .data_11_i (pc_next),
+        
+        .data_o    (result)
     );
     
-    Offset_Layout_Selector (
-        .offsetLayout_in (offsetLayout_wire),
-        .offsetNormal_in (instruction_wire[offsetNormal_offset + offsetNormal_width - 1 : offsetNormal_offset]),
-        .offsetShort_in (instruction_wire[offsetShort_offset + offsetShort_width - 1 : offsetShort_offset]),
-        .offsetLongContinuous_in (instruction_wire[offsetLongContinuous_offset + offsetLongContinuous_width - 1 : offsetLongContinuous_offset]),
-        .offsetLongSplitUpper_in (instruction_wire[offsetLongSplitUpper_offset + offsetLongSplitUpper_width - 1 : offsetLongSplitUpper_offset]),
-        .offsetLongSplitLower_in (instruction_wire[offsetLongSplitLower_offset + offsetLongSplitLower_width - 1 : offsetLongSplitLower_offset]),
-        .offset_out (offset_wire)
+    (* keep_hierarchy = "yes" *) Memory_Address_Selector memory_address_selector (
+        .addr_sel_i   (mem_addr_sel),
+        .instr_addr_i (pc),
+        .data_addr_i  (src1),
+        .addr_o       (mem_addr)
     );
     
-    Register_Bank registerBank (
-        .clk_in (clk50_wire),
-        .stall_in (stall_wire),
-        .regA_in (instruction_wire[regSrc1_offset + regSrc1_width - 1 : regSrc1_offset]),
-        .regB_in (instruction_wire[regSrc2_offset + regSrc2_width - 1 : regSrc2_offset]),
-        .regW_in (doJump_wire ? 4'b0100 : instruction_wire[regDest_offset + regDest_width - 1 : regDest_offset]),
-        .writeData_in (regWriteData_wire),
-        .writeEnable_in (regWriteEnable_wire),
-        .isRAMSelected_in (isRAMSelected_wire),
-        .dpadBtns_in (dpad_btns_in),
-        .slideSwitches_in (slide_switches_in),
-        .dataA_out (regA_wire),
-        .dataB_out (regB_wire),
-        .slideLEDs_out (slide_leds_out),
-        .sevenSegAnodes_out (seven_seg_anodes_out),
-        .sevenSegCathodes_out (seven_seg_cathodes_out)
+    (* keep_hierarchy = "yes" *) Memory_Bus memory_bus (
+        .addr_i             (mem_addr),
+        
+        .read_data_o        (mem_read_data),
+        .read_valid_o       (mem_read_valid),
+        .busy_o             (mem_busy),
+        
+        .ram_enable_o       (mem_ram_enable),
+        .ram_read_data_i    (mem_ram_read_data),
+        .ram_read_valid_i   (mem_ram_read_valid),
+        .ram_busy_i         (mem_ram_busy)
     );
     
-    Offset_Applicator offsetApplicatorA (
-        .offsetEnable_in (offsetEnableA_wire),
-        .data_in (regA_wire),
-        .offset_in (offset_wire),
-        .result_out (dataA_wire)
-    );
-    
-    Offset_Applicator offsetApplicatorB (
-        .offsetEnable_in (offsetEnableB_wire),
-        .data_in (regB_wire),
-        .offset_in (offset_wire),
-        .result_out (dataB_wire)
-    );
-    
-    ALU alu (
-        .a_in (aluSrcASelect_wire ? 32'b0 : dataA_wire),
-        .b_in (dataB_wire),
-        .alu_control_in (aluControl_wire),
-        .res_out (aluResult_wire),
-        .is_zero_out (aluIsZero_wire),
-        .is_neg_out (aluIsNeg_wire)
-    );
-    
-    Multiplexer resultMultiplexer (
-        .select_in (resultSelect_wire),
-        .a_in (aluResult_wire),
-        .b_in (memReadData_wire),
-        .c_in (immediate_wire),
-        .d_in (programCounterJump_wire),
-        .res_out (regWriteData_wire)
+    (* keep_hierarchy = "yes" *) Random_Access_Memory random_access_memory (
+        .clk_i          (clk_cpu),
+        .enable_i       (mem_ram_enable),
+        .addr_i         (mem_addr),
+        .data_i         (result),
+        .read_enable_i  (mem_read_enable),
+        .write_enable_i (mem_write_enable),
+        
+        .read_data_o    (mem_ram_read_data),
+        .read_valid_o   (mem_ram_read_valid),
+        .busy_o         (mem_ram_busy)
     );
 
 endmodule

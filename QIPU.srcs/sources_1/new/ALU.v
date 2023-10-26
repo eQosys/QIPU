@@ -1,74 +1,41 @@
 `timescale 1ns / 1ps
 
 module ALU(
-    input [31:0] a_in,
-    input [31:0] b_in,
-    input [2:0] alu_control_in,
-    output reg [31:0] res_out,
-    output is_zero_out,
-    output is_neg_out
+        input      [ 3:0] alu_ctrl_i,
+        input             src1_sel_i,
+        input      [31:0] src1_i,
+        input      [31:0] src2_i,
+        
+        output reg [31:0] res_o,
+        output            is_zero_o,
+        output            is_neg_o
     );
     
-    reg is_sub;
+    localparam ALU_CTRL_ADD = 4'b0000;
+    localparam ALU_CTRL_SUB = 4'b0001;
+    localparam ALU_CTRL_AND = 4'b0010;
+    localparam ALU_CTRL_OR  = 4'b0011;
+    localparam ALU_CTRL_XOR = 4'b0100;
+    localparam ALU_CTRL_SHL = 4'b0101;
+    localparam ALU_CTRL_SHR = 4'b0110;
     
-    wire [31:0] res_adder;
+    wire [31:0] src1;
+    
+    assign is_zero_o = res_o == 0;
+    assign is_neg_o  = res_o[31];
+    assign src1      = src1_sel_i == 0 ? 32'b0 : src1_i;
     
     always @ (*) begin
-        case (alu_control_in)
-            // ADDITION
-            3'b000: begin
-                res_out <= res_adder;
-                is_sub <= 0;
-            end
-            // SUBTRACTION
-            3'b001: begin
-                res_out <= res_adder;
-                is_sub <= 1;
-            end
-            // BITWISE AND
-            3'b010: begin
-                res_out <= a_in & b_in;
-                is_sub <= 0;
-            end
-            // BITWISE OR
-            3'b011: begin
-                res_out <= a_in | b_in;
-                is_sub <= 0;
-            end
-            // BITWISE XOR
-            3'b100: begin
-                res_out <= a_in ^ b_in;
-                is_sub <= 0;
-            end
-            // SHIFT LEFT
-            3'b101: begin
-                res_out <= a_in << b_in;
-                is_sub <= 0;
-            end
-            3'b110: begin
-                res_out <= a_in >> b_in;
-                is_sub <= 0;
-            end
-            // BITWISE NOT
-            // LOGICAL AND
-            // LOGICAL OR
-            // LOGICAL NOT
-            default: begin
-                res_out <= {32{1'bz}};
-                is_sub <= 0;
-            end
+        case (alu_ctrl_i)
+        ALU_CTRL_ADD: res_o <= src1 +  src2_i;
+        ALU_CTRL_SUB: res_o <= src1 -  src2_i;
+        ALU_CTRL_AND: res_o <= src1 &  src2_i;
+        ALU_CTRL_OR:  res_o <= src1 |  src2_i;
+        ALU_CTRL_XOR: res_o <= src1 ^  src2_i;
+        ALU_CTRL_SHL: res_o <= src1 << src2_i;
+        ALU_CTRL_SHR: res_o <= src1 >> src2_i;
+        default: res_o <= 'bz;
         endcase
     end
-    
-    Thirtytwo_Bit_Adder adder(
-        .a_in (a_in),
-        .b_in (is_sub ? ~b_in : b_in),
-        .carry_in (is_sub),
-        .carry_out (),
-        .sum_out (res_adder)
-    );
-    
-    assign is_zero_out = res_out == 0;
-    assign is_neg_out = res_out[31];
-    
+
 endmodule
