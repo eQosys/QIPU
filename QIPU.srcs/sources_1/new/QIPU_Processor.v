@@ -1,5 +1,7 @@
 `timescale 1ns / 1ps
 
+`define KEEP_HIERARCHY_TOGGLE "no"
+
 module QIPU_Processor(
         input         hw_clk_i,
         
@@ -14,7 +16,10 @@ module QIPU_Processor(
         //output [ 3:0] hw_vga_green_o,
         //output [ 3:0] hw_vga_blue_o,
         //output        hw_vga_hsync_o,
-        //output        hw_vga_vsync_o
+        //output        hw_vga_vsync_o,
+
+        //input         hw_uart_rx_i,
+        //output        hw_uart_tx_o
     );
     
     wire reset;
@@ -103,7 +108,8 @@ module QIPU_Processor(
     wire [31:0] mem_eio_read_data;
     wire        mem_eio_busy;
     
-    (* keep_hierarchy = "yes" *) Initial_Reset initial_reset (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Initial_Reset initial_reset (
         .clk_i (clk_cpu),
         
         .rst_o (reset)
@@ -116,7 +122,8 @@ module QIPU_Processor(
         .clk_vga_o (clk_vga)
     );
     
-    (* keep_hierarchy = "yes" *) Program_Counter program_counter (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Program_Counter program_counter (
         .clk_i        (clk_cpu),
         .rst_i        (reset),
         .enable_i     (pc_enable),
@@ -128,7 +135,8 @@ module QIPU_Processor(
         .pc_next_o    (pc_next)
     );
     
-    (* keep_hierarchy = "yes" *) Instruction_Decoder instruction_decoder (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Instruction_Decoder instruction_decoder (
         .clk_i            (clk_cpu),
         .rst_i            (reset),
         .enable_i         (instr_dec_enable),
@@ -148,7 +156,8 @@ module QIPU_Processor(
         .rel_jmp_o        (instr_rel_jmp)
     );
     
-    (* keep_hierarchy = "yes" *) Control_Unit control_unit (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Control_Unit control_unit (
         .clk_i              (clk_cpu),
         .rst_i              (reset),
         .mem_busy_i         (mem_busy),
@@ -168,7 +177,8 @@ module QIPU_Processor(
         .jmp_enable_o       (jmp_enable)
     );
     
-    (* keep_hierarchy = "yes" *) Register_Bank register_bank (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Register_Bank register_bank (
         .clk_i          (clk_cpu),
         .rst_i          (reset),
         .reg_src1_i     (instr_reg_src1),
@@ -180,8 +190,9 @@ module QIPU_Processor(
         .data_src1_o    (raw_src1),
         .data_src2_o    (raw_src2)
     );
-    
-    (* keep_hierarchy = "yes" *) Offset_Applicator offset_applicator (
+   
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Offset_Applicator offset_applicator (
         .layout_i         (off_layout),
         .off_normal_i     (instr_off_normal),
         .off_short_i      (instr_off_short),
@@ -195,7 +206,8 @@ module QIPU_Processor(
         .src2_o           (src2)
     );
     
-    (* keep_hierarchy = "yes" *) Immediate_Extender immediate_extender (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Immediate_Extender immediate_extender (
         .ex_mode_i (imm_ex_mode),
         .data_i    (raw_src1),
         .imm_i     (instr_imm),
@@ -203,7 +215,8 @@ module QIPU_Processor(
         .data_o    (imm)
     );
     
-    (* keep_hierarchy = "yes" *) ALU alu (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    ALU alu (
         .alu_ctrl_i (alu_ctrl),
         .src1_sel_i (alu_src1_sel),
         .src1_i     (src1),
@@ -214,7 +227,8 @@ module QIPU_Processor(
         .is_neg_o   (alu_is_neg)
     );
     
-    (* keep_hierarchy = "yes" *) Jump_Decider jump_decider (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Jump_Decider jump_decider (
         .jmp_enable_i (jmp_enable),
         .jmp_cond_i   (instr_jmp_cond),
         .is_zero_i    (alu_is_zero),
@@ -223,7 +237,8 @@ module QIPU_Processor(
         .do_jmp_o     (do_jmp)
     );
 
-    (* keep_hierarchy = "yes" *) Multiplexer_x4 result_selector (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Multiplexer_x4 result_selector (
         .sel_i     (res_sel),
         .data_00_i (alu_res),
         .data_01_i (mem_read_data),
@@ -233,14 +248,16 @@ module QIPU_Processor(
         .data_o    (result)
     );
     
-    (* keep_hierarchy = "yes" *) Memory_Address_Selector memory_address_selector (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Memory_Address_Selector memory_address_selector (
         .addr_sel_i   (mem_addr_sel),
         .instr_addr_i (pc),
         .data_addr_i  (src1),
         .addr_o       (mem_addr)
     );
     
-    (* keep_hierarchy = "yes" *) Memory_Bus memory_bus (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Memory_Bus memory_bus (
         .read_enable_i      (mem_read_enable),
         .write_enable_i     (mem_write_enable),
         .addr_i             (mem_addr),
@@ -264,7 +281,8 @@ module QIPU_Processor(
         .eio_busy_i         (mem_eio_busy)
     );
     
-    (* keep_hierarchy = "yes" *) Random_Access_Memory random_access_memory (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Random_Access_Memory random_access_memory (
         .clk_i          (clk_cpu),
         //.rst_i          (reset),
         .addr_i         (mem_addr[23:0]),
@@ -276,7 +294,8 @@ module QIPU_Processor(
         .busy_o         (mem_ram_busy)
     );
 
-    (* keep_hierarchy = "yes" *) Seven_Segment_Display seven_segment_display (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Seven_Segment_Display seven_segment_display (
         .clk_i          (clk_cpu),
         .rst_i          (reset),
         //.addr_i         (mem_addr),
@@ -291,7 +310,8 @@ module QIPU_Processor(
         .hw_cathodes_o  (hw_svn_seg_cathodes_o)
     );
 
-    (* keep_hierarchy = "yes" *) Easy_IO easy_io (
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Easy_IO easy_io (
         .clk_i               (clk_cpu),
         .rst_i               (reset),
         //.addr_i              (mem_addr),

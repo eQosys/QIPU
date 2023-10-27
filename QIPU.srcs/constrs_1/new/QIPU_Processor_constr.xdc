@@ -78,3 +78,7 @@ set_property -dict { PACKAGE_PIN U16 IOSTANDARD LVCMOS33 } [get_ports { hw_slide
 #set_property -dict { PACKAGE_PIN J18 IOSTANDARD LVCMOS33 } [get_ports { hw_vga_blue_o[3] }]
 #set_property -dict { PACKAGE_PIN P19 IOSTANDARD LVCMOS33 } [get_ports { hw_vga_hsync_o }]
 #set_property -dict { PACKAGE_PIN R19 IOSTANDARD LVCMOS33 } [get_ports { hw_vga_vsync_o }]
+
+# UART
+#set_property -dict { PACKAGE_PIN B18 IOSTANDARD LVCMOS33 } [get_ports { hw_uart_rx_i }]
+#set_property -dict { PACKAGE_PIN A18 IOSTANDARD LVCMOS33 } [get_ports { hw_uart_tx_o }]
