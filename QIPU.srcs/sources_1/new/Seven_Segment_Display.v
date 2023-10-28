@@ -31,6 +31,7 @@ module Seven_Segment_Display(
             data <= write_data_i;
     end
 
+
     // SEVEN SEGMENT DISPLAY OUTPUT LOGIC
     always @ (posedge clk_i) begin
         if (rst_i)

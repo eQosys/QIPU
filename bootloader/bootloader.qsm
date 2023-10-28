@@ -18,6 +18,12 @@ lui r0 sts "bo"
 lli r0 sts "ot"
 st zero(-1) r0
 
+~~ store vga base address in r0
+lui r0 0b0000000100000010
+lli r0 0b0000000000000000
+~~ set output mode to text
+st r0 zero(1)
+
 ~~ store vram base address in r0
 lui r0 0b0000000100000000
 lli r0 0b0000000000000000
@@ -31,11 +37,11 @@ li r2 0b100000000000000000
 ::loop
     ~~ load slide switch states into r4
     ld r4 zero(-2)
-    ~~ write swlide switch states to leds
+    ~~ write slide switch states to leds
     st zero(-2) r4
     ~~ combine pixel address with vram base address
     or r3 r0 r1
-    ~~ set pixel to white
+    ~~ set pixel to slide switch states
     st r3 r4
     ~~ increment pixel address
     add r1 r1 zero(1)
@@ -45,11 +51,6 @@ li r2 0b100000000000000000
     jrnz zero(rel loop) r3
     ~~ reset pixel address
     add r1 zero zero
-
-    li r5 100000
-    ::delayLoop
-        sub r5 r5 zero(1)
-    jrnz zero(rel delayLoop) r5
 ~~ jump to loop
 jrz zero(rel loop) zero
 

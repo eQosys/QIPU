@@ -372,8 +372,8 @@ module QIPU_Processor(
     VGA_Controller vga_controller (
         .clk_cpu_i          (clk_cpu),
         .clk_vga_i          (clk_vga),
-        //.rst_i              (reset),
-        .addr_i             (mem_addr),
+        .rst_i              (reset),
+        //.addr_i             (mem_addr),
         .write_data_i       (result),
         .read_enable_i      (mem_vga_read_enable),
         .write_enable_i     (mem_vga_write_enable),
