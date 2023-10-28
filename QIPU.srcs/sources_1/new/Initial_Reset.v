@@ -1,19 +1,14 @@
 `timescale 1ns / 1ps
 
 module Initial_Reset(
-        input clk_i,
+        input      clk_i,
         
-        output rst_o
+        output reg rst_o
     );
-    
-    reg [3:0] counter;
-    initial counter = 4'b1111;
-    
-    assign rst_o = counter != 0;
-    
+
+    initial rst_o = 1;
     always @ (posedge clk_i) begin
-        if (counter != 0)
-            counter <= counter - 1;
+        rst_o <= 0;
     end
     
 endmodule

@@ -1,9 +1,10 @@
 // CONTROL UNIT STATES
-`define CU_STATE_UNUSED             2'bzz
-`define CU_STATE_FETCH              2'b00
-`define CU_STATE_EXECUTE            2'b01
-`define CU_STATE_MEM_READ_WAIT      2'b10
-`define CU_STATE_MEM_WRITE_WAIT     2'b11
+`define CU_STATE_UNUSED             3'bzzz
+`define CU_STATE_FETCH              3'b000
+`define CU_STATE_DECODE             3'b001
+`define CU_STATE_EXECUTE            3'b010
+`define CU_STATE_MEM_READ_WAIT      3'b011
+`define CU_STATE_MEM_WRITE_WAIT     3'b100
 
 // CONTROL UNIT WAIT FOR
 `define CU_EXE_TYPE_REGISTER    2'b00

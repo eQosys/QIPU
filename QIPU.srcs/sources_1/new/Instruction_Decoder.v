@@ -21,7 +21,7 @@ module Instruction_Decoder(
     );
     
     reg  [31:0] instr;
-    wire [31:0] temp_instr = enable_i ? instr_i : instr;
+    wire [31:0] temp_instr = instr; //enable_i ? instr_i : instr;
     
     assign opcode_o         = temp_instr[ 4: 0];
     assign reg_dest_o       = temp_instr[ 8: 5];

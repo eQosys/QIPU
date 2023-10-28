@@ -2,10 +2,10 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
-// Date        : Fri Oct 27 00:24:22 2023
+// Date        : Tue Oct 24 23:16:30 2023
 // Host        : TecArch running 64-bit Arch Linux
-// Command     : write_verilog -force -mode funcsim
-//               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Clock_Manager/Clock_Manager_sim_netlist.v
+// Command     : write_verilog -force -mode funcsim -rename_top Clock_Manager -prefix
+//               Clock_Manager_ Clock_Manager_sim_netlist.v
 // Design      : Clock_Manager
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -26,13 +26,13 @@ module Clock_Manager
   (* IBUF_LOW_PWR *) wire clk_i;
   wire clk_vga_o;
 
-  Clock_Manager_clk_wiz inst
+  Clock_Manager_Clock_Manager_clk_wiz inst
        (.clk_cpu_o(clk_cpu_o),
         .clk_i(clk_i),
         .clk_vga_o(clk_vga_o));
 endmodule
 
-module Clock_Manager_clk_wiz
+module Clock_Manager_Clock_Manager_clk_wiz
    (clk_cpu_o,
     clk_vga_o,
     clk_i);
@@ -80,14 +80,14 @@ module Clock_Manager_clk_wiz
   (* BOX_TYPE = "PRIMITIVE" *) 
   PLLE2_ADV #(
     .BANDWIDTH("OPTIMIZED"),
-    .CLKFBOUT_MULT(9),
+    .CLKFBOUT_MULT(17),
     .CLKFBOUT_PHASE(0.000000),
     .CLKIN1_PERIOD(10.000000),
     .CLKIN2_PERIOD(0.000000),
-    .CLKOUT0_DIVIDE(30),
+    .CLKOUT0_DIVIDE(17),
     .CLKOUT0_DUTY_CYCLE(0.500000),
     .CLKOUT0_PHASE(0.000000),
-    .CLKOUT1_DIVIDE(36),
+    .CLKOUT1_DIVIDE(34),
     .CLKOUT1_DUTY_CYCLE(0.500000),
     .CLKOUT1_PHASE(0.000000),
     .CLKOUT2_DIVIDE(1),
@@ -103,7 +103,7 @@ module Clock_Manager_clk_wiz
     .CLKOUT5_DUTY_CYCLE(0.500000),
     .CLKOUT5_PHASE(0.000000),
     .COMPENSATION("ZHOLD"),
-    .DIVCLK_DIVIDE(1),
+    .DIVCLK_DIVIDE(2),
     .IS_CLKINSEL_INVERTED(1'b0),
     .IS_PWRDWN_INVERTED(1'b0),
     .IS_RST_INVERTED(1'b0),

@@ -21,16 +21,30 @@ module Memory_Bus(
         output            eio_read_enable_o,
         output            eio_write_enable_o,
         input      [31:0] eio_read_data_i,
-        input             eio_busy_i
+        input             eio_busy_i,
+
+        output            vrm_read_enable_o,
+        output            vrm_write_enable_o,
+        input      [31:0] vrm_read_data_i,
+        input             vrm_busy_i,
+
+        output            vga_read_enable_o,
+        output            vga_write_enable_o,
+        input      [31:0] vga_read_data_i,
+        input             vga_busy_i
     );
     
     localparam ENABLE_ID_UNUSED = 4'bzzzz;
     localparam ENABLE_ID_RAM    = 4'b0000;
     localparam ENABLE_ID_SSD    = 4'b0001;
     localparam ENABLE_ID_EIO    = 4'b0010;
+    localparam ENABLE_ID_VRM    = 4'b0011;
+    localparam ENABLE_ID_VGA    = 4'b0100;
     
     //                         32'b................................;
     localparam ADDR_MASK_RAM = 32'b00000000zzzzzzzzzzzzzzzzzzzzzzzz;
+    localparam ADDR_MASK_VRM = 32'b000000010000000zzzzzzzzzzzzzzzzz;
+    localparam ADDR_MASK_VGA = 32'b000000010000001zzzzzzzzzzzzzzzzz;
     localparam ADDR_MASK_SSD = 32'b11111111111111111111111111111111;
     localparam ADDR_MASK_EIO = 32'b11111111111111111111111111111110;
 
@@ -38,6 +52,8 @@ module Memory_Bus(
     wire       ram_select = (enable_id == ENABLE_ID_RAM);
     wire       ssd_select = (enable_id == ENABLE_ID_SSD);
     wire       eio_select = (enable_id == ENABLE_ID_EIO);
+    wire       vrm_select = (enable_id == ENABLE_ID_VRM);
+    wire       vga_select = (enable_id == ENABLE_ID_VGA);
     
     assign ram_read_enable_o = ram_select & read_enable_i;
     assign ram_write_enable_o = ram_select & write_enable_i;
@@ -47,6 +63,12 @@ module Memory_Bus(
 
     assign eio_read_enable_o = eio_select & read_enable_i;
     assign eio_write_enable_o = eio_select & write_enable_i;
+
+    assign vrm_read_enable_o = vrm_select & read_enable_i;
+    assign vrm_write_enable_o = vrm_select & write_enable_i;
+
+    assign vga_read_enable_o = vga_select & read_enable_i;
+    assign vga_write_enable_o = vga_select & write_enable_i;
 
     always @ (*) begin
         casez (addr_i)
@@ -64,6 +86,16 @@ module Memory_Bus(
                 enable_id    <= ENABLE_ID_EIO;
                 read_data_o  <= eio_read_data_i;
                 busy_o       <= eio_busy_i;
+            end
+            ADDR_MASK_VRM: begin
+                enable_id    <= ENABLE_ID_VRM;
+                read_data_o  <= vrm_read_data_i;
+                busy_o       <= vrm_busy_i;
+            end
+            ADDR_MASK_VGA: begin
+                enable_id    <= ENABLE_ID_VGA;
+                read_data_o  <= vga_read_data_i;
+                busy_o       <= vga_busy_i;
             end
             default: begin
                 enable_id    <= ENABLE_ID_UNUSED;

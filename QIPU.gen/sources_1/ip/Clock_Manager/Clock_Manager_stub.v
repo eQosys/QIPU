@@ -2,10 +2,10 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
-// Date        : Fri Oct 27 00:24:22 2023
+// Date        : Tue Oct 24 23:16:30 2023
 // Host        : TecArch running 64-bit Arch Linux
-// Command     : write_verilog -force -mode synth_stub
-//               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Clock_Manager/Clock_Manager_stub.v
+// Command     : write_verilog -force -mode synth_stub -rename_top Clock_Manager -prefix
+//               Clock_Manager_ Clock_Manager_stub.v
 // Design      : Clock_Manager
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7a35tcpg236-1

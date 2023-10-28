@@ -10,13 +10,13 @@ module QIPU_Processor(
         output [15:0] hw_slide_leds_o,
         
         output [ 3:0] hw_svn_seg_anodes_o,
-        output [ 7:0] hw_svn_seg_cathodes_o
+        output [ 7:0] hw_svn_seg_cathodes_o,
         
-        //output [ 3:0] hw_vga_red_o,
-        //output [ 3:0] hw_vga_green_o,
-        //output [ 3:0] hw_vga_blue_o,
-        //output        hw_vga_hsync_o,
-        //output        hw_vga_vsync_o,
+        output [ 3:0] hw_vga_red_o,
+        output [ 3:0] hw_vga_green_o,
+        output [ 3:0] hw_vga_blue_o,
+        output        hw_vga_hsync_o,
+        output        hw_vga_vsync_o
 
         //input         hw_uart_rx_i,
         //output        hw_uart_tx_o
@@ -92,6 +92,10 @@ module QIPU_Processor(
     wire        mem_ssd_write_enable;
     wire        mem_eio_read_enable;
     wire        mem_eio_write_enable;
+    wire        mem_vrm_read_enable;
+    wire        mem_vrm_write_enable;
+    wire        mem_vga_read_enable;
+    wire        mem_vga_write_enable;
     
     // result_selector
     wire [31:0] result;
@@ -107,6 +111,16 @@ module QIPU_Processor(
     // easy_io
     wire [31:0] mem_eio_read_data;
     wire        mem_eio_busy;
+
+    // video_memory
+    wire [31:0] mem_vrm_read_data;
+    wire        mem_vrm_busy;
+    wire [ 7:0] vram_vga_data;
+
+    // vga_controller
+    wire [31:0] mem_vga_read_data;
+    wire        mem_vga_busy;
+    wire [16:0] vga_vram_addr;
     
     (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
     Initial_Reset initial_reset (
@@ -278,15 +292,25 @@ module QIPU_Processor(
         .eio_read_enable_o  (mem_eio_read_enable),
         .eio_write_enable_o (mem_eio_write_enable),
         .eio_read_data_i    (mem_eio_read_data),
-        .eio_busy_i         (mem_eio_busy)
+        .eio_busy_i         (mem_eio_busy),
+
+        .vrm_read_enable_o  (mem_vrm_read_enable),
+        .vrm_write_enable_o (mem_vrm_write_enable),
+        .vrm_read_data_i    (mem_vrm_read_data),
+        .vrm_busy_i         (mem_vrm_busy),
+
+        .vga_read_enable_o  (mem_vga_read_enable),
+        .vga_write_enable_o (mem_vga_write_enable),
+        .vga_read_data_i    (mem_vga_read_data),
+        .vga_busy_i         (mem_vga_busy)
     );
     
     (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
     Random_Access_Memory random_access_memory (
         .clk_i          (clk_cpu),
         //.rst_i          (reset),
-        .addr_i         (mem_addr[23:0]),
-        .data_i         (result),
+        .addr_i         (mem_addr),
+        .write_data_i   (result),
         .read_enable_i  (mem_ram_read_enable),
         .write_enable_i (mem_ram_write_enable),
         
@@ -299,7 +323,7 @@ module QIPU_Processor(
         .clk_i          (clk_cpu),
         .rst_i          (reset),
         //.addr_i         (mem_addr),
-        .data_i         (result),
+        .write_data_i   (result),
         .read_enable_i  (mem_ssd_read_enable),
         .write_enable_i (mem_ssd_write_enable),
 
@@ -315,7 +339,7 @@ module QIPU_Processor(
         .clk_i               (clk_cpu),
         .rst_i               (reset),
         //.addr_i              (mem_addr),
-        .data_i              (result),
+        .write_data_i        (result),
         .read_enable_i       (mem_eio_read_enable),
         .write_enable_i      (mem_eio_write_enable),
         
@@ -325,6 +349,46 @@ module QIPU_Processor(
         .hw_dpad_btns_i      (hw_dpad_btns_i),
         .hw_slide_switches_i (hw_slide_switches_i),
         .hw_slide_leds_o     (hw_slide_leds_o)
+    );
+
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    Video_Memory video_memory (
+        .clk_cpu_i          (clk_cpu),
+        .clk_vga_i          (clk_vga),
+        //.rst_i              (reset),
+        .addr_i             (mem_addr),
+        .write_data_i       (result),
+        .read_enable_i      (mem_vrm_read_enable),
+        .write_enable_i     (mem_vrm_write_enable),
+
+        .read_data_o        (mem_vrm_read_data),
+        .busy_o             (mem_vrm_busy),
+
+        .vga_ctrl_addr_i    (vga_vram_addr),
+        .vga_ctrl_data_o    (vram_vga_data)
+    );
+
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    VGA_Controller vga_controller (
+        .clk_cpu_i          (clk_cpu),
+        .clk_vga_i          (clk_vga),
+        //.rst_i              (reset),
+        .addr_i             (mem_addr),
+        .write_data_i       (result),
+        .read_enable_i      (mem_vga_read_enable),
+        .write_enable_i     (mem_vga_write_enable),
+        
+        .read_data_o        (mem_vga_read_data),
+        .busy_o             (mem_vga_busy),
+
+        .vram_addr_o        (vga_vram_addr),
+        .vram_data_i        (vram_vga_data),
+
+        .hw_red_o           (hw_vga_red_o),
+        .hw_green_o         (hw_vga_green_o),
+        .hw_blue_o          (hw_vga_blue_o),
+        .hw_hsync_o         (hw_vga_hsync_o),
+        .hw_vsync_o         (hw_vga_vsync_o)
     );
 
 endmodule

@@ -3,8 +3,8 @@
 module Easy_IO(
         input             clk_i,
         input             rst_i,
-        //input      [23:0] addr_i,
-        input      [31:0] data_i,
+        //input      [31:0] addr_i,
+        input      [31:0] write_data_i,
         input             read_enable_i,
         input             write_enable_i,
 
@@ -24,7 +24,7 @@ module Easy_IO(
         else if (read_enable_i)
             read_data_o     <= { 11'b0, hw_dpad_btns_i, hw_slide_switches_i };
         else if (write_enable_i)
-            hw_slide_leds_o <= { 16'b0, data_i[15:0] };
+            hw_slide_leds_o <= { 16'b0, write_data_i[15:0] };
     end
 
 endmodule

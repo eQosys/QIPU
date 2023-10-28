@@ -2,10 +2,10 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
--- Date        : Fri Oct 27 00:24:22 2023
+-- Date        : Tue Oct 24 23:16:30 2023
 -- Host        : TecArch running 64-bit Arch Linux
--- Command     : write_vhdl -force -mode funcsim
---               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Clock_Manager/Clock_Manager_sim_netlist.vhdl
+-- Command     : write_vhdl -force -mode funcsim -rename_top Clock_Manager -prefix
+--               Clock_Manager_ Clock_Manager_sim_netlist.vhdl
 -- Design      : Clock_Manager
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -15,15 +15,15 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity Clock_Manager_clk_wiz is
+entity Clock_Manager_Clock_Manager_clk_wiz is
   port (
     clk_cpu_o : out STD_LOGIC;
     clk_vga_o : out STD_LOGIC;
     clk_i : in STD_LOGIC
   );
-end Clock_Manager_clk_wiz;
+end Clock_Manager_Clock_Manager_clk_wiz;
 
-architecture STRUCTURE of Clock_Manager_clk_wiz is
+architecture STRUCTURE of Clock_Manager_Clock_Manager_clk_wiz is
   signal clk_cpu_o_Clock_Manager : STD_LOGIC;
   signal clk_i_Clock_Manager : STD_LOGIC;
   signal clk_vga_o_Clock_Manager : STD_LOGIC;
@@ -75,14 +75,14 @@ clkout2_buf: unisim.vcomponents.BUFG
 plle2_adv_inst: unisim.vcomponents.PLLE2_ADV
     generic map(
       BANDWIDTH => "OPTIMIZED",
-      CLKFBOUT_MULT => 9,
+      CLKFBOUT_MULT => 17,
       CLKFBOUT_PHASE => 0.000000,
       CLKIN1_PERIOD => 10.000000,
       CLKIN2_PERIOD => 0.000000,
-      CLKOUT0_DIVIDE => 30,
+      CLKOUT0_DIVIDE => 17,
       CLKOUT0_DUTY_CYCLE => 0.500000,
       CLKOUT0_PHASE => 0.000000,
-      CLKOUT1_DIVIDE => 36,
+      CLKOUT1_DIVIDE => 34,
       CLKOUT1_DUTY_CYCLE => 0.500000,
       CLKOUT1_PHASE => 0.000000,
       CLKOUT2_DIVIDE => 1,
@@ -98,7 +98,7 @@ plle2_adv_inst: unisim.vcomponents.PLLE2_ADV
       CLKOUT5_DUTY_CYCLE => 0.500000,
       CLKOUT5_PHASE => 0.000000,
       COMPENSATION => "ZHOLD",
-      DIVCLK_DIVIDE => 1,
+      DIVCLK_DIVIDE => 2,
       IS_CLKINSEL_INVERTED => '0',
       IS_PWRDWN_INVERTED => '0',
       IS_RST_INVERTED => '0',
@@ -146,7 +146,7 @@ end Clock_Manager;
 
 architecture STRUCTURE of Clock_Manager is
 begin
-inst: entity work.Clock_Manager_clk_wiz
+inst: entity work.Clock_Manager_Clock_Manager_clk_wiz
      port map (
       clk_cpu_o => clk_cpu_o,
       clk_i => clk_i,

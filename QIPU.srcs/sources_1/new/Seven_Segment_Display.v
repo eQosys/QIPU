@@ -5,7 +5,7 @@ module Seven_Segment_Display(
         input             rst_i,
         
         //input      [31:0] addr_i,
-        input      [31:0] data_i,
+        input      [31:0] write_data_i,
         input             read_enable_i,
         input             write_enable_i,
 
@@ -28,7 +28,7 @@ module Seven_Segment_Display(
         else if (read_enable_i)
             read_data_o <= data;
         else if (write_enable_i)
-            data <= data_i;
+            data <= write_data_i;
     end
 
     // SEVEN SEGMENT DISPLAY OUTPUT LOGIC

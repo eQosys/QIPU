@@ -3,8 +3,8 @@
 module Random_Access_Memory(
         input             clk_i,
         //input             rst_i,
-        input      [23:0] addr_i,
-        input      [31:0] data_i,
+        input      [31:0] addr_i,
+        input      [31:0] write_data_i,
         input             read_enable_i,
         input             write_enable_i,
         
@@ -21,7 +21,7 @@ module Random_Access_Memory(
         if (read_enable_i)
             read_data_o <= mem[addr_i / 4];
         else if (write_enable_i)
-            mem[addr_i / 4] <= data_i;
+            mem[addr_i / 4] <= write_data_i;
     end
 
 endmodule
