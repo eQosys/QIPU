@@ -16,10 +16,10 @@ module QIPU_Processor(
         output [ 3:0] hw_vga_green_o,
         output [ 3:0] hw_vga_blue_o,
         output        hw_vga_hsync_o,
-        output        hw_vga_vsync_o
+        output        hw_vga_vsync_o,
 
-        //input         hw_uart_rx_i,
-        //output        hw_uart_tx_o
+        input         hw_uart_rx_i,
+        output        hw_uart_tx_o
     );
     
     wire reset;
@@ -27,6 +27,7 @@ module QIPU_Processor(
     // clock_manager
     wire clk_cpu;
     wire clk_vga;
+    wire clk_100;
     
     // program_counter
     wire [31:0] pc;
@@ -120,7 +121,7 @@ module QIPU_Processor(
     // vga_controller
     wire [31:0] mem_vga_read_data;
     wire        mem_vga_busy;
-    wire [16:0] vga_vram_addr;
+    wire [17:0] vga_vram_addr;
     
     (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
     Initial_Reset initial_reset (
@@ -133,7 +134,8 @@ module QIPU_Processor(
         .clk_i     (hw_clk_i),
         
         .clk_cpu_o (clk_cpu),
-        .clk_vga_o (clk_vga)
+        .clk_vga_o (clk_vga),
+        .clk_100_o (clk_100)
     );
     
     (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
@@ -389,6 +391,9 @@ module QIPU_Processor(
         .hw_blue_o          (hw_vga_blue_o),
         .hw_hsync_o         (hw_vga_hsync_o),
         .hw_vsync_o         (hw_vga_vsync_o)
+    );
+
+    UART_Controller uart_controller (
     );
 
 endmodule

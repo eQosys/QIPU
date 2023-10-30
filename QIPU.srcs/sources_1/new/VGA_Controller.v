@@ -12,12 +12,12 @@ module VGA_Controller(
         output reg [31:0] read_data_o,
         output            busy_o,
 
-        output reg [16:0] vram_addr_o,
+        output reg [17:0] vram_addr_o,
         input      [ 7:0] vram_data_i,
         
-        output [3:0]      hw_red_o,
-        output [3:0]      hw_green_o,
-        output [3:0]      hw_blue_o,
+        output     [ 3:0] hw_red_o,
+        output     [ 3:0] hw_green_o,
+        output     [ 3:0] hw_blue_o,
         output            hw_hsync_o,
         output            hw_vsync_o
     );
@@ -26,15 +26,15 @@ module VGA_Controller(
     localparam OUTPUT_MODE_TEXT     = 2'b01;
     localparam OUTPUT_MODE_TILEMAP  = 2'b10;
     
-    localparam HORZ_FRONT_PORCH = 16;
-    localparam HORZ_BACK_PORCH  = 48;
-    localparam HORZ_PULSE_WIDTH = 96;
     localparam HORZ_PIXEL_COUNT = 640;
+    localparam HORZ_FRONT_PORCH = 16;
+    localparam HORZ_PULSE_WIDTH = 96;
+    localparam HORZ_BACK_PORCH  = 48;
     
-    localparam VERT_FRONT_PORCH = 10;
-    localparam VERT_BACK_PORCH  = 29;
-    localparam VERT_PULSE_WIDTH = 2;
     localparam VERT_PIXEL_COUNT = 480;
+    localparam VERT_FRONT_PORCH = 10;
+    localparam VERT_PULSE_WIDTH = 2;
+    localparam VERT_BACK_PORCH  = 33;
     
     localparam HORZ_SYNC_BEGIN = HORZ_PIXEL_COUNT + HORZ_FRONT_PORCH;
     localparam HORZ_SYNC_END   = HORZ_SYNC_BEGIN  + HORZ_PULSE_WIDTH;
@@ -46,20 +46,17 @@ module VGA_Controller(
     
 
     reg  [ 1:0] output_mode;
-    reg  [ 9:0] h_counter;
-    reg  [ 9:0] v_counter;
+    reg  [10:0] h_counter;
+    reg  [10:0] v_counter;
     wire        display_enable;
     reg  [11:0] color_int;
     wire [11:0] color_final;
 
-    wire [16:0] vram_addr_low_res_renderer;
+    wire [17:0] vram_addr_low_res_renderer;
     wire [11:0] color_low_res_renderer;
 
-    wire [16:0] vram_addr_text_renderer;
+    wire [17:0] vram_addr_text_renderer;
     wire [11:0] color_text_renderer;
-
-    initial h_counter = 0;
-    initial v_counter = 0;
 
 
     // MEMORY BUS LOGIC

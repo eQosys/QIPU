@@ -19,7 +19,7 @@ lli r0 sts "ot"
 st zero(-1) r0
 
 ~~ store vga base address in r0
-lui r0 0b0000000100000010
+lui r0 0b0000000100000100
 lli r0 0b0000000000000000
 ~~ set output mode to text
 st r0 zero(1)
@@ -40,9 +40,12 @@ li r2 0b100000000000000000
     ~~ write slide switch states to leds
     st zero(-2) r4
     ~~ combine pixel address with vram base address
-    or r3 r0 r1
+    and r5 r1 zero(0b111111111)
+    shl r5 r5 zero(9)
+    or r3 r0 r5
+    or r3 r3 r1
     ~~ set pixel to slide switch states
-    st r3 r4
+    st r3 r4(65)
     ~~ increment pixel address
     add r1 r1 zero(1)
     ~~ subtract pixel address from max pixel address

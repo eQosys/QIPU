@@ -43,8 +43,8 @@ module Memory_Bus(
     
     //                         32'b................................;
     localparam ADDR_MASK_RAM = 32'b00000000zzzzzzzzzzzzzzzzzzzzzzzz;
-    localparam ADDR_MASK_VRM = 32'b000000010000000zzzzzzzzzzzzzzzzz;
-    localparam ADDR_MASK_VGA = 32'b000000010000001zzzzzzzzzzzzzzzzz;
+    localparam ADDR_MASK_VRM = 32'b00000001000000zzzzzzzzzzzzzzzzzz;
+    localparam ADDR_MASK_VGA = 32'b00000001000001zzzzzzzzzzzzzzzzzz;
     localparam ADDR_MASK_SSD = 32'b11111111111111111111111111111111;
     localparam ADDR_MASK_EIO = 32'b11111111111111111111111111111110;
 

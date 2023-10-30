@@ -56,8 +56,9 @@
 //  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
 //   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
 //----------------------------------------------------------------------------
-// clk_cpu_o__50.00000______0.000______50.0______203.457____155.540
-// clk_vga_o__25.00000______0.000______50.0______235.962____155.540
+// clk_cpu_o__50.00000______0.000______50.0______167.017____114.212
+// clk_vga_o__25.00000______0.000______50.0______191.696____114.212
+// clk_100_o__100.00000______0.000______50.0______144.719____114.212
 //
 //----------------------------------------------------------------------------
 // Input Clock   Freq (MHz)    Input Jitter (UI)
@@ -72,6 +73,10 @@ module Clock_Manager_clk_wiz
   // Clock out ports
   output        clk_cpu_o,
   output        clk_vga_o,
+  output        clk_100_o,
+  // Status and control signals
+  input         reset,
+  output        locked,
   input         clk_i
  );
   // Input buffering
@@ -94,7 +99,7 @@ wire clk_in2_Clock_Manager;
 
   wire        clk_cpu_o_Clock_Manager;
   wire        clk_vga_o_Clock_Manager;
-  wire        clk_out3_Clock_Manager;
+  wire        clk_100_o_Clock_Manager;
   wire        clk_out4_Clock_Manager;
   wire        clk_out5_Clock_Manager;
   wire        clk_out6_Clock_Manager;
@@ -107,35 +112,47 @@ wire clk_in2_Clock_Manager;
   wire        clkfbout_Clock_Manager;
   wire        clkfbout_buf_Clock_Manager;
   wire        clkfboutb_unused;
-   wire clkout2_unused;
    wire clkout3_unused;
    wire clkout4_unused;
   wire        clkout5_unused;
   wire        clkout6_unused;
   wire        clkfbstopped_unused;
   wire        clkinstopped_unused;
+  wire        reset_high;
+  (* KEEP = "TRUE" *) 
+  (* ASYNC_REG = "TRUE" *)
+  reg  [7 :0] seq_reg1 = 0;
+  (* KEEP = "TRUE" *) 
+  (* ASYNC_REG = "TRUE" *)
+  reg  [7 :0] seq_reg2 = 0;
+  (* KEEP = "TRUE" *) 
+  (* ASYNC_REG = "TRUE" *)
+  reg  [7 :0] seq_reg3 = 0;
 
   PLLE2_ADV
   #(.BANDWIDTH            ("OPTIMIZED"),
     .COMPENSATION         ("ZHOLD"),
     .STARTUP_WAIT         ("FALSE"),
-    .DIVCLK_DIVIDE        (2),
-    .CLKFBOUT_MULT        (17),
+    .DIVCLK_DIVIDE        (1),
+    .CLKFBOUT_MULT        (8),
     .CLKFBOUT_PHASE       (0.000),
-    .CLKOUT0_DIVIDE       (17),
+    .CLKOUT0_DIVIDE       (16),
     .CLKOUT0_PHASE        (0.000),
     .CLKOUT0_DUTY_CYCLE   (0.500),
-    .CLKOUT1_DIVIDE       (34),
+    .CLKOUT1_DIVIDE       (32),
     .CLKOUT1_PHASE        (0.000),
     .CLKOUT1_DUTY_CYCLE   (0.500),
-    .CLKIN1_PERIOD        (10.000))
+    .CLKOUT2_DIVIDE       (8),
+    .CLKOUT2_PHASE        (0.000),
+    .CLKOUT2_DUTY_CYCLE   (0.500),
+    .CLKIN1_PERIOD        (10.0))
   plle2_adv_inst
     // Output clocks
    (
     .CLKFBOUT            (clkfbout_Clock_Manager),
     .CLKOUT0             (clk_cpu_o_Clock_Manager),
     .CLKOUT1             (clk_vga_o_Clock_Manager),
-    .CLKOUT2             (clkout2_unused),
+    .CLKOUT2             (clk_100_o_Clock_Manager),
     .CLKOUT3             (clkout3_unused),
     .CLKOUT4             (clkout4_unused),
     .CLKOUT5             (clkout5_unused),
@@ -156,8 +173,10 @@ wire clk_in2_Clock_Manager;
     // Other control and status signals
     .LOCKED              (locked_int),
     .PWRDWN              (1'b0),
-    .RST                 (1'b0));
+    .RST                 (reset_high));
+  assign reset_high = reset; 
 
+  assign locked = locked_int;
 // Clock Monitor clock assigning
 //--------------------------------------
  // Output buffering
@@ -172,14 +191,66 @@ wire clk_in2_Clock_Manager;
 
 
 
-  BUFG clkout1_buf
+
+  BUFGCE clkout1_buf
    (.O   (clk_cpu_o),
+    .CE  (seq_reg1[7]),
     .I   (clk_cpu_o_Clock_Manager));
 
+  BUFH clkout1_buf_en
+   (.O   (clk_cpu_o_Clock_Manager_en_clk),
+    .I   (clk_cpu_o_Clock_Manager));
+  always @(posedge clk_cpu_o_Clock_Manager_en_clk or posedge reset_high) begin
+    if(reset_high == 1'b1) begin
+	    seq_reg1 <= 8'h00;
+    end
+    else begin
+        seq_reg1 <= {seq_reg1[6:0],locked_int};
+  
+    end
+  end
 
-  BUFG clkout2_buf
+
+  BUFGCE clkout2_buf
    (.O   (clk_vga_o),
+    .CE  (seq_reg2[7]),
     .I   (clk_vga_o_Clock_Manager));
+ 
+  BUFH clkout2_buf_en
+   (.O   (clk_vga_o_Clock_Manager_en_clk),
+    .I   (clk_vga_o_Clock_Manager));
+ 
+  always @(posedge clk_vga_o_Clock_Manager_en_clk or posedge reset_high) begin
+    if(reset_high == 1'b1) begin
+	  seq_reg2 <= 8'h00;
+    end
+    else begin
+        seq_reg2 <= {seq_reg2[6:0],locked_int};
+  
+    end
+  end
+
+
+  BUFGCE clkout3_buf
+   (.O   (clk_100_o),
+    .CE  (seq_reg3[7]),
+    .I   (clk_100_o_Clock_Manager));
+ 
+  BUFH clkout3_buf_en
+   (.O   (clk_100_o_Clock_Manager_en_clk),
+    .I   (clk_100_o_Clock_Manager));
+ 
+  always @(posedge clk_100_o_Clock_Manager_en_clk or posedge reset_high) begin
+    if(reset_high == 1'b1) begin
+	  seq_reg3 <= 8'h00;
+    end
+    else begin
+        seq_reg3 <= {seq_reg3[6:0],locked_int};
+  
+    end
+  end
+
+
 
 
 

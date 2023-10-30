@@ -12,14 +12,14 @@ module Video_Memory(
         output reg [31:0] read_data_o,
         output            busy_o,
 
-        input      [16:0] vga_ctrl_addr_i,
+        input      [17:0] vga_ctrl_addr_i,
         output reg [ 7:0] vga_ctrl_data_o
     );
 
     reg [ 7:0] vram[0:320*240];
 
-    wire [16:0] addr            = ({ 8'b0, addr_i[         16:8] } * 240 ) + { 9'b0, addr_i         [7:0] };
-    wire [16:0] vga_ctrl_addr   = ({ 8'b0, vga_ctrl_addr_i[16:8] } * 240 ) + { 9'b0, vga_ctrl_addr_i[7:0] };
+    wire [16:0] addr            = ({ 8'b0, addr_i         [17:9] } * 240 ) + { 8'b0, addr_i         [8:0] };
+    wire [16:0] vga_ctrl_addr   = ({ 8'b0, vga_ctrl_addr_i[17:9] } * 240 ) + { 8'b0, vga_ctrl_addr_i[8:0] };
     wire [ 7:0] write_data = write_data_i[7:0];
 
     assign busy_o = read_enable_i | write_enable_i;

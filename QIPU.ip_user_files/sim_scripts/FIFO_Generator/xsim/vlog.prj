@@ -1,0 +1,7 @@
+verilog xil_defaultlib  \
+"../../../../QIPU.gen/sources_1/ip/FIFO_Generator/sim/FIFO_Generator.v" \
+
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

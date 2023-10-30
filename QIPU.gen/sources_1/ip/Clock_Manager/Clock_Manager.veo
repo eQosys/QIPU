@@ -55,8 +55,9 @@
 //  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
 //   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
 //----------------------------------------------------------------------------
-// clk_cpu_o__50.00000______0.000______50.0______203.457____155.540
-// clk_vga_o__25.00000______0.000______50.0______235.962____155.540
+// clk_cpu_o__50.00000______0.000______50.0______167.017____114.212
+// clk_vga_o__25.00000______0.000______50.0______191.696____114.212
+// clk_100_o__100.00000______0.000______50.0______144.719____114.212
 //
 //----------------------------------------------------------------------------
 // Input Clock   Freq (MHz)    Input Jitter (UI)
@@ -74,6 +75,10 @@
     // Clock out ports
     .clk_cpu_o(clk_cpu_o),     // output clk_cpu_o
     .clk_vga_o(clk_vga_o),     // output clk_vga_o
+    .clk_100_o(clk_100_o),     // output clk_100_o
+    // Status and control signals
+    .reset(reset), // input reset
+    .locked(locked),       // output locked
    // Clock in ports
     .clk_i(clk_i)      // input clk_i
 );

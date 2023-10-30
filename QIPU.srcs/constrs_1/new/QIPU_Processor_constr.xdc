@@ -80,5 +80,8 @@ set_property -dict { PACKAGE_PIN P19 IOSTANDARD LVCMOS33 } [get_ports { hw_vga_h
 set_property -dict { PACKAGE_PIN R19 IOSTANDARD LVCMOS33 } [get_ports { hw_vga_vsync_o }]
 
 # UART
-#set_property -dict { PACKAGE_PIN B18 IOSTANDARD LVCMOS33 } [get_ports { hw_uart_rx_i }]
-#set_property -dict { PACKAGE_PIN A18 IOSTANDARD LVCMOS33 } [get_ports { hw_uart_tx_o }]
+set_property -dict { PACKAGE_PIN B18 IOSTANDARD LVCMOS33 } [get_ports { hw_uart_rx_i }]
+set_property -dict { PACKAGE_PIN A18 IOSTANDARD LVCMOS33 } [get_ports { hw_uart_tx_o }]
+
+
+#set_multicycle_path 3 -from [get_pins { vga_controller/output_mode_reg[*]/C }] -to [get_pins { video_memory/vram_reg_*/ADDRBWRADDR[*] }]

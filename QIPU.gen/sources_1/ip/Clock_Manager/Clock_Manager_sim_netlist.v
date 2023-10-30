@@ -2,10 +2,10 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
-// Date        : Tue Oct 24 23:16:30 2023
+// Date        : Mon Oct 30 20:25:45 2023
 // Host        : TecArch running 64-bit Arch Linux
-// Command     : write_verilog -force -mode funcsim -rename_top Clock_Manager -prefix
-//               Clock_Manager_ Clock_Manager_sim_netlist.v
+// Command     : write_verilog -force -mode funcsim
+//               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Clock_Manager/Clock_Manager_sim_netlist.v
 // Design      : Clock_Manager
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -17,43 +17,69 @@
 module Clock_Manager
    (clk_cpu_o,
     clk_vga_o,
+    clk_100_o,
+    reset,
+    locked,
     clk_i);
   output clk_cpu_o;
   output clk_vga_o;
+  output clk_100_o;
+  input reset;
+  output locked;
   input clk_i;
 
+  wire clk_100_o;
   wire clk_cpu_o;
   (* IBUF_LOW_PWR *) wire clk_i;
   wire clk_vga_o;
+  wire locked;
+  wire reset;
 
-  Clock_Manager_Clock_Manager_clk_wiz inst
-       (.clk_cpu_o(clk_cpu_o),
+  Clock_Manager_clk_wiz inst
+       (.clk_100_o(clk_100_o),
+        .clk_cpu_o(clk_cpu_o),
         .clk_i(clk_i),
-        .clk_vga_o(clk_vga_o));
+        .clk_vga_o(clk_vga_o),
+        .locked(locked),
+        .reset(reset));
 endmodule
 
-module Clock_Manager_Clock_Manager_clk_wiz
+module Clock_Manager_clk_wiz
    (clk_cpu_o,
     clk_vga_o,
+    clk_100_o,
+    reset,
+    locked,
     clk_i);
   output clk_cpu_o;
   output clk_vga_o;
+  output clk_100_o;
+  input reset;
+  output locked;
   input clk_i;
 
+  wire clk_100_o;
+  wire clk_100_o_Clock_Manager;
+  wire clk_100_o_Clock_Manager_en_clk;
   wire clk_cpu_o;
   wire clk_cpu_o_Clock_Manager;
+  wire clk_cpu_o_Clock_Manager_en_clk;
   wire clk_i;
   wire clk_i_Clock_Manager;
   wire clk_vga_o;
   wire clk_vga_o_Clock_Manager;
+  wire clk_vga_o_Clock_Manager_en_clk;
   wire clkfbout_Clock_Manager;
   wire clkfbout_buf_Clock_Manager;
-  wire NLW_plle2_adv_inst_CLKOUT2_UNCONNECTED;
+  wire locked;
+  wire reset;
+  (* RTL_KEEP = "true" *) (* async_reg = "true" *) wire [7:0]seq_reg1;
+  (* RTL_KEEP = "true" *) (* async_reg = "true" *) wire [7:0]seq_reg2;
+  (* RTL_KEEP = "true" *) (* async_reg = "true" *) wire [7:0]seq_reg3;
   wire NLW_plle2_adv_inst_CLKOUT3_UNCONNECTED;
   wire NLW_plle2_adv_inst_CLKOUT4_UNCONNECTED;
   wire NLW_plle2_adv_inst_CLKOUT5_UNCONNECTED;
   wire NLW_plle2_adv_inst_DRDY_UNCONNECTED;
-  wire NLW_plle2_adv_inst_LOCKED_UNCONNECTED;
   wire [15:0]NLW_plle2_adv_inst_DO_UNCONNECTED;
 
   (* BOX_TYPE = "PRIMITIVE" *) 
@@ -70,27 +96,85 @@ module Clock_Manager_Clock_Manager_clk_wiz
        (.I(clk_i),
         .O(clk_i_Clock_Manager));
   (* BOX_TYPE = "PRIMITIVE" *) 
-  BUFG clkout1_buf
-       (.I(clk_cpu_o_Clock_Manager),
-        .O(clk_cpu_o));
+  (* XILINX_LEGACY_PRIM = "BUFGCE" *) 
+  (* XILINX_TRANSFORM_PINMAP = "CE:CE0 I:I0 GND:S1,IGNORE0,CE1 VCC:S0,IGNORE1,I1" *) 
+  BUFGCTRL #(
+    .INIT_OUT(0),
+    .PRESELECT_I0("TRUE"),
+    .PRESELECT_I1("FALSE"),
+    .SIM_DEVICE("7SERIES")) 
+    clkout1_buf
+       (.CE0(seq_reg1[7]),
+        .CE1(1'b0),
+        .I0(clk_cpu_o_Clock_Manager),
+        .I1(1'b1),
+        .IGNORE0(1'b0),
+        .IGNORE1(1'b1),
+        .O(clk_cpu_o),
+        .S0(1'b1),
+        .S1(1'b0));
   (* BOX_TYPE = "PRIMITIVE" *) 
-  BUFG clkout2_buf
+  BUFH clkout1_buf_en
+       (.I(clk_cpu_o_Clock_Manager),
+        .O(clk_cpu_o_Clock_Manager_en_clk));
+  (* BOX_TYPE = "PRIMITIVE" *) 
+  (* XILINX_LEGACY_PRIM = "BUFGCE" *) 
+  (* XILINX_TRANSFORM_PINMAP = "CE:CE0 I:I0 GND:S1,IGNORE0,CE1 VCC:S0,IGNORE1,I1" *) 
+  BUFGCTRL #(
+    .INIT_OUT(0),
+    .PRESELECT_I0("TRUE"),
+    .PRESELECT_I1("FALSE"),
+    .SIM_DEVICE("7SERIES")) 
+    clkout2_buf
+       (.CE0(seq_reg2[7]),
+        .CE1(1'b0),
+        .I0(clk_vga_o_Clock_Manager),
+        .I1(1'b1),
+        .IGNORE0(1'b0),
+        .IGNORE1(1'b1),
+        .O(clk_vga_o),
+        .S0(1'b1),
+        .S1(1'b0));
+  (* BOX_TYPE = "PRIMITIVE" *) 
+  BUFH clkout2_buf_en
        (.I(clk_vga_o_Clock_Manager),
-        .O(clk_vga_o));
+        .O(clk_vga_o_Clock_Manager_en_clk));
+  (* BOX_TYPE = "PRIMITIVE" *) 
+  (* XILINX_LEGACY_PRIM = "BUFGCE" *) 
+  (* XILINX_TRANSFORM_PINMAP = "CE:CE0 I:I0 GND:S1,IGNORE0,CE1 VCC:S0,IGNORE1,I1" *) 
+  BUFGCTRL #(
+    .INIT_OUT(0),
+    .PRESELECT_I0("TRUE"),
+    .PRESELECT_I1("FALSE"),
+    .SIM_DEVICE("7SERIES")) 
+    clkout3_buf
+       (.CE0(seq_reg3[7]),
+        .CE1(1'b0),
+        .I0(clk_100_o_Clock_Manager),
+        .I1(1'b1),
+        .IGNORE0(1'b0),
+        .IGNORE1(1'b1),
+        .O(clk_100_o),
+        .S0(1'b1),
+        .S1(1'b0));
+  (* BOX_TYPE = "PRIMITIVE" *) 
+  BUFH clkout3_buf_en
+       (.I(clk_100_o_Clock_Manager),
+        .O(clk_100_o_Clock_Manager_en_clk));
   (* BOX_TYPE = "PRIMITIVE" *) 
   PLLE2_ADV #(
     .BANDWIDTH("OPTIMIZED"),
-    .CLKFBOUT_MULT(17),
+    .CLKFBOUT_MULT(8),
     .CLKFBOUT_PHASE(0.000000),
     .CLKIN1_PERIOD(10.000000),
     .CLKIN2_PERIOD(0.000000),
-    .CLKOUT0_DIVIDE(17),
+    .CLKOUT0_DIVIDE(16),
     .CLKOUT0_DUTY_CYCLE(0.500000),
     .CLKOUT0_PHASE(0.000000),
-    .CLKOUT1_DIVIDE(34),
+    .CLKOUT1_DIVIDE(32),
     .CLKOUT1_DUTY_CYCLE(0.500000),
     .CLKOUT1_PHASE(0.000000),
-    .CLKOUT2_DIVIDE(1),
+    .CLKOUT2_DIVIDE(8),
     .CLKOUT2_DUTY_CYCLE(0.500000),
     .CLKOUT2_PHASE(0.000000),
     .CLKOUT3_DIVIDE(1),
@@ -103,7 +187,7 @@ module Clock_Manager_Clock_Manager_clk_wiz
     .CLKOUT5_DUTY_CYCLE(0.500000),
     .CLKOUT5_PHASE(0.000000),
     .COMPENSATION("ZHOLD"),
-    .DIVCLK_DIVIDE(2),
+    .DIVCLK_DIVIDE(1),
     .IS_CLKINSEL_INVERTED(1'b0),
     .IS_PWRDWN_INVERTED(1'b0),
     .IS_RST_INVERTED(1'b0),
@@ -118,7 +202,7 @@ module Clock_Manager_Clock_Manager_clk_wiz
         .CLKINSEL(1'b1),
         .CLKOUT0(clk_cpu_o_Clock_Manager),
         .CLKOUT1(clk_vga_o_Clock_Manager),
-        .CLKOUT2(NLW_plle2_adv_inst_CLKOUT2_UNCONNECTED),
+        .CLKOUT2(clk_100_o_Clock_Manager),
         .CLKOUT3(NLW_plle2_adv_inst_CLKOUT3_UNCONNECTED),
         .CLKOUT4(NLW_plle2_adv_inst_CLKOUT4_UNCONNECTED),
         .CLKOUT5(NLW_plle2_adv_inst_CLKOUT5_UNCONNECTED),
@@ -129,9 +213,249 @@ module Clock_Manager_Clock_Manager_clk_wiz
         .DO(NLW_plle2_adv_inst_DO_UNCONNECTED[15:0]),
         .DRDY(NLW_plle2_adv_inst_DRDY_UNCONNECTED),
         .DWE(1'b0),
-        .LOCKED(NLW_plle2_adv_inst_LOCKED_UNCONNECTED),
+        .LOCKED(locked),
         .PWRDWN(1'b0),
-        .RST(1'b0));
+        .RST(reset));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg1_reg[0] 
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(locked),
+        .Q(seq_reg1[0]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg1_reg[1] 
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg1[0]),
+        .Q(seq_reg1[1]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg1_reg[2] 
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg1[1]),
+        .Q(seq_reg1[2]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg1_reg[3] 
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg1[2]),
+        .Q(seq_reg1[3]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg1_reg[4] 
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg1[3]),
+        .Q(seq_reg1[4]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg1_reg[5] 
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg1[4]),
+        .Q(seq_reg1[5]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg1_reg[6] 
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg1[5]),
+        .Q(seq_reg1[6]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg1_reg[7] 
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg1[6]),
+        .Q(seq_reg1[7]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg2_reg[0] 
+       (.C(clk_vga_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(locked),
+        .Q(seq_reg2[0]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg2_reg[1] 
+       (.C(clk_vga_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg2[0]),
+        .Q(seq_reg2[1]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg2_reg[2] 
+       (.C(clk_vga_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg2[1]),
+        .Q(seq_reg2[2]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg2_reg[3] 
+       (.C(clk_vga_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg2[2]),
+        .Q(seq_reg2[3]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg2_reg[4] 
+       (.C(clk_vga_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg2[3]),
+        .Q(seq_reg2[4]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg2_reg[5] 
+       (.C(clk_vga_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg2[4]),
+        .Q(seq_reg2[5]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg2_reg[6] 
+       (.C(clk_vga_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg2[5]),
+        .Q(seq_reg2[6]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg2_reg[7] 
+       (.C(clk_vga_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg2[6]),
+        .Q(seq_reg2[7]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg3_reg[0] 
+       (.C(clk_100_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(locked),
+        .Q(seq_reg3[0]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg3_reg[1] 
+       (.C(clk_100_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg3[0]),
+        .Q(seq_reg3[1]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg3_reg[2] 
+       (.C(clk_100_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg3[1]),
+        .Q(seq_reg3[2]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg3_reg[3] 
+       (.C(clk_100_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg3[2]),
+        .Q(seq_reg3[3]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg3_reg[4] 
+       (.C(clk_100_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg3[3]),
+        .Q(seq_reg3[4]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg3_reg[5] 
+       (.C(clk_100_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg3[4]),
+        .Q(seq_reg3[5]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg3_reg[6] 
+       (.C(clk_100_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg3[5]),
+        .Q(seq_reg3[6]));
+  (* ASYNC_REG *) 
+  (* KEEP = "yes" *) 
+  FDCE #(
+    .INIT(1'b0)) 
+    \seq_reg3_reg[7] 
+       (.C(clk_100_o_Clock_Manager_en_clk),
+        .CE(1'b1),
+        .CLR(reset),
+        .D(seq_reg3[6]),
+        .Q(seq_reg3[7]));
 endmodule
 `ifndef GLBL
 `define GLBL
