@@ -97,6 +97,8 @@ module QIPU_Processor(
     wire        mem_vrm_write_enable;
     wire        mem_vga_read_enable;
     wire        mem_vga_write_enable;
+    wire        mem_uar_read_enable;
+    wire        mem_uar_write_enable;
     
     // result_selector
     wire [31:0] result;
@@ -122,6 +124,10 @@ module QIPU_Processor(
     wire [31:0] mem_vga_read_data;
     wire        mem_vga_busy;
     wire [17:0] vga_vram_addr;
+
+    // uart_controller
+    wire [31:0] mem_uar_read_data;
+    wire        mem_uar_busy;
     
     (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
     Initial_Reset initial_reset (
@@ -304,7 +310,12 @@ module QIPU_Processor(
         .vga_read_enable_o  (mem_vga_read_enable),
         .vga_write_enable_o (mem_vga_write_enable),
         .vga_read_data_i    (mem_vga_read_data),
-        .vga_busy_i         (mem_vga_busy)
+        .vga_busy_i         (mem_vga_busy),
+
+        .uar_read_enable_o  (mem_uar_read_enable),
+        .uar_write_enable_o (mem_uar_write_enable),
+        .uar_read_data_i    (mem_uar_read_data),
+        .uar_busy_i         (mem_uar_busy)
     );
     
     (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
@@ -350,7 +361,7 @@ module QIPU_Processor(
         
         .hw_dpad_btns_i      (hw_dpad_btns_i),
         .hw_slide_switches_i (hw_slide_switches_i),
-        .hw_slide_leds_o     (hw_slide_leds_o)
+        .hw_slide_leds_o     (hw_slide_leds_o[14:0])
     );
 
     (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
@@ -394,6 +405,21 @@ module QIPU_Processor(
     );
 
     UART_Controller uart_controller (
+        .clk_i              (clk_cpu),
+        .clk_100_i          (clk_100),
+        .rst_i              (reset),
+        //.addr_i           (mem_addr),
+        .write_data_i       (result),
+        .read_enable_i      (mem_uar_read_enable),
+        .write_enable_i     (mem_uar_write_enable),
+
+        .read_data_o        (mem_uar_read_data),
+        .busy_o             (mem_uar_busy),
+
+        .hw_uart_rx_i       (hw_uart_rx_i),
+        .hw_uart_tx_o       (hw_uart_tx_o),
+
+        .fifo_empty_o       (hw_slide_leds_o[15])
     );
 
 endmodule

@@ -14,10 +14,15 @@ module UART_Controller(
         output        busy_o,
 
         input         hw_uart_rx_i,
-        output        hw_uart_tx_o
+        output        hw_uart_tx_o,
+
+        output fifo_empty_o
     );
 
-    assign busy_o = read_enable_i | write_enable_i;
+    wire receiver_busy;
+    wire transmitter_busy;
+
+    assign busy_o = receiver_busy | transmitter_busy;
 
     UART_Receiver uart_receiver (
         .clk_i         (clk_i),
@@ -26,17 +31,21 @@ module UART_Controller(
 
         .read_enable_i (read_enable_i),
         .data_o        (read_data_o),
+        .busy_o        (receiver_busy),
 
-        .hw_uart_rx_i  (hw_uart_rx_i)
+        .hw_uart_rx_i  (hw_uart_rx_i),
+
+        .fifo_empty_o  (fifo_empty_o)
     );
 
     UART_Transmitter uart_transmitter (
         .clk_i          (clk_i),
-        .clk_i          (clk_100_i),
+        .clk_100_i      (clk_100_i),
         .rst_i          (rst_i),
 
         .write_enable_i (write_enable_i),
         .data_i         (write_data_i),
+        .busy_o         (transmitter_busy),
 
         .hw_uart_tx_o   (hw_uart_tx_o)
     );

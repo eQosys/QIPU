@@ -67,7 +67,7 @@
 
 `timescale 1ps/1ps
 
-(* CORE_GENERATION_INFO = "Clock_Manager,clk_wiz_v6_0_12_0_0,{component_name=Clock_Manager,use_phase_alignment=true,use_min_o_jitter=false,use_max_i_jitter=false,use_dyn_phase_shift=false,use_inclk_switchover=false,use_dyn_reconfig=false,enable_axi=0,feedback_source=FDBK_AUTO,PRIMITIVE=PLL,num_out_clk=3,clkin1_period=10.0,clkin2_period=10.0,use_power_down=false,use_reset=true,use_locked=true,use_inclk_stopped=false,feedback_type=SINGLE,CLOCK_MGR_TYPE=NA,manual_override=false}" *)
+(* CORE_GENERATION_INFO = "Clock_Manager,clk_wiz_v6_0_12_0_0,{component_name=Clock_Manager,use_phase_alignment=true,use_min_o_jitter=false,use_max_i_jitter=false,use_dyn_phase_shift=false,use_inclk_switchover=false,use_dyn_reconfig=false,enable_axi=0,feedback_source=FDBK_AUTO,PRIMITIVE=PLL,num_out_clk=3,clkin1_period=10.0,clkin2_period=10.0,use_power_down=false,use_reset=false,use_locked=true,use_inclk_stopped=false,feedback_type=SINGLE,CLOCK_MGR_TYPE=NA,manual_override=false}" *)
 
 module Clock_Manager 
  (
@@ -76,7 +76,6 @@ module Clock_Manager
   output        clk_vga_o,
   output        clk_100_o,
   // Status and control signals
-  input         reset,
   output        locked,
  // Clock in ports
   input         clk_i
@@ -89,7 +88,6 @@ module Clock_Manager
   .clk_vga_o(clk_vga_o),
   .clk_100_o(clk_100_o),
   // Status and control signals               
-  .reset(reset), 
   .locked(locked),
  // Clock in ports
   .clk_i(clk_i)

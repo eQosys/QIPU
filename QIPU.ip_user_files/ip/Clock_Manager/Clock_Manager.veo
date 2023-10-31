@@ -77,7 +77,6 @@
     .clk_vga_o(clk_vga_o),     // output clk_vga_o
     .clk_100_o(clk_100_o),     // output clk_100_o
     // Status and control signals
-    .reset(reset), // input reset
     .locked(locked),       // output locked
    // Clock in ports
     .clk_i(clk_i)      // input clk_i

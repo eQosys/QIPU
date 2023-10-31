@@ -75,7 +75,6 @@ module Clock_Manager_clk_wiz
   output        clk_vga_o,
   output        clk_100_o,
   // Status and control signals
-  input         reset,
   output        locked,
   input         clk_i
  );
@@ -118,7 +117,6 @@ wire clk_in2_Clock_Manager;
   wire        clkout6_unused;
   wire        clkfbstopped_unused;
   wire        clkinstopped_unused;
-  wire        reset_high;
   (* KEEP = "TRUE" *) 
   (* ASYNC_REG = "TRUE" *)
   reg  [7 :0] seq_reg1 = 0;
@@ -173,8 +171,7 @@ wire clk_in2_Clock_Manager;
     // Other control and status signals
     .LOCKED              (locked_int),
     .PWRDWN              (1'b0),
-    .RST                 (reset_high));
-  assign reset_high = reset; 
+    .RST                 (1'b0));
 
   assign locked = locked_int;
 // Clock Monitor clock assigning
@@ -200,15 +197,8 @@ wire clk_in2_Clock_Manager;
   BUFH clkout1_buf_en
    (.O   (clk_cpu_o_Clock_Manager_en_clk),
     .I   (clk_cpu_o_Clock_Manager));
-  always @(posedge clk_cpu_o_Clock_Manager_en_clk or posedge reset_high) begin
-    if(reset_high == 1'b1) begin
-	    seq_reg1 <= 8'h00;
-    end
-    else begin
+  always @(posedge clk_cpu_o_Clock_Manager_en_clk)
         seq_reg1 <= {seq_reg1[6:0],locked_int};
-  
-    end
-  end
 
 
   BUFGCE clkout2_buf
@@ -220,15 +210,8 @@ wire clk_in2_Clock_Manager;
    (.O   (clk_vga_o_Clock_Manager_en_clk),
     .I   (clk_vga_o_Clock_Manager));
  
-  always @(posedge clk_vga_o_Clock_Manager_en_clk or posedge reset_high) begin
-    if(reset_high == 1'b1) begin
-	  seq_reg2 <= 8'h00;
-    end
-    else begin
+  always @(posedge clk_vga_o_Clock_Manager_en_clk)
         seq_reg2 <= {seq_reg2[6:0],locked_int};
-  
-    end
-  end
 
 
   BUFGCE clkout3_buf
@@ -240,15 +223,8 @@ wire clk_in2_Clock_Manager;
    (.O   (clk_100_o_Clock_Manager_en_clk),
     .I   (clk_100_o_Clock_Manager));
  
-  always @(posedge clk_100_o_Clock_Manager_en_clk or posedge reset_high) begin
-    if(reset_high == 1'b1) begin
-	  seq_reg3 <= 8'h00;
-    end
-    else begin
+  always @(posedge clk_100_o_Clock_Manager_en_clk)
         seq_reg3 <= {seq_reg3[6:0],locked_int};
-  
-    end
-  end
 
 
 

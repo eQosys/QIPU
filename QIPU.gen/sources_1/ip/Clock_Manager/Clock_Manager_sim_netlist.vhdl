@@ -2,7 +2,7 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
--- Date        : Mon Oct 30 20:25:45 2023
+-- Date        : Tue Oct 31 03:01:44 2023
 -- Host        : TecArch running 64-bit Arch Linux
 -- Command     : write_vhdl -force -mode funcsim
 --               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Clock_Manager/Clock_Manager_sim_netlist.vhdl
@@ -20,7 +20,6 @@ entity Clock_Manager_clk_wiz is
     clk_cpu_o : out STD_LOGIC;
     clk_vga_o : out STD_LOGIC;
     clk_100_o : out STD_LOGIC;
-    reset : in STD_LOGIC;
     locked : out STD_LOGIC;
     clk_i : in STD_LOGIC
   );
@@ -266,271 +265,271 @@ plle2_adv_inst: unisim.vcomponents.PLLE2_ADV
       DWE => '0',
       LOCKED => \^locked\,
       PWRDWN => '0',
-      RST => reset
+      RST => '0'
     );
-\seq_reg1_reg[0]\: unisim.vcomponents.FDCE
+\seq_reg1_reg[0]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_cpu_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => \^locked\,
-      Q => seq_reg1(0)
+      Q => seq_reg1(0),
+      R => '0'
     );
-\seq_reg1_reg[1]\: unisim.vcomponents.FDCE
+\seq_reg1_reg[1]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_cpu_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg1(0),
-      Q => seq_reg1(1)
+      Q => seq_reg1(1),
+      R => '0'
     );
-\seq_reg1_reg[2]\: unisim.vcomponents.FDCE
+\seq_reg1_reg[2]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_cpu_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg1(1),
-      Q => seq_reg1(2)
+      Q => seq_reg1(2),
+      R => '0'
     );
-\seq_reg1_reg[3]\: unisim.vcomponents.FDCE
+\seq_reg1_reg[3]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_cpu_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg1(2),
-      Q => seq_reg1(3)
+      Q => seq_reg1(3),
+      R => '0'
     );
-\seq_reg1_reg[4]\: unisim.vcomponents.FDCE
+\seq_reg1_reg[4]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_cpu_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg1(3),
-      Q => seq_reg1(4)
+      Q => seq_reg1(4),
+      R => '0'
     );
-\seq_reg1_reg[5]\: unisim.vcomponents.FDCE
+\seq_reg1_reg[5]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_cpu_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg1(4),
-      Q => seq_reg1(5)
+      Q => seq_reg1(5),
+      R => '0'
     );
-\seq_reg1_reg[6]\: unisim.vcomponents.FDCE
+\seq_reg1_reg[6]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_cpu_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg1(5),
-      Q => seq_reg1(6)
+      Q => seq_reg1(6),
+      R => '0'
     );
-\seq_reg1_reg[7]\: unisim.vcomponents.FDCE
+\seq_reg1_reg[7]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_cpu_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg1(6),
-      Q => seq_reg1(7)
+      Q => seq_reg1(7),
+      R => '0'
     );
-\seq_reg2_reg[0]\: unisim.vcomponents.FDCE
+\seq_reg2_reg[0]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_vga_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => \^locked\,
-      Q => seq_reg2(0)
+      Q => seq_reg2(0),
+      R => '0'
     );
-\seq_reg2_reg[1]\: unisim.vcomponents.FDCE
+\seq_reg2_reg[1]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_vga_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg2(0),
-      Q => seq_reg2(1)
+      Q => seq_reg2(1),
+      R => '0'
     );
-\seq_reg2_reg[2]\: unisim.vcomponents.FDCE
+\seq_reg2_reg[2]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_vga_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg2(1),
-      Q => seq_reg2(2)
+      Q => seq_reg2(2),
+      R => '0'
     );
-\seq_reg2_reg[3]\: unisim.vcomponents.FDCE
+\seq_reg2_reg[3]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_vga_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg2(2),
-      Q => seq_reg2(3)
+      Q => seq_reg2(3),
+      R => '0'
     );
-\seq_reg2_reg[4]\: unisim.vcomponents.FDCE
+\seq_reg2_reg[4]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_vga_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg2(3),
-      Q => seq_reg2(4)
+      Q => seq_reg2(4),
+      R => '0'
     );
-\seq_reg2_reg[5]\: unisim.vcomponents.FDCE
+\seq_reg2_reg[5]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_vga_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg2(4),
-      Q => seq_reg2(5)
+      Q => seq_reg2(5),
+      R => '0'
     );
-\seq_reg2_reg[6]\: unisim.vcomponents.FDCE
+\seq_reg2_reg[6]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_vga_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg2(5),
-      Q => seq_reg2(6)
+      Q => seq_reg2(6),
+      R => '0'
     );
-\seq_reg2_reg[7]\: unisim.vcomponents.FDCE
+\seq_reg2_reg[7]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_vga_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg2(6),
-      Q => seq_reg2(7)
+      Q => seq_reg2(7),
+      R => '0'
     );
-\seq_reg3_reg[0]\: unisim.vcomponents.FDCE
+\seq_reg3_reg[0]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_100_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => \^locked\,
-      Q => seq_reg3(0)
+      Q => seq_reg3(0),
+      R => '0'
     );
-\seq_reg3_reg[1]\: unisim.vcomponents.FDCE
+\seq_reg3_reg[1]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_100_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg3(0),
-      Q => seq_reg3(1)
+      Q => seq_reg3(1),
+      R => '0'
     );
-\seq_reg3_reg[2]\: unisim.vcomponents.FDCE
+\seq_reg3_reg[2]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_100_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg3(1),
-      Q => seq_reg3(2)
+      Q => seq_reg3(2),
+      R => '0'
     );
-\seq_reg3_reg[3]\: unisim.vcomponents.FDCE
+\seq_reg3_reg[3]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_100_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg3(2),
-      Q => seq_reg3(3)
+      Q => seq_reg3(3),
+      R => '0'
     );
-\seq_reg3_reg[4]\: unisim.vcomponents.FDCE
+\seq_reg3_reg[4]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_100_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg3(3),
-      Q => seq_reg3(4)
+      Q => seq_reg3(4),
+      R => '0'
     );
-\seq_reg3_reg[5]\: unisim.vcomponents.FDCE
+\seq_reg3_reg[5]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_100_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg3(4),
-      Q => seq_reg3(5)
+      Q => seq_reg3(5),
+      R => '0'
     );
-\seq_reg3_reg[6]\: unisim.vcomponents.FDCE
+\seq_reg3_reg[6]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_100_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg3(5),
-      Q => seq_reg3(6)
+      Q => seq_reg3(6),
+      R => '0'
     );
-\seq_reg3_reg[7]\: unisim.vcomponents.FDCE
+\seq_reg3_reg[7]\: unisim.vcomponents.FDRE
     generic map(
       INIT => '0'
     )
         port map (
       C => clk_100_o_Clock_Manager_en_clk,
       CE => '1',
-      CLR => reset,
       D => seq_reg3(6),
-      Q => seq_reg3(7)
+      Q => seq_reg3(7),
+      R => '0'
     );
 end STRUCTURE;
 library IEEE;
@@ -542,7 +541,6 @@ entity Clock_Manager is
     clk_cpu_o : out STD_LOGIC;
     clk_vga_o : out STD_LOGIC;
     clk_100_o : out STD_LOGIC;
-    reset : in STD_LOGIC;
     locked : out STD_LOGIC;
     clk_i : in STD_LOGIC
   );
@@ -558,7 +556,6 @@ inst: entity work.Clock_Manager_clk_wiz
       clk_cpu_o => clk_cpu_o,
       clk_i => clk_i,
       clk_vga_o => clk_vga_o,
-      locked => locked,
-      reset => reset
+      locked => locked
     );
 end STRUCTURE;

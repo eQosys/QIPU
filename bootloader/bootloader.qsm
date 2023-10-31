@@ -16,7 +16,7 @@
 ~~ view 'boot' message on 7-segment display
 lui r0 sts "bo"
 lli r0 sts "ot"
-st zero(-1) r0
+st zero(-3) r0
 
 ~~ store vga base address in r0
 lui r0 0b0000000100000100
@@ -35,17 +35,16 @@ add r1 zero zero
 li r2 0b100000000000000000
 
 ::loop
-    ~~ load slide switch states into r4
-    ld r4 zero(-2)
-    ~~ write slide switch states to leds
-    st zero(-2) r4
+    ~~ load value from uart fifo
+    ld r4 zero(-1)
+    ~~ if value is less than 0, skip display update
+    jlz zero(rel loop) r4
+    ~~ echo value to uart
+    st zero(-1) r4
     ~~ combine pixel address with vram base address
-    and r5 r1 zero(0b111111111)
-    shl r5 r5 zero(9)
-    or r3 r0 r5
-    or r3 r3 r1
-    ~~ set pixel to slide switch states
-    st r3 r4(65)
+    or r3 r0 r1
+    ~~ set pixel to value received via uart
+    st r3 r4
     ~~ increment pixel address
     add r1 r1 zero(1)
     ~~ subtract pixel address from max pixel address

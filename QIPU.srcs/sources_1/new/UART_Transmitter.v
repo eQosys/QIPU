@@ -7,55 +7,169 @@ module UART_Transmitter(
 
         input             write_enable_i,
         input      [31:0] data_i,
-
-        output reg        data_acknowledge_o,
+        output            busy_o,
 
         output reg        hw_uart_tx_o
     );
 
-    localparam STATE_IDLE   = 2'b00;
-    localparam STATE_START  = 2'b01;
-    localparam STATE_DATA   = 2'b10;
-    localparam STATE_STOP   = 2'b11;
+    // ---------- FIFO ----------
 
-    reg [1:0] state;
-    reg [2:0] bit_counter;
-    reg [7:0] data;
+    reg        fifo_write_enable;
+    reg        fifo_read_enable;
+    reg  [7:0] fifo_write_data;
+    wire [7:0] fifo_read_data;
+    wire       fifo_full;
+    wire       fifo_write_ack;
+    wire       fifo_empty;
+    wire       fifo_read_valid;
+
+    assign fifo_empty_o = fifo_empty;
+
+    FIFO_Generator fifo (
+        .clk        (clk_100_i),
+        .rst        (rst_i),
+        .din        (fifo_write_data),
+        .wr_en      (fifo_write_enable),
+        .rd_en      (fifo_read_enable),
+        .dout       (fifo_read_data),
+        .full       (full),
+        .wr_ack     (fifo_write_ack),
+        .empty      (fifo_empty),
+        .valid      (fifo_read_valid)
+    );
+
+    // ---------- MEMORY BUS ----------
+
+    localparam MEM_BUS_STATE_IDLE  = 2'b00;
+    localparam MEM_BUS_STATE_WRITE = 2'b01;
+
+    reg  [1:0] mem_bus_state;
+    reg        busy;
+    reg        mem_bus_writing;
+    reg        mem_bus_write_done;
+    assign     busy_o = busy | write_enable_i;
 
     always @ (posedge clk_i) begin
         if (rst_i) begin
-            data_acknowledge_o <= 0;
-            hw_uart_tx_o <= 1;
-            state <= STATE_IDLE;
-            bit_counter <= 0;
+            mem_bus_state <= MEM_BUS_STATE_IDLE;
+            busy          <= 0;
         end
         else begin
-            case (state)
-                STATE_IDLE: begin
-                    if (data_valid_i) begin
-                        data               <= data_i;
-                        data_acknowledge_o <= 1;
-                        state              <= STATE_START;
-                        bit_counter        <= 0;
+            case (mem_bus_state)
+                MEM_BUS_STATE_IDLE: begin
+                    if (write_enable_i) begin
+                        mem_bus_state   <= MEM_BUS_STATE_WRITE;
+                        busy            <= 1;
+                        fifo_write_data <= data_i;
                     end
                 end
-                STATE_START: begin
-                    data_acknowledge_o <= 0;
-                    hw_uart_tx_o       <= 0;
-                    state              <= STATE_DATA;
-                end
-                STATE_DATA: begin
-                    hw_uart_tx_o <= data_i[bit_counter];
-                    if (bit_counter == 7) begin
-                        state <= STATE_STOP;
-                    end
-                    else begin
-                        bit_counter <= bit_counter + 1;
+                MEM_BUS_STATE_WRITE: begin
+                    if (mem_bus_write_done) begin
+                        mem_bus_state <= MEM_BUS_STATE_IDLE;
+                        busy          <= 0;
                     end
                 end
-                STATE_STOP: begin
-                    hw_uart_tx_o <= 1;
-                    state        <= STATE_IDLE;
+            endcase
+        end
+    end
+
+    always @ (posedge clk_100_i) begin
+        if (rst_i) begin
+            fifo_write_enable  <= 0;
+            mem_bus_writing    <= 0;
+            mem_bus_write_done <= 0;
+        end
+        else begin
+            if (mem_bus_state == MEM_BUS_STATE_WRITE) begin
+                if (fifo_full) begin
+                    // Do nothing and wait until fifo is not full
+                end
+                else if (!mem_bus_writing) begin
+                    fifo_write_enable <= 1;
+                    mem_bus_writing   <= 1;
+                end
+                else begin
+                    fifo_write_enable <= 0;
+                    if (fifo_write_ack) begin
+                        mem_bus_writing    <= 0;
+                        mem_bus_write_done <= 1;
+                    end
+                end
+            end
+            else begin
+                mem_bus_writing    <= 0;
+                mem_bus_write_done <= 0;
+            end
+        end
+    end
+
+    // ---------- UART ----------
+
+    localparam UART_STATE_IDLE = 2'b00;
+    localparam UART_STATE_START = 2'b01;
+    localparam UART_STATE_DATA = 2'b10;
+    localparam UART_STATE_STOP = 2'b11;
+
+    localparam BAUD_RATE = 10000;
+    localparam UART_CLOCK_MAX = 100000000 / BAUD_RATE;
+
+    reg  [14:0] uart_clk_counter;
+    reg  [ 1:0] uart_state;
+    reg  [ 2:0] uart_bit_counter;
+    reg  [ 7:0] uart_data_to_send;
+    wire        uart_clk_posedge = (uart_clk_counter == UART_CLOCK_MAX / 2);
+
+    always @ (posedge clk_100_i) begin
+        if (rst_i) begin
+            fifo_read_enable   <= 0;
+            uart_clk_counter   <= 0;
+            uart_state         <= UART_STATE_IDLE;
+            uart_bit_counter   <= 0;
+            uart_data_to_send  <= 0;
+            hw_uart_tx_o       <= 1;
+        end
+        else begin
+            if (uart_state == UART_STATE_IDLE)
+                uart_clk_counter <= 0;
+            else if (uart_clk_counter == UART_CLOCK_MAX)
+                uart_clk_counter <= 0;
+            else
+                uart_clk_counter <= uart_clk_counter + 1;
+
+            case (uart_state)
+                UART_STATE_IDLE: begin
+                    if (!fifo_empty) begin
+                        fifo_read_enable <= 1;
+                        uart_state <= UART_STATE_START;
+                    end
+                end
+                UART_STATE_START: begin
+                    fifo_read_enable <= 0;
+                    if (fifo_read_valid) begin
+                        uart_data_to_send <= fifo_read_data;
+                    end
+
+                    if (uart_clk_posedge) begin
+                        hw_uart_tx_o <= 0;
+                        uart_state <= UART_STATE_DATA;
+                    end
+                end
+                UART_STATE_DATA: begin
+                    if (uart_clk_posedge) begin
+                        hw_uart_tx_o <= uart_data_to_send[uart_bit_counter];
+                        uart_bit_counter <= uart_bit_counter + 1;
+
+                        if (uart_bit_counter == 7) begin
+                            uart_state <= UART_STATE_STOP;
+                        end
+                    end
+                end
+                UART_STATE_STOP: begin
+                    if (uart_clk_posedge) begin
+                        hw_uart_tx_o <= 1;
+                        uart_bit_counter <= 0;
+                        uart_state <= UART_STATE_IDLE;
+                    end
                 end
             endcase
         end

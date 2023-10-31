@@ -2,7 +2,7 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
-// Date        : Mon Oct 30 20:25:45 2023
+// Date        : Tue Oct 31 03:01:44 2023
 // Host        : TecArch running 64-bit Arch Linux
 // Command     : write_verilog -force -mode funcsim
 //               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Clock_Manager/Clock_Manager_sim_netlist.v
@@ -18,13 +18,11 @@ module Clock_Manager
    (clk_cpu_o,
     clk_vga_o,
     clk_100_o,
-    reset,
     locked,
     clk_i);
   output clk_cpu_o;
   output clk_vga_o;
   output clk_100_o;
-  input reset;
   output locked;
   input clk_i;
 
@@ -33,28 +31,24 @@ module Clock_Manager
   (* IBUF_LOW_PWR *) wire clk_i;
   wire clk_vga_o;
   wire locked;
-  wire reset;
 
   Clock_Manager_clk_wiz inst
        (.clk_100_o(clk_100_o),
         .clk_cpu_o(clk_cpu_o),
         .clk_i(clk_i),
         .clk_vga_o(clk_vga_o),
-        .locked(locked),
-        .reset(reset));
+        .locked(locked));
 endmodule
 
 module Clock_Manager_clk_wiz
    (clk_cpu_o,
     clk_vga_o,
     clk_100_o,
-    reset,
     locked,
     clk_i);
   output clk_cpu_o;
   output clk_vga_o;
   output clk_100_o;
-  input reset;
   output locked;
   input clk_i;
 
@@ -72,7 +66,6 @@ module Clock_Manager_clk_wiz
   wire clkfbout_Clock_Manager;
   wire clkfbout_buf_Clock_Manager;
   wire locked;
-  wire reset;
   (* RTL_KEEP = "true" *) (* async_reg = "true" *) wire [7:0]seq_reg1;
   (* RTL_KEEP = "true" *) (* async_reg = "true" *) wire [7:0]seq_reg2;
   (* RTL_KEEP = "true" *) (* async_reg = "true" *) wire [7:0]seq_reg3;
@@ -215,247 +208,247 @@ module Clock_Manager_clk_wiz
         .DWE(1'b0),
         .LOCKED(locked),
         .PWRDWN(1'b0),
-        .RST(reset));
+        .RST(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[0] 
        (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(locked),
-        .Q(seq_reg1[0]));
+        .Q(seq_reg1[0]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[1] 
        (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg1[0]),
-        .Q(seq_reg1[1]));
+        .Q(seq_reg1[1]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[2] 
        (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg1[1]),
-        .Q(seq_reg1[2]));
+        .Q(seq_reg1[2]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[3] 
        (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg1[2]),
-        .Q(seq_reg1[3]));
+        .Q(seq_reg1[3]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[4] 
        (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg1[3]),
-        .Q(seq_reg1[4]));
+        .Q(seq_reg1[4]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[5] 
        (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg1[4]),
-        .Q(seq_reg1[5]));
+        .Q(seq_reg1[5]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[6] 
        (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg1[5]),
-        .Q(seq_reg1[6]));
+        .Q(seq_reg1[6]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[7] 
        (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg1[6]),
-        .Q(seq_reg1[7]));
+        .Q(seq_reg1[7]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[0] 
        (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(locked),
-        .Q(seq_reg2[0]));
+        .Q(seq_reg2[0]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[1] 
        (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg2[0]),
-        .Q(seq_reg2[1]));
+        .Q(seq_reg2[1]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[2] 
        (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg2[1]),
-        .Q(seq_reg2[2]));
+        .Q(seq_reg2[2]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[3] 
        (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg2[2]),
-        .Q(seq_reg2[3]));
+        .Q(seq_reg2[3]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[4] 
        (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg2[3]),
-        .Q(seq_reg2[4]));
+        .Q(seq_reg2[4]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[5] 
        (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg2[4]),
-        .Q(seq_reg2[5]));
+        .Q(seq_reg2[5]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[6] 
        (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg2[5]),
-        .Q(seq_reg2[6]));
+        .Q(seq_reg2[6]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[7] 
        (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg2[6]),
-        .Q(seq_reg2[7]));
+        .Q(seq_reg2[7]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[0] 
        (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(locked),
-        .Q(seq_reg3[0]));
+        .Q(seq_reg3[0]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[1] 
        (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg3[0]),
-        .Q(seq_reg3[1]));
+        .Q(seq_reg3[1]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[2] 
        (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg3[1]),
-        .Q(seq_reg3[2]));
+        .Q(seq_reg3[2]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[3] 
        (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg3[2]),
-        .Q(seq_reg3[3]));
+        .Q(seq_reg3[3]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[4] 
        (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg3[3]),
-        .Q(seq_reg3[4]));
+        .Q(seq_reg3[4]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[5] 
        (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg3[4]),
-        .Q(seq_reg3[5]));
+        .Q(seq_reg3[5]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[6] 
        (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg3[5]),
-        .Q(seq_reg3[6]));
+        .Q(seq_reg3[6]),
+        .R(1'b0));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
-  FDCE #(
+  FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[7] 
        (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .CLR(reset),
         .D(seq_reg3[6]),
-        .Q(seq_reg3[7]));
+        .Q(seq_reg3[7]),
+        .R(1'b0));
 endmodule
 `ifndef GLBL
 `define GLBL
