@@ -42,10 +42,13 @@ module UART_Receiver(
     localparam MEM_BUS_STATE_IDLE = 2'b00;
     localparam MEM_BUS_STATE_READ = 2'b01;
 
+    localparam FIFO_STATE_IDLE       = 2'b00;
+    localparam FIFO_STATE_READ_WAIT  = 2'b01;
+    localparam FIFO_STATE_READ_DONE  = 2'b10;
+
     reg  [1:0] mem_bus_state;
+    reg  [1:0] fifo_state;
     reg        busy;
-    reg        mem_bus_reading;
-    reg        mem_bus_read_done;
     assign     busy_o = busy | read_enable_i;
 
 
@@ -63,7 +66,7 @@ module UART_Receiver(
                     end
                 end
                 MEM_BUS_STATE_READ: begin
-                    if (mem_bus_read_done) begin
+                    if (fifo_state == FIFO_STATE_READ_DONE) begin
                         mem_bus_state <= MEM_BUS_STATE_IDLE;
                         busy          <= 0;
                     end
@@ -74,36 +77,35 @@ module UART_Receiver(
 
     always @ (posedge clk_100_i) begin
         if (rst_i) begin
+            fifo_state        <= FIFO_STATE_IDLE;
             fifo_read_enable  <= 0;
-            mem_bus_reading   <= 0;
-            mem_bus_read_done <= 0;
         end
         else begin
-            if (mem_bus_state == MEM_BUS_STATE_READ) begin
-                if (fifo_empty) begin
-                    mem_bus_reading   <= 0;
-                    mem_bus_read_done <= 1;
-                    data_o            <= 32'b1;
-                end
-                else if (!mem_bus_reading) begin
-                    mem_bus_reading  <= 1;
-                    fifo_read_enable <= 1;
-                end
-                else begin
-                    fifo_read_enable <= 0;
-                    if (!mem_bus_read_done) begin
-                        if (fifo_read_valid) begin
-                            mem_bus_reading   <= 0;
-                            mem_bus_read_done <= 1;
-                            data_o <= { 24'b0, fifo_read_data };
+            case (fifo_state)
+                FIFO_STATE_IDLE: begin
+                    if (mem_bus_state == MEM_BUS_STATE_READ) begin
+                        if (fifo_empty) begin
+                            data_o           <= 32'hFFFFFFFF;
+                            fifo_state       <= FIFO_STATE_READ_DONE;
+                        end
+                        else begin
+                            fifo_read_enable <= 1;
+                            fifo_state       <= FIFO_STATE_READ_WAIT;
                         end
                     end
                 end
-            end
-            else begin
-                mem_bus_reading   <= 0;
-                mem_bus_read_done <= 0;
-            end
+                FIFO_STATE_READ_WAIT: begin
+                    fifo_read_enable <= 0;
+                    if (fifo_read_valid) begin
+                        data_o     <= { 24'b0, fifo_read_data};
+                        fifo_state <= FIFO_STATE_READ_DONE;
+                    end
+                end
+                FIFO_STATE_READ_DONE: begin
+                    if (mem_bus_state == MEM_BUS_STATE_IDLE)
+                        fifo_state <= FIFO_STATE_IDLE;
+                end
+            endcase
         end
     end
 

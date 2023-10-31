@@ -38,7 +38,7 @@ li r2 0b100000000000000000
     ~~ load value from uart fifo
     ld r4 zero(-1)
     ~~ if value is less than 0, skip display update
-    jlz zero(rel loop) r4
+    jrlz zero(rel loop) r4
     ~~ echo value to uart
     st zero(-1) r4
     ~~ combine pixel address with vram base address

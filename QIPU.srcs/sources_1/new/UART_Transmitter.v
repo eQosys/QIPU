@@ -43,10 +43,13 @@ module UART_Transmitter(
     localparam MEM_BUS_STATE_IDLE  = 2'b00;
     localparam MEM_BUS_STATE_WRITE = 2'b01;
 
+    localparam FIFO_STATE_IDLE       = 2'b00;
+    localparam FIFO_STATE_WRITE_WAIT = 2'b01;
+    localparam FIFO_STATE_WRITE_DONE = 2'b10;
+
     reg  [1:0] mem_bus_state;
+    reg  [1:0] fifo_state;
     reg        busy;
-    reg        mem_bus_writing;
-    reg        mem_bus_write_done;
     assign     busy_o = busy | write_enable_i;
 
     always @ (posedge clk_i) begin
@@ -64,7 +67,7 @@ module UART_Transmitter(
                     end
                 end
                 MEM_BUS_STATE_WRITE: begin
-                    if (mem_bus_write_done) begin
+                    if (fifo_state == FIFO_STATE_WRITE_DONE) begin
                         mem_bus_state <= MEM_BUS_STATE_IDLE;
                         busy          <= 0;
                     end
@@ -75,31 +78,30 @@ module UART_Transmitter(
 
     always @ (posedge clk_100_i) begin
         if (rst_i) begin
+            fifo_state         <= FIFO_STATE_IDLE;
             fifo_write_enable  <= 0;
-            mem_bus_writing    <= 0;
-            mem_bus_write_done <= 0;
         end
         else begin
-            if (mem_bus_state == MEM_BUS_STATE_WRITE) begin
-                if (fifo_full) begin
-                    // Do nothing and wait until fifo is not full
+            case (fifo_state)
+                FIFO_STATE_IDLE: begin
+                    if (mem_bus_state == MEM_BUS_STATE_WRITE &&
+                        !fifo_full) begin
+                        fifo_state        <= FIFO_STATE_WRITE_WAIT;
+                        fifo_write_enable <= 1;
+                    end
+
                 end
-                else if (!mem_bus_writing) begin
-                    fifo_write_enable <= 1;
-                    mem_bus_writing   <= 1;
-                end
-                else begin
+                FIFO_STATE_WRITE_WAIT: begin
                     fifo_write_enable <= 0;
                     if (fifo_write_ack) begin
-                        mem_bus_writing    <= 0;
-                        mem_bus_write_done <= 1;
+                        fifo_state        <= FIFO_STATE_WRITE_DONE;
                     end
                 end
-            end
-            else begin
-                mem_bus_writing    <= 0;
-                mem_bus_write_done <= 0;
-            end
+                FIFO_STATE_WRITE_DONE: begin
+                    if (mem_bus_state == MEM_BUS_STATE_IDLE)
+                        fifo_state <= FIFO_STATE_IDLE;
+                end
+            endcase
         end
     end
 
