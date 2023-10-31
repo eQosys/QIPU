@@ -112,14 +112,11 @@ module UART_Transmitter(
     localparam UART_STATE_DATA = 2'b10;
     localparam UART_STATE_STOP = 2'b11;
 
-    localparam BAUD_RATE = 10000;
-    localparam UART_CLOCK_MAX = 100000000 / BAUD_RATE;
-
     reg  [14:0] uart_clk_counter;
     reg  [ 1:0] uart_state;
     reg  [ 2:0] uart_bit_counter;
     reg  [ 7:0] uart_data_to_send;
-    wire        uart_clk_posedge = (uart_clk_counter == UART_CLOCK_MAX / 2);
+    wire        uart_clk_posedge = (uart_clk_counter == `UART_CLOCK_MAX / 2);
 
     always @ (posedge clk_100_i) begin
         if (rst_i) begin
@@ -133,7 +130,7 @@ module UART_Transmitter(
         else begin
             if (uart_state == UART_STATE_IDLE)
                 uart_clk_counter <= 0;
-            else if (uart_clk_counter == UART_CLOCK_MAX)
+            else if (uart_clk_counter == `UART_CLOCK_MAX)
                 uart_clk_counter <= 0;
             else
                 uart_clk_counter <= uart_clk_counter + 1;

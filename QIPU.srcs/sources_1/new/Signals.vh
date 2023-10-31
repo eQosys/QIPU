@@ -66,3 +66,6 @@
 `define IMM_EX_MODE_UPPER       2'b00
 `define IMM_EX_MODE_LOWER       2'b01
 `define IMM_EX_MODE_FULL        2'b10
+
+`define UART_BAUD_RATE          115200
+`define UART_CLOCK_MAX          100000000 / `UART_BAUD_RATE

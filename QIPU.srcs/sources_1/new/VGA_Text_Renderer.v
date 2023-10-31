@@ -24,7 +24,7 @@ module VGA_Text_Renderer(
     wire [11:0] char_idx   = { 4'b0, char_ascii } * 12 + { 1'b0, px_row };
     wire [ 7:0] char_data  = char_map[char_idx];
 
-    assign vram_addr_o     = { char_x[8:0], char_y[8:0] };
+    assign vram_addr_o     = { char_y[8:0], char_x[8:0] };
     assign color_o         = {12{char_data[px_col]}};
 
 

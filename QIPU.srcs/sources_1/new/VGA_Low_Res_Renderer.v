@@ -17,7 +17,7 @@ module VGA_Low_Res_Renderer(
         $readmemb("./default_color_lookup_table.bin", color_lookup_table);
     end
 
-    assign vram_addr_o = { h_counter_i[9:1], v_counter_i[9:1] };
+    assign vram_addr_o = { v_counter_i[9:1], h_counter_i[9:1] };
     assign color_idx   = vram_data_i;
     assign color_o     = color_lookup_table[color_idx];
 
