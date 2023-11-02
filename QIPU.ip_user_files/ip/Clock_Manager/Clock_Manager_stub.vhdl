@@ -2,7 +2,7 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
--- Date        : Tue Oct 31 03:01:44 2023
+-- Date        : Wed Nov  1 03:29:00 2023
 -- Host        : TecArch running 64-bit Arch Linux
 -- Command     : write_vhdl -force -mode synth_stub
 --               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Clock_Manager/Clock_Manager_stub.vhdl
@@ -15,10 +15,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity Clock_Manager is
   Port ( 
+    clk_100_o : out STD_LOGIC;
     clk_cpu_o : out STD_LOGIC;
     clk_vga_o : out STD_LOGIC;
-    clk_100_o : out STD_LOGIC;
-    locked : out STD_LOGIC;
     clk_i : in STD_LOGIC
   );
 
@@ -28,6 +27,6 @@ architecture stub of Clock_Manager is
 attribute syn_black_box : boolean;
 attribute black_box_pad_pin : string;
 attribute syn_black_box of stub : architecture is true;
-attribute black_box_pad_pin of stub : architecture is "clk_cpu_o,clk_vga_o,clk_100_o,locked,clk_i";
+attribute black_box_pad_pin of stub : architecture is "clk_100_o,clk_cpu_o,clk_vga_o,clk_i";
 begin
 end;

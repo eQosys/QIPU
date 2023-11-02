@@ -14,9 +14,7 @@ module UART_Controller(
         output        busy_o,
 
         input         hw_uart_rx_i,
-        output        hw_uart_tx_o,
-
-        output fifo_empty_o
+        output        hw_uart_tx_o
     );
 
     wire receiver_busy;
@@ -33,9 +31,7 @@ module UART_Controller(
         .data_o        (read_data_o),
         .busy_o        (receiver_busy),
 
-        .hw_uart_rx_i  (hw_uart_rx_i),
-
-        .fifo_empty_o  (fifo_empty_o)
+        .hw_uart_rx_i  (hw_uart_rx_i)
     );
 
     UART_Transmitter uart_transmitter (

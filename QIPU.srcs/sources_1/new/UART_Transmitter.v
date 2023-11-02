@@ -12,18 +12,39 @@ module UART_Transmitter(
         output reg        hw_uart_tx_o
     );
 
+    localparam MEM_BUS_STATE_IDLE  = 2'b00;
+    localparam MEM_BUS_STATE_WRITE = 2'b01;
+
+    localparam FIFO_STATE_IDLE       = 2'b00;
+    localparam FIFO_STATE_WRITE_WAIT = 2'b01;
+    localparam FIFO_STATE_WRITE_DONE = 2'b10;
+    
+    localparam UART_STATE_IDLE = 2'b00;
+    localparam UART_STATE_START = 2'b01;
+    localparam UART_STATE_DATA = 2'b10;
+    localparam UART_STATE_STOP = 2'b11;
+
+    reg         fifo_write_enable;
+    reg         fifo_read_enable;
+    reg  [ 7:0] fifo_write_data;
+    wire [ 7:0] fifo_read_data;
+    wire        fifo_full;
+    wire        fifo_write_ack;
+    wire        fifo_empty;
+    wire        fifo_read_valid;
+    reg  [ 1:0] mem_bus_state;
+    reg  [ 1:0] fifo_state;
+    reg         busy;
+    reg  [14:0] uart_clk_counter;
+    reg  [ 1:0] uart_state;
+    reg  [ 2:0] uart_bit_counter;
+    reg  [ 7:0] uart_data_to_send;
+    wire        uart_clk_posedge = (uart_clk_counter == `UART_CLOCK_MAX / 2);
+
+    assign      busy_o = busy | write_enable_i;
+
+
     // ---------- FIFO ----------
-
-    reg        fifo_write_enable;
-    reg        fifo_read_enable;
-    reg  [7:0] fifo_write_data;
-    wire [7:0] fifo_read_data;
-    wire       fifo_full;
-    wire       fifo_write_ack;
-    wire       fifo_empty;
-    wire       fifo_read_valid;
-
-    assign fifo_empty_o = fifo_empty;
 
     FIFO_Generator fifo (
         .clk        (clk_100_i),
@@ -32,25 +53,13 @@ module UART_Transmitter(
         .wr_en      (fifo_write_enable),
         .rd_en      (fifo_read_enable),
         .dout       (fifo_read_data),
-        .full       (full),
+        .full       (fifo_full),
         .wr_ack     (fifo_write_ack),
         .empty      (fifo_empty),
         .valid      (fifo_read_valid)
     );
 
     // ---------- MEMORY BUS ----------
-
-    localparam MEM_BUS_STATE_IDLE  = 2'b00;
-    localparam MEM_BUS_STATE_WRITE = 2'b01;
-
-    localparam FIFO_STATE_IDLE       = 2'b00;
-    localparam FIFO_STATE_WRITE_WAIT = 2'b01;
-    localparam FIFO_STATE_WRITE_DONE = 2'b10;
-
-    reg  [1:0] mem_bus_state;
-    reg  [1:0] fifo_state;
-    reg        busy;
-    assign     busy_o = busy | write_enable_i;
 
     always @ (posedge clk_i) begin
         if (rst_i) begin
@@ -106,17 +115,6 @@ module UART_Transmitter(
     end
 
     // ---------- UART ----------
-
-    localparam UART_STATE_IDLE = 2'b00;
-    localparam UART_STATE_START = 2'b01;
-    localparam UART_STATE_DATA = 2'b10;
-    localparam UART_STATE_STOP = 2'b11;
-
-    reg  [14:0] uart_clk_counter;
-    reg  [ 1:0] uart_state;
-    reg  [ 2:0] uart_bit_counter;
-    reg  [ 7:0] uart_data_to_send;
-    wire        uart_clk_posedge = (uart_clk_counter == `UART_CLOCK_MAX / 2);
 
     always @ (posedge clk_100_i) begin
         if (rst_i) begin

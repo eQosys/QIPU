@@ -1,17 +1,8 @@
-~~ .entry test
-
-~~ ::test
-
-~~ lui r0 sts "ra"
-~~ lli r0 sts "m "
-~~ st zero(-1) r0
-~~ ld r0 zero(-2)
-~~ st zero(-2) r0
-~~ jrz zero(-8) zero
-
 .entry test
 
 ::test
+
+~~~~~~~~~~ INITIAL SETUP ~~~~~~~~~~
 
 ~~ view 'boot' message on 7-segment display
 lui r0 sts "bo"
@@ -22,39 +13,62 @@ st zero(-3) r0
 lui r0 0b0000000100000100
 lli r0 0b0000000000000000
 ~~ set output mode to text
-st r0 zero(1)
+st r0 zero(0)
+
+~~~~~~~~~~ RENDERING LOOP ~~~~~~~~~~
+
+~~ r0 -> vram base address
+~~ r1 -> x position
+~~ r2 -> y position
+~~ r3 -> combined vram address
+~~ r4 -> pixel data
+~~ r5 -> temp pixel address
+~~ r6 -> loop-label address
 
 ~~ store vram base address in r0
 lui r0 0b0000000100000000
 lli r0 0b0000000000000000
 
-~~ set pixel address to 0 (stored in r1)
+~~ r1 stores x position
 add r1 zero zero
 
-~~ store max pixel address in r2
-li r2 0b100000000000000000
+~~ r2 stores y position
+add r2 zero zero
+
+~~ store loop-label address in r6
+li r6 loop
 
 ::loop
-    ~~ load value from uart fifo
+    ~~ load pixel data from uart
     ld r4 zero(-1)
-    ~~ if value is less than 0, skip display update
-    jrlz zero(rel loop) r4
-    ~~ echo value to uart
+    ~~ if no data is available, skip display update
+    jlz r6 r4
+    ~~ echo received pixel data to uart
     st zero(-1) r4
-    ~~ combine pixel address with vram base address
-    or r3 r0 r1
-    ~~ set pixel to value received via uart
+
+    ~~ calculate pixel address and store data in vram
+
+    ~~ shift x position 9 bits to the left
+    shl r5 r1 zero(9)
+    ~~ combine x position with vram base address
+    or r3 r0 r5
+    ~~ combine y position with current pixel address
+    or r3 r3 r2
+    ~~ store pixel data in vram
     st r3 r4
-    ~~ increment pixel address
+
+    ~~ increment x position
     add r1 r1 zero(1)
-    ~~ subtract pixel address from max pixel address
-    sub r3 r2 r1
-    ~~ if pixel address is not equal to max pixel address, skip reset and jump to loop
-    jrnz zero(rel loop) r3
-    ~~ reset pixel address
+    ~~ if x position is equal to 160, reset x position and increment y position
+    jnz r6 r1(-160)
     add r1 zero zero
+    add r2 r2 zero(1)
+    ~~ if y position is equal to 80, reset y position
+    jnz r6 r2(-80)
+    add r2 zero zero
+
 ~~ jump to loop
-jrz zero(rel loop) zero
+jz r6 zero
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
 

@@ -9,20 +9,39 @@ module UART_Receiver(
         output reg [31:0] data_o,
         output wire       busy_o,
 
-        input             hw_uart_rx_i,
-
-        output fifo_empty_o
+        input             hw_uart_rx_i
     );
+    
+    localparam MEM_BUS_STATE_IDLE = 2'b00;
+    localparam MEM_BUS_STATE_READ = 2'b01;
+
+    localparam FIFO_STATE_IDLE       = 2'b00;
+    localparam FIFO_STATE_READ_WAIT  = 2'b01;
+    localparam FIFO_STATE_READ_DONE  = 2'b10;
+
+    localparam UART_STATE_IDLE   = 2'b00;
+    localparam UART_STATE_START  = 2'b01;
+    localparam UART_STATE_DATA   = 2'b10;
+    localparam UART_STATE_STOP   = 2'b11;
+
+    reg  [ 1:0] fifo_state;
+    reg         fifo_write_enable;
+    reg         fifo_read_enable;
+    wire [ 7:0] fifo_read_data;
+    wire        fifo_empty;
+    wire        fifo_read_valid;
+
+    reg  [ 1:0] mem_bus_state;
+    reg  [14:0] uart_clk_counter;
+    reg  [ 1:0] uart_state;
+    reg  [ 2:0] uart_bit_counter;
+    reg  [ 7:0] uart_data_received;
+    wire        uart_clk_posedge = (uart_clk_counter == `UART_CLOCK_MAX / 2);
+    reg         busy;
+
+    assign     busy_o = busy | read_enable_i;
 
     // ---------- FIFO ----------
-
-    reg        fifo_write_enable;
-    reg        fifo_read_enable;
-    wire [7:0] fifo_read_data;
-    wire       fifo_empty;
-    wire       fifo_read_valid;
-
-    assign fifo_empty_o = fifo_empty;
 
     FIFO_Generator fifo (
         .clk        (clk_100_i),
@@ -38,19 +57,6 @@ module UART_Receiver(
     );
 
     // ---------- MEMORY BUS ----------
-
-    localparam MEM_BUS_STATE_IDLE = 2'b00;
-    localparam MEM_BUS_STATE_READ = 2'b01;
-
-    localparam FIFO_STATE_IDLE       = 2'b00;
-    localparam FIFO_STATE_READ_WAIT  = 2'b01;
-    localparam FIFO_STATE_READ_DONE  = 2'b10;
-
-    reg  [1:0] mem_bus_state;
-    reg  [1:0] fifo_state;
-    reg        busy;
-    assign     busy_o = busy | read_enable_i;
-
 
     always @ (posedge clk_i) begin
         if (rst_i) begin
@@ -110,17 +116,6 @@ module UART_Receiver(
     end
 
     // ---------- UART ----------
-
-    localparam UART_STATE_IDLE   = 2'b00;
-    localparam UART_STATE_START  = 2'b01;
-    localparam UART_STATE_DATA   = 2'b10;
-    localparam UART_STATE_STOP   = 2'b11;
-
-    reg  [14:0] uart_clk_counter;
-    reg  [ 1:0] uart_state;
-    reg  [ 2:0] uart_bit_counter;
-    reg  [ 7:0] uart_data_received;
-    wire        uart_clk_posedge = (uart_clk_counter == `UART_CLOCK_MAX / 2);
 
     always @ (posedge clk_100_i) begin
         if (rst_i) begin

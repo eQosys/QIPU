@@ -2,7 +2,7 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
-// Date        : Tue Oct 31 03:01:44 2023
+// Date        : Wed Nov  1 03:29:00 2023
 // Host        : TecArch running 64-bit Arch Linux
 // Command     : write_verilog -force -mode funcsim
 //               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Clock_Manager/Clock_Manager_sim_netlist.v
@@ -15,41 +15,35 @@
 
 (* NotValidForBitStream *)
 module Clock_Manager
-   (clk_cpu_o,
+   (clk_100_o,
+    clk_cpu_o,
     clk_vga_o,
-    clk_100_o,
-    locked,
     clk_i);
+  output clk_100_o;
   output clk_cpu_o;
   output clk_vga_o;
-  output clk_100_o;
-  output locked;
   input clk_i;
 
   wire clk_100_o;
   wire clk_cpu_o;
   (* IBUF_LOW_PWR *) wire clk_i;
   wire clk_vga_o;
-  wire locked;
 
   Clock_Manager_clk_wiz inst
        (.clk_100_o(clk_100_o),
         .clk_cpu_o(clk_cpu_o),
         .clk_i(clk_i),
-        .clk_vga_o(clk_vga_o),
-        .locked(locked));
+        .clk_vga_o(clk_vga_o));
 endmodule
 
 module Clock_Manager_clk_wiz
-   (clk_cpu_o,
+   (clk_100_o,
+    clk_cpu_o,
     clk_vga_o,
-    clk_100_o,
-    locked,
     clk_i);
+  output clk_100_o;
   output clk_cpu_o;
   output clk_vga_o;
-  output clk_100_o;
-  output locked;
   input clk_i;
 
   wire clk_100_o;
@@ -65,7 +59,7 @@ module Clock_Manager_clk_wiz
   wire clk_vga_o_Clock_Manager_en_clk;
   wire clkfbout_Clock_Manager;
   wire clkfbout_buf_Clock_Manager;
-  wire locked;
+  wire locked_int;
   (* RTL_KEEP = "true" *) (* async_reg = "true" *) wire [7:0]seq_reg1;
   (* RTL_KEEP = "true" *) (* async_reg = "true" *) wire [7:0]seq_reg2;
   (* RTL_KEEP = "true" *) (* async_reg = "true" *) wire [7:0]seq_reg3;
@@ -99,17 +93,17 @@ module Clock_Manager_clk_wiz
     clkout1_buf
        (.CE0(seq_reg1[7]),
         .CE1(1'b0),
-        .I0(clk_cpu_o_Clock_Manager),
+        .I0(clk_100_o_Clock_Manager),
         .I1(1'b1),
         .IGNORE0(1'b0),
         .IGNORE1(1'b1),
-        .O(clk_cpu_o),
+        .O(clk_100_o),
         .S0(1'b1),
         .S1(1'b0));
   (* BOX_TYPE = "PRIMITIVE" *) 
   BUFH clkout1_buf_en
-       (.I(clk_cpu_o_Clock_Manager),
-        .O(clk_cpu_o_Clock_Manager_en_clk));
+       (.I(clk_100_o_Clock_Manager),
+        .O(clk_100_o_Clock_Manager_en_clk));
   (* BOX_TYPE = "PRIMITIVE" *) 
   (* XILINX_LEGACY_PRIM = "BUFGCE" *) 
   (* XILINX_TRANSFORM_PINMAP = "CE:CE0 I:I0 GND:S1,IGNORE0,CE1 VCC:S0,IGNORE1,I1" *) 
@@ -121,17 +115,17 @@ module Clock_Manager_clk_wiz
     clkout2_buf
        (.CE0(seq_reg2[7]),
         .CE1(1'b0),
-        .I0(clk_vga_o_Clock_Manager),
+        .I0(clk_cpu_o_Clock_Manager),
         .I1(1'b1),
         .IGNORE0(1'b0),
         .IGNORE1(1'b1),
-        .O(clk_vga_o),
+        .O(clk_cpu_o),
         .S0(1'b1),
         .S1(1'b0));
   (* BOX_TYPE = "PRIMITIVE" *) 
   BUFH clkout2_buf_en
-       (.I(clk_vga_o_Clock_Manager),
-        .O(clk_vga_o_Clock_Manager_en_clk));
+       (.I(clk_cpu_o_Clock_Manager),
+        .O(clk_cpu_o_Clock_Manager_en_clk));
   (* BOX_TYPE = "PRIMITIVE" *) 
   (* XILINX_LEGACY_PRIM = "BUFGCE" *) 
   (* XILINX_TRANSFORM_PINMAP = "CE:CE0 I:I0 GND:S1,IGNORE0,CE1 VCC:S0,IGNORE1,I1" *) 
@@ -143,31 +137,31 @@ module Clock_Manager_clk_wiz
     clkout3_buf
        (.CE0(seq_reg3[7]),
         .CE1(1'b0),
-        .I0(clk_100_o_Clock_Manager),
+        .I0(clk_vga_o_Clock_Manager),
         .I1(1'b1),
         .IGNORE0(1'b0),
         .IGNORE1(1'b1),
-        .O(clk_100_o),
+        .O(clk_vga_o),
         .S0(1'b1),
         .S1(1'b0));
   (* BOX_TYPE = "PRIMITIVE" *) 
   BUFH clkout3_buf_en
-       (.I(clk_100_o_Clock_Manager),
-        .O(clk_100_o_Clock_Manager_en_clk));
+       (.I(clk_vga_o_Clock_Manager),
+        .O(clk_vga_o_Clock_Manager_en_clk));
   (* BOX_TYPE = "PRIMITIVE" *) 
   PLLE2_ADV #(
     .BANDWIDTH("OPTIMIZED"),
-    .CLKFBOUT_MULT(8),
+    .CLKFBOUT_MULT(14),
     .CLKFBOUT_PHASE(0.000000),
     .CLKIN1_PERIOD(10.000000),
     .CLKIN2_PERIOD(0.000000),
-    .CLKOUT0_DIVIDE(16),
+    .CLKOUT0_DIVIDE(14),
     .CLKOUT0_DUTY_CYCLE(0.500000),
     .CLKOUT0_PHASE(0.000000),
-    .CLKOUT1_DIVIDE(32),
+    .CLKOUT1_DIVIDE(28),
     .CLKOUT1_DUTY_CYCLE(0.500000),
     .CLKOUT1_PHASE(0.000000),
-    .CLKOUT2_DIVIDE(8),
+    .CLKOUT2_DIVIDE(13),
     .CLKOUT2_DUTY_CYCLE(0.500000),
     .CLKOUT2_PHASE(0.000000),
     .CLKOUT3_DIVIDE(1),
@@ -193,9 +187,9 @@ module Clock_Manager_clk_wiz
         .CLKIN1(clk_i_Clock_Manager),
         .CLKIN2(1'b0),
         .CLKINSEL(1'b1),
-        .CLKOUT0(clk_cpu_o_Clock_Manager),
-        .CLKOUT1(clk_vga_o_Clock_Manager),
-        .CLKOUT2(clk_100_o_Clock_Manager),
+        .CLKOUT0(clk_100_o_Clock_Manager),
+        .CLKOUT1(clk_cpu_o_Clock_Manager),
+        .CLKOUT2(clk_vga_o_Clock_Manager),
         .CLKOUT3(NLW_plle2_adv_inst_CLKOUT3_UNCONNECTED),
         .CLKOUT4(NLW_plle2_adv_inst_CLKOUT4_UNCONNECTED),
         .CLKOUT5(NLW_plle2_adv_inst_CLKOUT5_UNCONNECTED),
@@ -206,7 +200,7 @@ module Clock_Manager_clk_wiz
         .DO(NLW_plle2_adv_inst_DO_UNCONNECTED[15:0]),
         .DRDY(NLW_plle2_adv_inst_DRDY_UNCONNECTED),
         .DWE(1'b0),
-        .LOCKED(locked),
+        .LOCKED(locked_int),
         .PWRDWN(1'b0),
         .RST(1'b0));
   (* ASYNC_REG *) 
@@ -214,9 +208,9 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[0] 
-       (.C(clk_cpu_o_Clock_Manager_en_clk),
+       (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .D(locked),
+        .D(locked_int),
         .Q(seq_reg1[0]),
         .R(1'b0));
   (* ASYNC_REG *) 
@@ -224,7 +218,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[1] 
-       (.C(clk_cpu_o_Clock_Manager_en_clk),
+       (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg1[0]),
         .Q(seq_reg1[1]),
@@ -234,7 +228,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[2] 
-       (.C(clk_cpu_o_Clock_Manager_en_clk),
+       (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg1[1]),
         .Q(seq_reg1[2]),
@@ -244,7 +238,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[3] 
-       (.C(clk_cpu_o_Clock_Manager_en_clk),
+       (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg1[2]),
         .Q(seq_reg1[3]),
@@ -254,7 +248,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[4] 
-       (.C(clk_cpu_o_Clock_Manager_en_clk),
+       (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg1[3]),
         .Q(seq_reg1[4]),
@@ -264,7 +258,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[5] 
-       (.C(clk_cpu_o_Clock_Manager_en_clk),
+       (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg1[4]),
         .Q(seq_reg1[5]),
@@ -274,7 +268,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[6] 
-       (.C(clk_cpu_o_Clock_Manager_en_clk),
+       (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg1[5]),
         .Q(seq_reg1[6]),
@@ -284,7 +278,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg1_reg[7] 
-       (.C(clk_cpu_o_Clock_Manager_en_clk),
+       (.C(clk_100_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg1[6]),
         .Q(seq_reg1[7]),
@@ -294,9 +288,9 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[0] 
-       (.C(clk_vga_o_Clock_Manager_en_clk),
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .D(locked),
+        .D(locked_int),
         .Q(seq_reg2[0]),
         .R(1'b0));
   (* ASYNC_REG *) 
@@ -304,7 +298,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[1] 
-       (.C(clk_vga_o_Clock_Manager_en_clk),
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg2[0]),
         .Q(seq_reg2[1]),
@@ -314,7 +308,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[2] 
-       (.C(clk_vga_o_Clock_Manager_en_clk),
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg2[1]),
         .Q(seq_reg2[2]),
@@ -324,7 +318,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[3] 
-       (.C(clk_vga_o_Clock_Manager_en_clk),
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg2[2]),
         .Q(seq_reg2[3]),
@@ -334,7 +328,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[4] 
-       (.C(clk_vga_o_Clock_Manager_en_clk),
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg2[3]),
         .Q(seq_reg2[4]),
@@ -344,7 +338,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[5] 
-       (.C(clk_vga_o_Clock_Manager_en_clk),
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg2[4]),
         .Q(seq_reg2[5]),
@@ -354,7 +348,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[6] 
-       (.C(clk_vga_o_Clock_Manager_en_clk),
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg2[5]),
         .Q(seq_reg2[6]),
@@ -364,7 +358,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg2_reg[7] 
-       (.C(clk_vga_o_Clock_Manager_en_clk),
+       (.C(clk_cpu_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg2[6]),
         .Q(seq_reg2[7]),
@@ -374,9 +368,9 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[0] 
-       (.C(clk_100_o_Clock_Manager_en_clk),
+       (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
-        .D(locked),
+        .D(locked_int),
         .Q(seq_reg3[0]),
         .R(1'b0));
   (* ASYNC_REG *) 
@@ -384,7 +378,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[1] 
-       (.C(clk_100_o_Clock_Manager_en_clk),
+       (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg3[0]),
         .Q(seq_reg3[1]),
@@ -394,7 +388,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[2] 
-       (.C(clk_100_o_Clock_Manager_en_clk),
+       (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg3[1]),
         .Q(seq_reg3[2]),
@@ -404,7 +398,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[3] 
-       (.C(clk_100_o_Clock_Manager_en_clk),
+       (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg3[2]),
         .Q(seq_reg3[3]),
@@ -414,7 +408,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[4] 
-       (.C(clk_100_o_Clock_Manager_en_clk),
+       (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg3[3]),
         .Q(seq_reg3[4]),
@@ -424,7 +418,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[5] 
-       (.C(clk_100_o_Clock_Manager_en_clk),
+       (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg3[4]),
         .Q(seq_reg3[5]),
@@ -434,7 +428,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[6] 
-       (.C(clk_100_o_Clock_Manager_en_clk),
+       (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg3[5]),
         .Q(seq_reg3[6]),
@@ -444,7 +438,7 @@ module Clock_Manager_clk_wiz
   FDRE #(
     .INIT(1'b0)) 
     \seq_reg3_reg[7] 
-       (.C(clk_100_o_Clock_Manager_en_clk),
+       (.C(clk_vga_o_Clock_Manager_en_clk),
         .CE(1'b1),
         .D(seq_reg3[6]),
         .Q(seq_reg3[7]),

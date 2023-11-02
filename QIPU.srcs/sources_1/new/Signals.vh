@@ -67,5 +67,12 @@
 `define IMM_EX_MODE_LOWER       2'b01
 `define IMM_EX_MODE_FULL        2'b10
 
+// UART
 `define UART_BAUD_RATE          115200
 `define UART_CLOCK_MAX          100000000 / `UART_BAUD_RATE
+
+// VGA OUTPUT MODES
+`define VGA_OUTPUT_MODE_TEXT        2'b00
+`define VGA_OUTPUT_MODE_LOW_RES     2'b01
+`define VGA_OUTPUT_MODE_MID_RES     2'b10
+`define VGA_OUTPUT_MODE_HIGH_RES    2'b11

@@ -12,7 +12,8 @@ module VGA_Controller(
         output reg [31:0] read_data_o,
         output            busy_o,
 
-        output reg [17:0] vram_addr_o,
+        output reg [ 8:0] vram_x_o,
+        output reg [ 8:0] vram_y_o,
         input      [ 7:0] vram_data_i,
         
         output     [ 3:0] hw_red_o,
@@ -22,19 +23,32 @@ module VGA_Controller(
         output            hw_vsync_o
     );
 
-    localparam OUTPUT_MODE_LOW_RES  = 2'b00;
-    localparam OUTPUT_MODE_TEXT     = 2'b01;
-    localparam OUTPUT_MODE_TILEMAP  = 2'b10;
+    // 1280x960 real
+    //  -> x real -- 11 bits
+    //  -> y real -- 10 bits
+    // 320x480 vram
+    //  -> x vram --  9 bits
+    //  -> y vram --  9 bits
+
+    localparam HORZ_PIXEL_COUNT = 1280;
+    localparam HORZ_FRONT_PORCH = 96;
+    localparam HORZ_PULSE_WIDTH = 112;
+    localparam HORZ_BACK_PORCH  = 312;
     
-    localparam HORZ_PIXEL_COUNT = 640;
-    localparam HORZ_FRONT_PORCH = 16;
-    localparam HORZ_PULSE_WIDTH = 96;
-    localparam HORZ_BACK_PORCH  = 48;
+    localparam VERT_PIXEL_COUNT = 960;
+    localparam VERT_FRONT_PORCH = 1;
+    localparam VERT_PULSE_WIDTH = 3;
+    localparam VERT_BACK_PORCH  = 36;
     
-    localparam VERT_PIXEL_COUNT = 480;
-    localparam VERT_FRONT_PORCH = 10;
-    localparam VERT_PULSE_WIDTH = 2;
-    localparam VERT_BACK_PORCH  = 33;
+    // localparam HORZ_PIXEL_COUNT = 640;
+    // localparam HORZ_FRONT_PORCH = 16;
+    // localparam HORZ_PULSE_WIDTH = 96;
+    // localparam HORZ_BACK_PORCH  = 48;
+    
+    // localparam VERT_PIXEL_COUNT = 480;
+    // localparam VERT_FRONT_PORCH = 10;
+    // localparam VERT_PULSE_WIDTH = 2;
+    // localparam VERT_BACK_PORCH  = 33;
     
     localparam HORZ_SYNC_BEGIN = HORZ_PIXEL_COUNT + HORZ_FRONT_PORCH;
     localparam HORZ_SYNC_END   = HORZ_SYNC_BEGIN  + HORZ_PULSE_WIDTH;
@@ -52,19 +66,20 @@ module VGA_Controller(
     reg  [11:0] color_int;
     wire [11:0] color_final;
 
-    wire [17:0] vram_addr_low_res_renderer;
-    wire [11:0] color_low_res_renderer;
-
-    wire [17:0] vram_addr_text_renderer;
     wire [11:0] color_text_renderer;
+    wire [ 8:0] vram_x_text_renderer;
+    wire [ 8:0] vram_y_text_renderer;
 
+    wire [11:0] color_low_res_renderer;
+    wire [ 8:0] vram_x_low_res_renderer;
+    wire [ 8:0] vram_y_low_res_renderer;
 
     // MEMORY BUS LOGIC
     assign busy_o = read_enable_i | write_enable_i;
 
     always @ (posedge clk_cpu_i) begin
         if (rst_i)
-            output_mode <= OUTPUT_MODE_LOW_RES;
+            output_mode <= `VGA_OUTPUT_MODE_TEXT;
         else if (read_enable_i)
             read_data_o <= { 30'b0, output_mode };
         else if (write_enable_i)
@@ -77,42 +92,48 @@ module VGA_Controller(
     // vga output mode selection logic
     always @ (*) begin
         case (output_mode)
-            OUTPUT_MODE_LOW_RES: begin
-                vram_addr_o = vram_addr_low_res_renderer;
-                color_int   = color_low_res_renderer;
+            `VGA_OUTPUT_MODE_TEXT: begin
+                color_int = color_text_renderer;
+                vram_x_o  = vram_x_text_renderer;
+                vram_y_o  = vram_y_text_renderer;
             end
-            OUTPUT_MODE_TEXT: begin
-                vram_addr_o = vram_addr_text_renderer;
-                color_int   = color_text_renderer;
+            `VGA_OUTPUT_MODE_LOW_RES: begin
+                color_int = color_low_res_renderer;
+                vram_x_o  = vram_x_text_renderer;
+                vram_y_o  = vram_y_text_renderer;
             end
-            OUTPUT_MODE_TILEMAP: begin
-                vram_addr_o = 0;
-                color_int   = 'h0000FF;
+            `VGA_OUTPUT_MODE_MID_RES: begin
+                color_int = 'h0000FF;
+            end
+            `VGA_OUTPUT_MODE_HIGH_RES: begin
+                color_int = 'hFF0000;
             end
             default: begin
-                vram_addr_o = 0;
-                color_int   = 'hFF00FF;
+                color_int = 'hFF00FF;
             end
         endcase
     end
-
-    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
-    VGA_Low_Res_Renderer vga_low_res_renderer (
-        .h_counter_i     (h_counter),
-        .v_counter_i     (v_counter),
-        .color_o         (color_low_res_renderer),
-        .vram_addr_o     (vram_addr_low_res_renderer),
-        .vram_data_i     (vram_data_i)
-    );
 
     (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
     VGA_Text_Renderer vga_text_renderer (
         .h_counter_i     (h_counter),
         .v_counter_i     (v_counter),
         .color_o         (color_text_renderer),
-        .vram_addr_o     (vram_addr_text_renderer),
+        .vram_x_o        (vram_x_text_renderer),
+        .vram_y_o        (vram_y_text_renderer),
         .vram_data_i     (vram_data_i)
     );
+
+    (* keep_hierarchy = `KEEP_HIERARCHY_TOGGLE *)
+    VGA_Low_Res_Renderer vga_low_res_renderer (
+        .h_counter_i     (h_counter),
+        .v_counter_i     (v_counter),
+        .color_o         (color_low_res_renderer),
+        .vram_x_o        (vram_x_low_res_renderer),
+        .vram_y_o        (vram_y_low_res_renderer),
+        .vram_data_i     (vram_data_i)
+    );
+
 
     
     // Color output logic
