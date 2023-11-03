@@ -55,6 +55,8 @@ module VGA_Controller(
     wire        display_enable;
     reg  [11:0] color_int;
     wire [11:0] color_final;
+    reg  [ 7:0] h_sync_delay;
+    reg  [ 7:0] v_sync_delay;
 
     wire [11:0] color_text_renderer;
     wire [ 8:0] vram_x_text_renderer;
@@ -134,8 +136,15 @@ module VGA_Controller(
     assign hw_blue_o      = color_final[ 3:0];
 
     // Horizontal and vertical sync signals
-    assign hw_hsync_o = ~((HORZ_SYNC_BEGIN <= h_counter) && (h_counter < HORZ_SYNC_END));
-    assign hw_vsync_o = ~((VERT_SYNC_BEGIN <= v_counter) && (v_counter < VERT_SYNC_END));
+    assign h_sync = ~((HORZ_SYNC_BEGIN <= h_counter) && (h_counter < HORZ_SYNC_END));
+    assign v_sync = ~((VERT_SYNC_BEGIN <= v_counter) && (v_counter < VERT_SYNC_END));
+    assign hw_hsync_o = h_sync_delay[7];
+    assign hw_vsync_o = v_sync_delay[7];
+
+    always @ (posedge clk_vga_i) begin
+        h_sync_delay <= { h_sync_delay[6:0], h_sync };
+        v_sync_delay <= { v_sync_delay[6:0], v_sync };
+    end
     
     // VGA timing logic
     always @ (posedge clk_vga_i) begin

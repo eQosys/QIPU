@@ -2,7 +2,7 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
--- Date        : Wed Nov  1 03:29:00 2023
+-- Date        : Fri Nov  3 04:31:46 2023
 -- Host        : TecArch running 64-bit Arch Linux
 -- Command     : write_vhdl -force -mode synth_stub
 --               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/Clock_Manager/Clock_Manager_stub.vhdl
