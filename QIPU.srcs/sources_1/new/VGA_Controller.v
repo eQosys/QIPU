@@ -40,16 +40,6 @@ module VGA_Controller(
     localparam VERT_PULSE_WIDTH = 3;
     localparam VERT_BACK_PORCH  = 36;
     
-    // localparam HORZ_PIXEL_COUNT = 640;
-    // localparam HORZ_FRONT_PORCH = 16;
-    // localparam HORZ_PULSE_WIDTH = 96;
-    // localparam HORZ_BACK_PORCH  = 48;
-    
-    // localparam VERT_PIXEL_COUNT = 480;
-    // localparam VERT_FRONT_PORCH = 10;
-    // localparam VERT_PULSE_WIDTH = 2;
-    // localparam VERT_BACK_PORCH  = 33;
-    
     localparam HORZ_SYNC_BEGIN = HORZ_PIXEL_COUNT + HORZ_FRONT_PORCH;
     localparam HORZ_SYNC_END   = HORZ_SYNC_BEGIN  + HORZ_PULSE_WIDTH;
     localparam HORZ_SYNC_TOTAL = HORZ_SYNC_END    + HORZ_BACK_PORCH;

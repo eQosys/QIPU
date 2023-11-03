@@ -19,7 +19,7 @@ module VGA_Text_Renderer(
 
     assign vram_x_o        = h_counter_i / 8;
     assign vram_y_o        = v_counter_i / 12;
-    wire [ 3:0] px_col     = h_counter_i % 8;
+    wire [ 2:0] px_col     = (h_counter_i % 8) - 2;
     wire [ 3:0] px_row     = v_counter_i % 12;
     wire [11:0] char_idx   = { 4'b0, vram_data_i } * 12 + { 8'b0, px_row };
     wire [ 7:0] char_data  = char_map[char_idx];
