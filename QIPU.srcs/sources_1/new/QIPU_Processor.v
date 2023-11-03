@@ -409,7 +409,6 @@ module QIPU_Processor(
 
     UART_Controller uart_controller (
         .clk_i              (clk_cpu),
-        .clk_100_i          (clk_100),
         .rst_i              (reset),
         //.addr_i           (mem_addr),
         .write_data_i       (result),

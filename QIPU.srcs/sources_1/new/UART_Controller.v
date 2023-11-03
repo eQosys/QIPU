@@ -2,7 +2,6 @@
 
 module UART_Controller(
         input         clk_i,
-        input         clk_100_i,
         input         rst_i,
 
         //input [31:0]  addr_i,
@@ -24,7 +23,6 @@ module UART_Controller(
 
     UART_Receiver uart_receiver (
         .clk_i         (clk_i),
-        .clk_100_i     (clk_100_i),
         .rst_i         (rst_i),
 
         .read_enable_i (read_enable_i),
@@ -36,7 +34,6 @@ module UART_Controller(
 
     UART_Transmitter uart_transmitter (
         .clk_i          (clk_i),
-        .clk_100_i      (clk_100_i),
         .rst_i          (rst_i),
 
         .write_enable_i (write_enable_i),

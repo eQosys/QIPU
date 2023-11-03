@@ -2,7 +2,6 @@
 
 module UART_Transmitter(
         input             clk_i,
-        input             clk_100_i,
         input             rst_i,
 
         input             write_enable_i,
@@ -47,7 +46,7 @@ module UART_Transmitter(
     // ---------- FIFO ----------
 
     FIFO_Generator fifo (
-        .clk        (clk_100_i),
+        .clk        (clk_i),
         .rst        (rst_i),
         .din        (fifo_write_data),
         .wr_en      (fifo_write_enable),
@@ -85,7 +84,7 @@ module UART_Transmitter(
         end
     end
 
-    always @ (posedge clk_100_i) begin
+    always @ (posedge clk_i) begin
         if (rst_i) begin
             fifo_state         <= FIFO_STATE_IDLE;
             fifo_write_enable  <= 0;
@@ -116,7 +115,7 @@ module UART_Transmitter(
 
     // ---------- UART ----------
 
-    always @ (posedge clk_100_i) begin
+    always @ (posedge clk_i) begin
         if (rst_i) begin
             fifo_read_enable   <= 0;
             uart_clk_counter   <= 0;

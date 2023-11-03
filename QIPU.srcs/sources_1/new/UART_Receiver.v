@@ -2,7 +2,6 @@
 
 module UART_Receiver(
         input             clk_i,
-        input             clk_100_i,
         input             rst_i,
 
         input             read_enable_i,
@@ -44,7 +43,7 @@ module UART_Receiver(
     // ---------- FIFO ----------
 
     FIFO_Generator fifo (
-        .clk        (clk_100_i),
+        .clk        (clk_i),
         .rst        (rst_i),
         .din        (uart_data_received),
         .wr_en      (fifo_write_enable),
@@ -81,7 +80,7 @@ module UART_Receiver(
         end
     end
 
-    always @ (posedge clk_100_i) begin
+    always @ (posedge clk_i) begin
         if (rst_i) begin
             fifo_state        <= FIFO_STATE_IDLE;
             fifo_read_enable  <= 0;
@@ -117,7 +116,7 @@ module UART_Receiver(
 
     // ---------- UART ----------
 
-    always @ (posedge clk_100_i) begin
+    always @ (posedge clk_i) begin
         if (rst_i) begin
             fifo_write_enable  <= 0;
             uart_clk_counter   <= 0;

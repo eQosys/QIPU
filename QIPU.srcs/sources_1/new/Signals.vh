@@ -1,3 +1,8 @@
+// CLOCK FREQUENCIES
+`define CLK_100_FREQ        100000000
+`define CLK_CPU_FREQ         50000000
+`define CLK_VGA_FREQ        107692310
+
 // CONTROL UNIT STATES
 `define CU_STATE_UNUSED             3'bzzz
 `define CU_STATE_FETCH              3'b000
@@ -68,8 +73,8 @@
 `define IMM_EX_MODE_FULL        2'b10
 
 // UART
-`define UART_BAUD_RATE          115200
-`define UART_CLOCK_MAX          100000000 / `UART_BAUD_RATE
+`define UART_BAUD_RATE          9600
+`define UART_CLOCK_MAX          `CLK_CPU_FREQ / `UART_BAUD_RATE
 
 // VGA OUTPUT MODES
 `define VGA_OUTPUT_MODE_TEXT        2'b00
