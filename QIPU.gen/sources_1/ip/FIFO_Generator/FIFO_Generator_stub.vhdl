@@ -1,8 +1,8 @@
 -- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
--- Tool Version: Vivado v.2023.1 (lin64) Build 3865809 Sun May  7 15:04:56 MDT 2023
--- Date        : Mon Oct 30 21:19:52 2023
+-- Tool Version: Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
+-- Date        : Tue Nov  7 15:07:34 2023
 -- Host        : TecArch running 64-bit Arch Linux
 -- Command     : write_vhdl -force -mode synth_stub
 --               /home/tecstylos/dev/QIPU/QIPU.gen/sources_1/ip/FIFO_Generator/FIFO_Generator_stub.vhdl
@@ -35,6 +35,6 @@ attribute black_box_pad_pin : string;
 attribute syn_black_box of stub : architecture is true;
 attribute black_box_pad_pin of stub : architecture is "clk,rst,din[7:0],wr_en,rd_en,dout[7:0],full,wr_ack,empty,valid";
 attribute x_core_info : string;
-attribute x_core_info of stub : architecture is "fifo_generator_v13_2_8,Vivado 2023.1";
+attribute x_core_info of stub : architecture is "fifo_generator_v13_2_9,Vivado 2023.2";
 begin
 end;
