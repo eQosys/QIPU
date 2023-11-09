@@ -72,7 +72,7 @@ module Control_Unit(
                 `CU_STATE_EXECUTE: begin
                     case (opcode_i)
                         `OPCODE_ADD: begin
-                            off_layout_o       <= `OFF_LAYOUT_NORMAL;
+                            off_layout_o       <= `OFF_LAYOUT_SHORT;
                             alu_ctrl_o         <= `ALU_CTRL_ADD;
                             alu_src1_sel_o     <= `ALU_SRC1_SEL_REG;
                             res_sel_o          <= `RES_SEL_ALU;
@@ -88,7 +88,7 @@ module Control_Unit(
                             state              <= `CU_STATE_FETCH;
                         end
                         `OPCODE_SUB: begin
-                            off_layout_o       <= `OFF_LAYOUT_NORMAL;
+                            off_layout_o       <= `OFF_LAYOUT_SHORT;
                             alu_ctrl_o         <= `ALU_CTRL_SUB;
                             alu_src1_sel_o     <= `ALU_SRC1_SEL_REG;
                             res_sel_o          <= `RES_SEL_ALU;
@@ -104,7 +104,7 @@ module Control_Unit(
                             state              <= `CU_STATE_FETCH;
                         end
                         `OPCODE_AND: begin
-                            off_layout_o       <= `OFF_LAYOUT_NORMAL;
+                            off_layout_o       <= `OFF_LAYOUT_SHORT;
                             alu_ctrl_o         <= `ALU_CTRL_AND;
                             alu_src1_sel_o     <= `ALU_SRC1_SEL_REG;
                             res_sel_o          <= `RES_SEL_ALU;
@@ -120,7 +120,7 @@ module Control_Unit(
                             state              <= `CU_STATE_FETCH;
                         end
                         `OPCODE_OR: begin
-                            off_layout_o       <= `OFF_LAYOUT_NORMAL;
+                            off_layout_o       <= `OFF_LAYOUT_SHORT;
                             alu_ctrl_o         <= `ALU_CTRL_OR;
                             alu_src1_sel_o     <= `ALU_SRC1_SEL_REG;
                             res_sel_o          <= `RES_SEL_ALU;
@@ -136,7 +136,7 @@ module Control_Unit(
                             state              <= `CU_STATE_FETCH;
                         end
                         `OPCODE_XOR: begin
-                            off_layout_o       <= `OFF_LAYOUT_NORMAL;
+                            off_layout_o       <= `OFF_LAYOUT_SHORT;
                             alu_ctrl_o         <= `ALU_CTRL_XOR;
                             alu_src1_sel_o     <= `ALU_SRC1_SEL_REG;
                             res_sel_o          <= `RES_SEL_ALU;
@@ -152,7 +152,7 @@ module Control_Unit(
                             state              <= `CU_STATE_FETCH;
                         end
                         `OPCODE_SHL: begin
-                            off_layout_o       <= `OFF_LAYOUT_NORMAL;
+                            off_layout_o       <= `OFF_LAYOUT_SHORT;
                             alu_ctrl_o         <= `ALU_CTRL_SHL;
                             alu_src1_sel_o     <= `ALU_SRC1_SEL_REG;
                             res_sel_o          <= `RES_SEL_ALU;
@@ -168,7 +168,7 @@ module Control_Unit(
                             state              <= `CU_STATE_FETCH;
                         end
                         `OPCODE_SHR: begin
-                            off_layout_o       <= `OFF_LAYOUT_NORMAL;
+                            off_layout_o       <= `OFF_LAYOUT_SHORT;
                             alu_ctrl_o         <= `ALU_CTRL_SHR;
                             alu_src1_sel_o     <= `ALU_SRC1_SEL_REG;
                             res_sel_o          <= `RES_SEL_ALU;
